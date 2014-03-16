@@ -4,6 +4,8 @@ $(document).ready(function() {
   
   console.log('ready');
   
+  console.log(window.location.origin);
+  
   var socket = io.connect(window.location.origin);
    socket.on('news', function (data) {
      console.log(data);
