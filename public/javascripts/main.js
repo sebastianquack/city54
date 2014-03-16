@@ -4,7 +4,7 @@ $(document).ready(function() {
   
   console.log('ready');
   
-  var socket = io.connect('http://localhost');
+  var socket = io.connect(window.location.origin);
    socket.on('news', function (data) {
      console.log(data);
      socket.emit('my other event', { my: 'data' });
