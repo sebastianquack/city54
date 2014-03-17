@@ -20,10 +20,10 @@ module.exports = {
   },
   staging: {
     root: rootPath,
-    db: process.env.MONGOHQ_URL
+    db: process.env.MONGOLAB_URI
   },
   production: {
     root: rootPath,
-    db: process.env.MONGOHQ_URL
+    db: process.env.MONGOLAB_URI
   }
 }
