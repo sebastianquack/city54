@@ -1,11 +1,11 @@
 /**
  * Module dependencies.
  */
-var express = require('express');
-var mongoose = require('mongoose');
-var http = require('http');
-var path = require('path');
-var fs = require('fs');
+var express = require('express')
+var mongoose = require('mongoose')
+var http = require('http')
+var path = require('path')
+var fs = require('fs')
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config/config')[env]
 
@@ -41,11 +41,11 @@ require('./config/express')(app)
 require('./config/routes')(app)
 
 var server = http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+  console.log('Express server listening on port ' + app.get('port'))
+})
 
 // sockets
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server)
 require('./app/sockets')(io)
 
 
