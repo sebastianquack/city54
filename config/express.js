@@ -8,20 +8,15 @@ module.exports = function (app) {
   app.use(express.logger('dev'));
   app.use(express.json());
   app.use(express.urlencoded());
-  app.use(express.methodOverride());
-  
-  app.use(express.static(config.root + '/public'))
-  
+  app.use(express.methodOverride());  
+  app.use(express.static(config.root + '/public'));
   app.use(app.router);
-  
-  app.set('port', process.env.PORT || 3000);
-
-  app.set('views', config.root + '/app/views')
-  app.set('view engine', 'jade');
-
-  // development only
-  if ('development' == app.get('env')) {
+  if (env == 'development') {
     app.use(express.errorHandler());
   }
+  
+  app.set('view engine', 'jade');
+  app.set('views', config.root + '/app/views')
+  app.set('port', process.env.PORT || 3000);
 
 }
