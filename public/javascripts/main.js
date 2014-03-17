@@ -17,12 +17,13 @@ $(document).ready(function() {
 
   socket.emit('uuid-check', { uuid: $.cookie('city54_uuid') });
 
-  socket.on('hello', function (data) {
-    alert('Hi, ' + data.name);
-  });
-
   socket.on('chat-update', function (data) {
-     console.log(data);
+    if(data.player_name == "System") {
+      $('ul#chat').append('<li>' + data.value + '</li>');      
+    } else {
+      $('ul#chat').append('<li>' + data.player_name + ': ' + data.value + '</li>');      
+    }
+
   });
 
   // user input events
