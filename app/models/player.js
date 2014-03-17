@@ -6,8 +6,8 @@ var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
 var PlayerSchema = new Schema({
-  name: { type: String, default: '' },
-  hash: { type: String, default: '' }
+  uuid: { type: String, default: '' },
+  name: { type: String, default: '' }
 })
 
 

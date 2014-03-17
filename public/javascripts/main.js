@@ -1,22 +1,37 @@
 
-
 $(document).ready(function() {
   
-  console.log('ready');
+  console.log('ready');  
   
-  console.log(window.location.origin);
-  
-  var socket = io.connect(window.location.origin);
-   socket.on('news', function (data) {
-     console.log(data);
-     socket.emit('my other event', { my: 'data' });
-  });
-  
-  if($.cookie('test_cookie')) {
-    console.log('cookie found');
+  // cookies
+  if($.cookie('city54_uuid')) {
+    console.log('uuid found: ' + $.cookie('city54_uuid'));
   } else {
-    $.cookie('test_cookie', '1');
-    console.log('cookie set');
+    $.cookie('city54_uuid', uuid.v1());
+    console.log('uuid set to' + $.cookie('city54_uuid'));
   }
-    
+  
+  // sockets
+  var socket = io.connect(window.location.origin);
+  console.log(window.location.origin);
+
+  socket.emit('uuid-check', { uuid: $.cookie('city54_uuid') });
+
+  socket.on('hello', function (data) {
+    alert('Hi, ' + data.name);
+  });
+
+  socket.on('chat-update', function (data) {
+     console.log(data);
+  });
+
+  // user input events
+  $('#input-command').on("keypress", function(e) {
+    if (e.keyCode == 13) {  
+      val = $('#input-command').val();
+      socket.emit('chat-submit', { uuid: $.cookie('city54_uuid'), value: val });
+      $('#input-command').val('');
+    }
+  });
+
 });
