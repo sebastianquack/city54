@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "NODE_PATH=./app/controllers NODE_ENV=development node server.js"
+    "start": "NODE_PATH=./app/controllers node server.js"
   },
   "dependencies": {
     "express": "3.4.8",
