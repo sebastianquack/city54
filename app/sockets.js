@@ -40,7 +40,7 @@ function parseCommand(socket, player, value) {
 
       var options = {
         host: 'testapi.cleverscript.com',
-        path: '/csapi?key=gzwybd1267c20c4e4e08b0936691899515409&input=' + encodeURIComponent(botCommand) + '&cs=&callback=processCleverResponse',
+        path: '/csapi?key=' + process.env.cleverAPIKey + '&input=' + encodeURIComponent(botCommand) + '&cs=&callback=processCleverResponse',
         method: 'GET',
         headers: {
           'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36',
