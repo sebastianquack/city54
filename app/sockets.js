@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+var http = require('http')
 
 var Player = mongoose.model('Player')
 var ChatItem = mongoose.model('ChatItem')
@@ -15,6 +16,43 @@ function chat(socket, player, value, mode) {
     socket.broadcast.emit('chat-update', chat_item) // broadcast to everyone
   if(mode == "everyone" || mode == "sender") 
     socket.emit('chat-update', chat_item) // send back to this socket
+}
+
+function parseCommand(socket, player, value) {
+  var words = value.split(" ")
+  if(words.length >= 2) {
+    if(words[0] == 'bot') {
+      words.splice(0,1)
+      botCommand = words.join(" ")
+      chat(socket, {name: "System"}, player.name + " called bot with: " + botCommand, "everyone")
+      
+      var processCleverResponse = function(data) {
+        console.log(data)
+        chat(socket, {name: "Bot"}, data.output, "everyone")        
+      }
+      
+      var cleverRequestCallback = function(response) {
+        var str = ''
+        response.on('error', function (err) { handleError(err) })
+        response.on('data', function (chunk) { str += chunk })
+        response.on('end', function () { eval(str) })
+      }
+
+      var options = {
+        host: 'testapi.cleverscript.com',
+        path: '/csapi?key=gzwybd1267c20c4e4e08b0936691899515409&input=' + encodeURIComponent(botCommand) + '&cs=&callback=processCleverResponse',
+        method: 'GET',
+        headers: {
+          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36',
+          'referer': 'http://city54.herokuapp.com'
+        }
+      }
+      http.request(options, cleverRequestCallback).end()
+      
+      return true
+    }
+  }
+  return false
 }
 
 module.exports = function (io) {
@@ -40,8 +78,10 @@ module.exports = function (io) {
           player.save()
           chat(socket, {name: "System"}, "Have fun chatting, " + player.name, "sender")
           chat(socket, {name: "System"}, player.name + " entered the room.", "everyone else")
-        } else {
-          chat(socket, player, data.value, "everyone")          
+        } else {          
+          if(!parseCommand(socket, player, data.value)) { // if command is not found, assume this is part of the chat
+            chat(socket, player, data.value, "everyone")                      
+          }
         }
       })      
     })
