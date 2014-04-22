@@ -23,7 +23,6 @@ $(document).ready(function() {
     } else {
       $('ul#chat').append('<li>' + data.player_name + ': ' + data.value + '</li>')      
     }
-
   })
 
   // user input events

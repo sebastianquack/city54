@@ -4,3 +4,32 @@ block content
 
   ul#chat
   input(type='text', id='input-command')
+
+  h1 cleverscript
+  | <div id="reply"></div>
+  | <form onsubmit="CSInput (this.userinput.value); this.userinput.value = ''; return false;">
+  |   You: <input name="userinput" type="text" size="40"/> <input type="submit" value="Say it" /> 
+  | </form> 
+  |  <script type="text/javascript">
+  |    var CSSTATE = '';
+  |    function CSProcess (data) { 
+  |      console.log(data);
+  |      if (data.response) {
+  |        document.getElementById ('reply').innerHTML += data.response+'<br/>';
+  |      } else {
+  |        if (data.input) document.getElementById ('reply').innerHTML += 'You: '+data.input+'<br/>';
+  |        document.getElementById ('reply').innerHTML += 'Bot: ' + data.output + '<br/>';
+  |        CSSTATE = data.cs; 
+  |      }
+  |    } 
+  |    function CSInput (userinput) {
+  |      var key = 'gzwybd1267c20c4e4e08b0936691899515409';
+  |      var url = 'http://testapi.cleverscript.com/csapi';
+  |      url += '?key=' + key + '&input=' + encodeURIComponent (userinput);
+  |      url += '&cs=' + CSSTATE + '&callback=CSProcess';
+  |      var el = document.createElement ('script');
+  |      el.setAttribute ('action', 'text/javascript'); el.setAttribute ('src', url);
+  |      document.getElementById('reply').appendChild (el); 
+  |    }
+  |    CSInput ('');
+  |  </script>
