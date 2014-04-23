@@ -4,6 +4,8 @@ var http = require('http')
 var Player = mongoose.model('Player')
 var ChatItem = mongoose.model('ChatItem')
 
+var joke = "langweiliger witz"
+
 function handleError(err) {
   console.log(err)
   return err
@@ -28,7 +30,12 @@ function parseCommand(socket, player, value) {
       
       var processCleverResponse = function(data) {
         console.log(data)
-        chat(socket, {name: "Bot"}, data.output, "everyone")        
+        chat(socket, {name: "Bot"}, data.output, "everyone")
+        player.botState = data.cs
+        player.save()
+        if(data.newjoke_other) {
+          joke = data.newjoke_other
+        }
       }
       
       var cleverRequestCallback = function(response) {
@@ -40,13 +47,14 @@ function parseCommand(socket, player, value) {
 
       var options = {
         host: 'testapi.cleverscript.com',
-        path: '/csapi?key=' + process.env.cleverAPIKey + '&input=' + encodeURIComponent(botCommand) + '&cs=&callback=processCleverResponse',
+        path: '/csapi?key=' + process.env.cleverAPIKey + '&input=' + encodeURIComponent(botCommand) + '&cs=' + player.botState + '&callback=processCleverResponse&_oldjoke=' + encodeURIComponent(joke),
         method: 'GET',
         headers: {
           'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36',
           'referer': 'http://city54.herokuapp.com'
         }
       }
+      console.log(options.path)
       http.request(options, cleverRequestCallback).end()
       
       return true
