@@ -6,6 +6,8 @@ var ChatItem = mongoose.model('ChatItem')
 var joke = "langweiliger witz"
 
 var Cleverscript = require('./cleverscript')
+var Spreadsheets = require('./spreadsheets')
+
 
 function handleError(err) {
   console.log(err)
@@ -24,6 +26,7 @@ function chat(socket, player, value, mode) {
 function parseCommand(socket, player, value) {
   var words = value.split(" ")
   if(words.length >= 2) {
+  	if (words[0] == "r") Spreadsheets.loadRoom(words[1])
     if(words[0] == 'bot') {
       words.splice(0,1)
       botCommand = words.join(" ")

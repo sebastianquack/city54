@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "city54",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,10 @@
     "express": "3.4.8",
     "jade": "*",
     "socket.io": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "google-spreadsheets": "*",
+    "google-drive": "*",
+    "googleapis": "*",
+    "google-oauth-jwt": "*"
   }
 }
