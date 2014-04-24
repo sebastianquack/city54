@@ -10,9 +10,7 @@
     "jade": "*",
     "socket.io": "*",
     "mongoose": "*",
-    "google-spreadsheets": "*",
-    "google-drive": "*",
-    "googleapis": "*",
+    "edit-google-spreadsheets": "*",
     "google-oauth-jwt": "*"
   }
 }
