@@ -10,7 +10,7 @@
     "jade": "*",
     "socket.io": "*",
     "mongoose": "*",
-    "edit-google-spreadsheets": "*",
+    "edit-google-spreadsheets": "https://github.com/jpillora/node-edit-google-spreadsheet",
     "google-oauth-jwt": "*"
   }
 }
