@@ -26,11 +26,24 @@ function chat(socket, player, value, mode) {
 function parseCommand(socket, player, value) {
   var words = value.split(" ")
   if(words.length >= 2) {
-  	if (words[0] == "r") Spreadsheets.loadRoom(words[1])
+  	if (words[0] == "r") {
+      
+      // room callback
+      roomEntered = function(data){
+      	for (i in data.command) {
+      		if (data.command[i] == "base") greeting = data.text[i]
+      	}
+      	chat(socket, {name: "room"}, greeting, "everyone")
+      }  		
+  		
+  	  Spreadsheets.loadRoom(words[1], roomEntered)
+  	}
+  		
     if(words[0] == 'bot') {
       words.splice(0,1)
       botCommand = words.join(" ")
       chat(socket, {name: "System"}, player.name + " called bot with: " + botCommand, "everyone")
+    
       
       // cleverscript callback
       Cleverscript.talkToBot(process.env.cleverAPIKey, botCommand, player.botState, joke, function(data) {

@@ -6,7 +6,7 @@ tokens = new TokenCache();
 
 
 
-loadRoom = function (room) {
+loadRoom = function (room, callback) {
 	tokens.get({
 	  // use the email address of the service account, as seen in the API console
 	  email: '446725146509@developer.gserviceaccount.com',
@@ -19,12 +19,12 @@ loadRoom = function (room) {
 	  scopes: ['https://www.googleapis.com/auth/drive.readonly','https://spreadsheets.google.com/feeds']
 	}, function (err, token) {
 	  console.log(token)
-	  get_spreadsheet(token, room)
+	  get_spreadsheet(token, room, callback)
 	});
 }
 
 
-get_spreadsheet = function(token, room) {
+get_spreadsheet = function(token, room, callback) {
   Spreadsheet.load({
     debug: true,
     spreadsheetName: room,
@@ -62,7 +62,8 @@ get_spreadsheet = function(token, room) {
 				}
 			}
 		}
-        console.log(data);
+        console.log(data)
+        callback(data)
       
     });
   });
