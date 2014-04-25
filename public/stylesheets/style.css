@@ -28,7 +28,11 @@ ul#chat li {
 	padding-bottom:0.3em;
 }
 
-b[data-command] {
+ul#chat li:last-child {
+	padding-bottom:2em;
+}
+
+ul#chat li:last-child b[data-command] {
 	color:red;
 }
 

@@ -24,7 +24,13 @@ $(document).ready(function() {
       newElem = $('<li>' + data.player_name + ': ' + data.value + '</li>')
     }
     $('ul#chat').append(newElem)
-    
+	$('ul#chat').animate({
+		scrollTop: $("ul#chat")[0].scrollHeight - $("ul#chat").innerHeight()
+		}, {
+	    duration: 300,//$("ul#chat li:last-child").height()*10,
+	    queue: false,
+	    easing: "swing"
+	    })
   })
 
   // user input events
