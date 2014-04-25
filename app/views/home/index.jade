@@ -2,8 +2,13 @@ extends ../layouts/default
 
 block content  
 
-  h1 multi-user chat with bot
+  h1#top multi-user chat with bot
   ul#chat
-  input(type='text', id='input-command')
-  p add "bot" before speaking to talk to bot
-  p enter "r oberhausen" to enter oberhausen, "r witten" to enter witten
+  div#bottom
+    input(type='text', id='input-command')
+    p add "
+      b(data-command='bot Hi!') bot 
+      | " before speaking to talk to bot
+    p enter "
+      b(data-command='gehe oberhausen') gehe oberhausen
+      | " to enter oberhausen

@@ -1,0 +1,42 @@
+html, body {
+	height:100%;
+	font-family:Futura, sans-serif;
+}
+
+#top {
+	height:10%;
+}
+
+#chat {
+	overflow-y: scroll;
+	overflow-wrap: break-word;
+	height:60%;
+	background:#ccc;
+	color:black;
+	line-height:1.3em;
+}
+
+ul#chat {
+	list-style-type:none;
+	list-style-position:inside;
+	margin:0;
+	padding:1em;
+}
+
+
+ul#chat li {
+	padding-bottom:0.3em;
+}
+
+b[data-command] {
+	color:red;
+}
+
+b[data-command]:hover {
+	cursor:pointer;
+}
+
+#bottom {
+	height:30%;
+}
+
