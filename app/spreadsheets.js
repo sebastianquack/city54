@@ -1,13 +1,4 @@
-var Spreadsheet = require('edit-google-spreadsheet');
-
-var TokenCache = require('google-oauth-jwt').TokenCache,
-tokens = new TokenCache();
-
-
-
-
-loadRoom = function (room, callback) {
-	tokens.get({
+googleConf = {
 	  // use the email address of the service account, as seen in the API console
 	  email: '446725146509@developer.gserviceaccount.com',
 	  // use the PEM file we generated from the downloaded key
@@ -17,18 +8,66 @@ loadRoom = function (room, callback) {
 	  useHTTPS: false,
 	  // specify the scopes you wish to access 
 	  scopes: ['https://www.googleapis.com/auth/drive.readonly','https://spreadsheets.google.com/feeds']
-	}, function (err, token) {
-	  console.log(token)
+	}
+
+
+var Spreadsheet = require('edit-google-spreadsheet');
+var googleapis = require('googleapis');
+var TokenCache = require('google-oauth-jwt').TokenCache,
+tokens = new TokenCache();
+
+spreadsheetIdCache = {}
+
+/*
+// preload google drive file metadata
+var request = require('google-oauth-jwt').requestWithJWT();
+request({
+  url: 'https://www.googleapis.com/drive/v2/files',
+  jwt: googleConf
+}, function (err, res, body) {
+	files = JSON.parse(body).items;
+    for (i in files) {
+    	console.log(i)
+    	if (files[i]['mimeType'] == 'application/vnd.google-apps.spreadsheet') {
+    		spreadsheetIdCache[files[i]['title']] = files[i]['id']
+    	}
+    }
+    console.log(spreadsheetIdCache)
+});
+*/
+
+
+loadRoom = function (room, callback) {
+	tokens.get(googleConf, function (err, token) {
+	  console.log("google OAuth token: " + token)
 	  get_spreadsheet(token, room, callback)
 	});
 }
 
 
 get_spreadsheet = function(token, room, callback) {
+  
+  spreadsheetName = room
+  worksheetName = room
+  
+  // retrieve cache
+  if (spreadsheetIdCache[spreadsheetName] != undefined && spreadsheetIdCache[spreadsheetName][worksheetName] != undefined) {
+  	spreadsheetId = spreadsheetIdCache[spreadsheetName][worksheetName].spreadsheetId
+  	worksheetId = spreadsheetIdCache[spreadsheetName][worksheetName].worksheetId
+  	spreadsheetName = undefined
+  	worksheetName = undefined
+  }
+  else {
+  	spreadsheetId = undefined
+  	worksheetId = undefined
+  }
+
   Spreadsheet.load({
     debug: true,
-    spreadsheetName: room,
-    worksheetName: room,
+    spreadsheetName: spreadsheetName,
+    spreadsheetId: spreadsheetId,
+    worksheetName: worksheetName,
+    worksheetId: worksheetId,
     // Choose from 1 of the 3 authentication methods:
     //    1. Username and Password
     //username: 'my-name@google.email.com',
@@ -44,8 +83,20 @@ get_spreadsheet = function(token, room, callback) {
       token: token
     }
   }, function sheetReady(err, spreadsheet) {
-    if(err) throw err;
-
+    if(err) throw err
+	
+	// populate cache
+	if (typeof spreadsheetIdCache[spreadsheetName] == "undefined") {
+		spreadsheetIdCache[spreadsheetName] = {} 
+		spreadsheetIdCache[spreadsheetName][worksheetName] = {spreadsheetId: spreadsheet.spreadsheetId, worksheetId: spreadsheet.worksheetId}
+		console.log("cached spreadsheet IDs for " +spreadsheetName + " / " + worksheetName + " as " + spreadsheet.spreadsheetId + " / " + spreadsheet.worksheetId)
+		}
+	else if (typeof spreadsheetIdCache[spreadsheetName][worksheetName] == "undefined") {
+		spreadsheetIdCache[spreadsheetName][worksheetName] = {spreadsheetId: spreadsheet.spreadsheetId, worksheetId: spreadsheet.worksheetId}
+		console.log("cached spreadsheet IDs for " +spreadsheetName + " / " + worksheetName + " as " + spreadsheet.spreadsheetId + " / " + spreadsheet.worksheetId)
+		}
+    
+    // process worksheet
     spreadsheet.receive(function(err, rows, info) {
       if(err) throw err;
 
@@ -62,7 +113,7 @@ get_spreadsheet = function(token, room, callback) {
 				}
 			}
 		}
-        console.log(data)
+        //console.log(data)
         callback(data)
       
     });
