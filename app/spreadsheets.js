@@ -12,30 +12,10 @@ googleConf = {
 
 
 var Spreadsheet = require('edit-google-spreadsheet');
-var googleapis = require('googleapis');
 var TokenCache = require('google-oauth-jwt').TokenCache,
 tokens = new TokenCache();
 
 spreadsheetIdCache = {}
-
-/*
-// preload google drive file metadata
-var request = require('google-oauth-jwt').requestWithJWT();
-request({
-  url: 'https://www.googleapis.com/drive/v2/files',
-  jwt: googleConf
-}, function (err, res, body) {
-	files = JSON.parse(body).items;
-    for (i in files) {
-    	console.log(i)
-    	if (files[i]['mimeType'] == 'application/vnd.google-apps.spreadsheet') {
-    		spreadsheetIdCache[files[i]['title']] = files[i]['id']
-    	}
-    }
-    console.log(spreadsheetIdCache)
-});
-*/
-
 
 loadRoom = function (room, callback) {
 	tokens.get(googleConf, function (err, token) {
