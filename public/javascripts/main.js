@@ -32,17 +32,17 @@ $(document).ready(function() {
 	    easing: "swing"
 	    })
   })
-
-  // user input events
-  $('#input-command').on("keypress", function(e) {
-    if (e.keyCode == 13) { submitCommand }
-  })
   
   // focus input field
   $('#input-command').focus()
   
   // make commands clickable
   $("body").on("click","b[data-command]",null, function() { autoType( $(this).data("command") ) } )
+
+  // user input events
+  $('#input-command').on("keypress", function(e) {
+    if (e.keyCode == 13) { submitCommand() }
+  })
 
   function autoType(text) {
     $('#input-command').focus()

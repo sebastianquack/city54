@@ -4,7 +4,8 @@ html, body {
 }
 
 #top {
-	height:10%;
+	height:0%;
+	display:none;
 }
 
 #chat {
@@ -38,6 +39,12 @@ ul#chat li:last-child b[data-command] {
 
 b[data-command]:hover {
 	cursor:pointer;
+}
+
+#input-command {
+	width:96%;
+	padding:0.4em;
+	font-size:110%;
 }
 
 #bottom {
