@@ -63,7 +63,10 @@ get_spreadsheet = function(token, room, callback) {
       token: token
     }
   }, function sheetReady(err, spreadsheet) {
-    if(err) throw err
+    if(err) {
+    	console.log(err)
+    	return
+    }
 	
 	// populate cache
 	if (typeof spreadsheetIdCache[spreadsheetName] == "undefined") {
