@@ -18,6 +18,7 @@ tokens = new TokenCache();
 spreadsheetIdCache = {}
 
 loadRoom = function (room, callback) {
+	// will automatically acquire new token if expired
 	tokens.get(googleConf, function (err, token) {
 	  console.log("google OAuth token: " + token)
 	  get_spreadsheet(token, room, callback)
