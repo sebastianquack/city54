@@ -1,14 +1,21 @@
+/* variable declarations */
+
 var mongoose = require('mongoose')
 var Player = mongoose.model('Player')
 var ChatItem = mongoose.model('ChatItem')
 var joke = "langweiliger witz"
-var Cleverscript = require('./cleverscript')
-var Spreadsheets = require('./spreadsheets')
+var Cleverscript = require('./apis/cleverscript')
+var Spreadsheets = require('./apis/spreadsheets')
 
+/* function declarations */
 
 function handleError(err) {
   console.log(err)
   return err
+}
+
+function linkify(text) {
+	return text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>')
 }
 
 function chat(socket, player, value, mode) {
@@ -63,9 +70,16 @@ function parseCommand(socket, player, value) {
   return false
 }
 
+/* expose functionality */
+
 module.exports = function (io) {
+
+  /* events */
+
+  // client connects
   io.sockets.on('connection', function (socket) {
 
+    // client send uuid from browser cookie
     socket.on('uuid-check', function (data) {
       Player.findOne({ uuid: data.uuid }, function(err, player) {
         if(err) return handleError(err)
@@ -77,16 +91,18 @@ module.exports = function (io) {
       })
     })
 
+    // client sends new chat item
     socket.on('chat-submit', function (data) {            
+
       // check if player exists
       Player.findOne({ uuid: data.uuid }, function(err, player) {
         if(err) return handleError(err)
-        if(!player) {
+        if(!player) { // player doesn't exist, create new one
           player = new Player({ uuid: data.uuid, name: data.value })
           player.save()
           chat(socket, {name: "System"}, "Have fun chatting, " + player.name, "sender")
           chat(socket, {name: "System"}, player.name + " entered the room.", "everyone else")
-        } else { // Player exists         
+        } else { // player exists, parse the command         
           if(!parseCommand(socket, player, data.value)) { // if command is not found, assume this is part of the chat
             chat(socket, player, data.value, "everyone")                      
           }
@@ -95,8 +111,4 @@ module.exports = function (io) {
     })
 
   })
-}
-
-function linkify(text) {
-	return text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>')
 }
