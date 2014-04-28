@@ -1,6 +1,6 @@
 html, body {
 	height:100%;
-	font-family:Futura, sans-serif;
+	font-family:Roboto, sans-serif;
 }
 
 #top {
@@ -11,7 +11,7 @@ html, body {
 #chat {
 	overflow-y: scroll;
 	overflow-wrap: break-word;
-	height:60%;
+	height:70%;
 	background:#ccc;
 	color:black;
 	line-height:1.3em;
@@ -48,6 +48,6 @@ b[data-command]:hover {
 }
 
 #bottom {
-	height:30%;
+	height:20%;
 }
 

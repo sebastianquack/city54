@@ -12,7 +12,7 @@ var talkToBot = function(APIKey, input, botState, joke, callback) {
   var options = {
     host: 'testapi.cleverscript.com',
     path: '/csapi?key=' + process.env.cleverAPIKey + 
-                  '&input=' + encodeURIComponent(botCommand) + 
+                  '&input=' + encodeURIComponent(input) + 
                   '&cs=' + botState + 
                   '&callback=callback' + 
                   '&_oldjoke=' + encodeURIComponent(joke),
