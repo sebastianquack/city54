@@ -5,7 +5,7 @@ var Player = mongoose.model('Player')
 var ChatItem = mongoose.model('ChatItem')
 var joke = "langweiliger witz"
 var Cleverscript = require('./apis/cleverscript')
-var Spreadsheets = require('./apis/spreadsheets')
+var Spreadsheets = require('./apis/google_spreadsheets')
 
 /* function declarations */
 
