@@ -1,10 +1,7 @@
 var mongoose = require('mongoose')
-
 var Player = mongoose.model('Player')
 var ChatItem = mongoose.model('ChatItem')
-
 var joke = "langweiliger witz"
-
 var Cleverscript = require('./cleverscript')
 
 function handleError(err) {
@@ -29,7 +26,7 @@ function parseCommand(socket, player, value) {
       botCommand = words.join(" ")
       chat(socket, {name: "System"}, player.name + " called bot with: " + botCommand, "everyone")
       
-      // cleverscript callback
+      // cleverscript
       Cleverscript.talkToBot(process.env.cleverAPIKey, botCommand, player.botState, joke, function(data) {
         console.log(data)
         chat(socket, {name: "Bot"}, data.output, "everyone")
