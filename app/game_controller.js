@@ -3,6 +3,8 @@ var Player = mongoose.model('Player')
 var ChatItem = mongoose.model('ChatItem')
 var joke = "langweiliger witz"
 var Cleverscript = require('./cleverscript')
+var Spreadsheets = require('./spreadsheets')
+
 
 function handleError(err) {
   console.log(err)
@@ -21,10 +23,12 @@ function chat(socket, player, value, mode) {
 function parseCommand(socket, player, value) {
   var words = value.split(" ")
   if(words.length >= 2) {
+  		
     if(words[0] == 'bot') {
       words.splice(0,1)
       botCommand = words.join(" ")
       chat(socket, {name: "System"}, player.name + " called bot with: " + botCommand, "everyone")
+    
       
       // cleverscript
       Cleverscript.talkToBot(process.env.cleverAPIKey, botCommand, player.botState, joke, function(data) {
@@ -39,6 +43,22 @@ function parseCommand(socket, player, value) {
       
       return true
     }
+
+    else {
+      if (words[0] == "gehe") {
+        
+        // room callback
+        roomEntered = function(data){
+          for (i in data.command) {
+            if (data.command[i] == "base") greeting = data.text[i]
+          }
+          chat(socket, {name: "room"}, linkify(greeting), "everyone")
+        }     
+        
+        Spreadsheets.loadRoom(words[1], roomEntered)
+      }
+    }
+
   }
   return false
 }
@@ -75,4 +95,8 @@ module.exports = function (io) {
     })
 
   })
+}
+
+function linkify(text) {
+	return text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>')
 }

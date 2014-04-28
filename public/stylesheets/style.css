@@ -1,0 +1,53 @@
+html, body {
+	height:100%;
+	font-family:Futura, sans-serif;
+}
+
+#top {
+	height:0%;
+	display:none;
+}
+
+#chat {
+	overflow-y: scroll;
+	overflow-wrap: break-word;
+	height:60%;
+	background:#ccc;
+	color:black;
+	line-height:1.3em;
+}
+
+ul#chat {
+	list-style-type:none;
+	list-style-position:inside;
+	margin:0;
+	padding:1em;
+}
+
+
+ul#chat li {
+	padding-bottom:0.3em;
+}
+
+ul#chat li:last-child {
+	padding-bottom:2em;
+}
+
+ul#chat li:last-child b[data-command] {
+	color:red;
+}
+
+b[data-command]:hover {
+	cursor:pointer;
+}
+
+#input-command {
+	width:96%;
+	padding:0.4em;
+	font-size:110%;
+}
+
+#bottom {
+	height:30%;
+}
+
