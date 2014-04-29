@@ -111,7 +111,7 @@ function explore(socket, player, input) {
         chat(socket, {name: "System"}, linkify(reply), "everyone") // todo only to people in room  
 
         // leave room
-        if (data.exit != undefined data.exit[i].length > 0) {
+        if (data.exit != undefined && data.exit[i].length > 0) {
           player.currentRoom = data.exit[i]
           player.currentRoomData = {}
           player.save()
@@ -121,7 +121,7 @@ function explore(socket, player, input) {
         }
 
         // touch bot
-        if (data.bot != undefined data.bot[i].length > 0) {
+        if (data.bot != undefined && data.bot[i].length > 0) {
           player.state = "bot"
           player.save()
           botChat(socket, player, null)
