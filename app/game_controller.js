@@ -6,7 +6,8 @@ var ChatItem = mongoose.model('ChatItem')
 var joke = "langweiliger witz" // just for testing, todo: manage bot variables in db
 var Cleverscript = require('./apis/cleverscript')
 var Spreadsheets = require('./apis/google_spreadsheets')
-var rooms = ['witten', 'oberhausen', 'gelsenkirchen']    
+var rooms = ['witten', 'oberhausen', 'gelsenkirchen', 'mars']
+var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
 
 /* function declarations */
 
@@ -178,7 +179,7 @@ function botChat(socket, player, input) {
   
   // todo: check for exit keyword
   var command = getCommand(input)
-  if(command == "exit") {
+  if(typeof command == "string" && command.search(RegexBotExit) != -1) {
     player.state = "world"
     player.save()
     explore(socket, player, null)
