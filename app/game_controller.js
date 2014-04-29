@@ -81,38 +81,89 @@ function explore(socket, player, input) {
         if (data.command[i] == "base") greeting = data.text[i]
       }
       chat(socket, {name: "System"}, linkify(greeting), "everyone")
-      chat(socket, {name: "System"}, player.name + " hat den Raum betreten.", "everyone else") // todo only to people in room      
+      chat(socket, {name: "System"}, player.name + " hat den Raum betreten.", "everyone else") // todo only to people in room  
+      player.currentRoomData = data;
+      player.save()
+        console.log(player.currentRoomData)
+  console.log(data)
     }     
     Spreadsheets.loadRoom(player.currentRoom, roomEntered)
     return
   }
   
   var command = getCommand(input)
-  switch(command) {
-    case "gehe":
-      var room = getObject(input)      
-      player.currentRoom = room
-      player.save()
-      chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
-      chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db
-      explore(socket, player, null)
-      break
-    // todo: support alle command from room
-    case "bot":
-      player.state = "bot"
-      player.save()
-      botChat(socket, player, null)  
-      break
-    case "say":
-      chat(socket, player, getObject(input), "everyone")
-      break
-    case "restart":
-      // todo: make sure user really wants this
-      chat(socket, {name: "System"}, "restarting game...", "sender")
-      intro(socket, player, null)
-      break
-    default:
-      chat(socket, {name: "System"}, "unsupported command", "sender")
+  var object = getObject(input)
+
+
+  // parse room commands
+  var roomCommandFound = false
+  if (player.currentRoomData != undefined)
+  {
+    data = player.currentRoomData
+    for (i in data.command) {
+      if (data.command[i] == command && data.object[i] == object) { // TODO: condition (worldVariable), SYNONYMS
+        
+        roomCommandFound = true
+
+        // TODO: effect -> worldVariable
+
+        reply = data.text[i] 
+        chat(socket, {name: "System"}, linkify(reply), "everyone") // todo only to people in room  
+
+        // leave room
+        if (data.exit != undefined data.exit[i].length > 0) {
+          player.currentRoom = data.exit[i]
+          player.currentRoomData = {}
+          player.save()
+          chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
+          //if (reply == "") chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db        
+          explore(socket, player, null)
+        }
+
+        // touch bot
+        if (data.bot != undefined data.bot[i].length > 0) {
+          player.state = "bot"
+          player.save()
+          botChat(socket, player, null)
+        }
+
+        // play audio
+        if (data.audio != undefined && data.audio[i].length > 0) {
+          // play audio
+        }
+      }
+    }
+  }
+
+  if (!roomCommandFound) {
+    switch(command) {
+      /*
+      case "gehe":
+        var room = getObject(input)      
+        player.currentRoom = room
+        player.save()
+        chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
+        chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db
+        explore(socket, player, null)
+        break
+      // todo: support alle command from room
+      case "bot":
+        player.state = "bot"
+        player.save()
+        botChat(socket, player, null)  
+        break
+      */
+      case "say":
+        chat(socket, player, getObject(input), "everyone")
+        break
+      case "restart":
+        // todo: make sure user really wants this
+        chat(socket, {name: "System"}, "restarting game...", "sender")
+        intro(socket, player, null)
+        break
+      default:
+        chat(socket, {name: "System"}, "unsupported command", "sender")
+    }
   }
 
 }

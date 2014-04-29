@@ -34,7 +34,11 @@ ul#chat li:last-child {
 }
 
 ul#chat li:last-child b[data-command] {
-	color:red;
+}
+
+b[data-command]:after {
+	content: " (\"" attr(data-command) "\")";
+	font-weight:normal;
 }
 
 b[data-command]:hover {

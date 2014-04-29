@@ -12,6 +12,7 @@ var PlayerSchema = new Schema({
   currentRoom: { type: String, default: '' },
   currentBot: { type: String, default: '' },
   botState: { type: String, default: '' },
+  currentRoomData: { type: Object, default: {}}
 })
 
 

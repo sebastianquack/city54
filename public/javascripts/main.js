@@ -48,6 +48,7 @@ $(document).ready(function() {
     }
     
     $('ul#chat').append(newElem)
+    // scroll up to fit new item
 	  $('ul#chat').animate( {
 		    scrollTop: $("ul#chat")[0].scrollHeight - $("ul#chat").innerHeight()
       }, {
