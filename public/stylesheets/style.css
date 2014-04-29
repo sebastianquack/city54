@@ -26,11 +26,11 @@ ul#chat {
 
 
 ul#chat li {
-	padding-bottom:0.3em;
+	padding-bottom:1em;
 }
 
 ul#chat li:last-child {
-	padding-bottom:2em;
+	padding-bottom:0em;
 }
 
 ul#chat li:last-child b[data-command] {

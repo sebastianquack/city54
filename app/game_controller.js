@@ -123,6 +123,7 @@ function explore(socket, player, input) {
         // touch bot
         if (data.bot != undefined && data.bot[i].length > 0) {
           player.state = "bot"
+          player.currentBot = data.bot[i]
           player.save()
           botChat(socket, player, null)
         }
