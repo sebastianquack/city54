@@ -182,8 +182,11 @@ function explore(socket, player, input) {
 
   if (!roomCommandFound) {
 
-    // command: wo bin ich?
-    if (command.search(RegexWoBinIch) != -1) processRoomCommand(socket, player, "base", "")
+    // wo bin ich?
+    if (input.search(RegexWoBinIch) != -1) {
+      processRoomCommand(socket, player, "base", "")
+      return
+    }
 
     switch(command) {
       /*
