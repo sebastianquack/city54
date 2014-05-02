@@ -6,8 +6,10 @@ var ChatItem = mongoose.model('ChatItem')
 var joke = "langweiliger witz" // just for testing, todo: manage bot variables in db
 var Cleverscript = require('./apis/cleverscript')
 var Spreadsheets = require('./apis/google_spreadsheets')
-var rooms = ['witten', 'oberhausen', 'gelsenkirchen', 'mars']
+var rooms = ['witten', 'oberhausen', 'gelsenkirchen']
 var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
+var RegexWoBinIch = /wo bin ich/i
+var worldVariables = []
 
 /* function declarations */
 
@@ -51,6 +53,90 @@ function chat(socket, player, value, mode) {
     socket.emit('chat-update', chat_item) // send back to this socket
 }
 
+// parse WorldVariable String
+function parseWV(string) {
+  parts = string.split("=")
+  // TODO error handling
+  return { name: parts[0], value: parts[1] }
+}
+
+// check WorldVariable
+function checkWV(wv) {
+  console.log("check")
+  if (wv == undefined) return true // no object given
+  if (worldVariables[wv.name] == undefined) { // wv does not exist
+    setWV(wv) // init at first appearance
+    return true
+  }
+  else return (worldVariables[wv.name] == wv.value)
+}
+
+// set WorldVariable
+function setWV(vw) {
+  worldVariables[vw.name] = vw.value
+}
+
+// parse and execute room commands
+function processRoomCommand(socket, player, command, object) {
+  data = player.currentRoomData;
+  roomCommandFound = false;
+  if (data == undefined) return false
+  var reply = ""
+  for (i in data.command) {
+
+    var condition = null
+
+    // get world variable (condition)
+    if (data.condition != undefined && data.condition[i].length > 0) {
+      var condition = parseWV(data.condition[i])
+    }
+
+    if (
+      data.command[i] == command 
+      && data.object[i] == object
+      && (condition == null || checkWV(condition)) // check condition
+    ) { // TODO: SYNONYMS
+      
+      roomCommandFound = true
+
+      // effect
+      if (data.effect != undefined && data.effect[i].length > 0) {
+        effect = parseWV(data.effect[i])
+        setWV(effect)
+      }   
+
+      // collect reply
+      reply = reply + data.text[i] + " "
+
+      // leave room
+      if (data.exit != undefined && data.exit[i].length > 0) {
+        player.currentRoom = data.exit[i]
+        player.currentRoomData = {}
+        player.save()
+        chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
+        //if (reply == "") chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db        
+        explore(socket, player, null)
+      }
+
+      // touch bot
+      if (data.bot != undefined && data.bot[i].length > 0) {
+        player.state = "bot"
+        player.currentBot = data.bot[i]
+        player.save()
+        botChat(socket, player, null)
+      }
+
+      // play audio
+      if (data.audio != undefined && data.audio[i].length > 0) {
+        // play audio
+      }
+    }
+  }
+  // send reply
+  chat(socket, {name: "System"}, linkify(reply), "everyone") // TODO only to people in room  
+
+  return roomCommandFound
+}
 /* react to to player actions in different situations */
 
 // handle introduction
@@ -78,66 +164,27 @@ function explore(socket, player, input) {
   
   if(!input) {
     var roomEntered = function(data){
-      for (i in data.command) {
-        if (data.command[i] == "base") greeting = data.text[i]
-      }
-      chat(socket, {name: "System"}, linkify(greeting), "everyone")
       chat(socket, {name: "System"}, player.name + " hat den Raum betreten.", "everyone else") // todo only to people in room  
       player.currentRoomData = data;
       player.save()
-        console.log(player.currentRoomData)
-  console.log(data)
+      processRoomCommand(socket, player, "base", "")
     }     
     Spreadsheets.loadRoom(player.currentRoom, roomEntered)
     return
   }
-  
+
   var command = getCommand(input)
   var object = getObject(input)
 
-
-  // parse room commands
-  var roomCommandFound = false
-  if (player.currentRoomData != undefined)
-  {
-    data = player.currentRoomData
-    for (i in data.command) {
-      if (data.command[i] == command && data.object[i] == object) { // TODO: condition (worldVariable), SYNONYMS
-        
-        roomCommandFound = true
-
-        // TODO: effect -> worldVariable
-
-        reply = data.text[i] 
-        chat(socket, {name: "System"}, linkify(reply), "everyone") // todo only to people in room  
-
-        // leave room
-        if (data.exit != undefined && data.exit[i].length > 0) {
-          player.currentRoom = data.exit[i]
-          player.currentRoomData = {}
-          player.save()
-          chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
-          //if (reply == "") chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db        
-          explore(socket, player, null)
-        }
-
-        // touch bot
-        if (data.bot != undefined && data.bot[i].length > 0) {
-          player.state = "bot"
-          player.currentBot = data.bot[i]
-          player.save()
-          botChat(socket, player, null)
-        }
-
-        // play audio
-        if (data.audio != undefined && data.audio[i].length > 0) {
-          // play audio
-        }
-      }
-    }
+  if (command != "base") {
+    roomCommandFound = processRoomCommand(socket, player, command, object)
   }
 
   if (!roomCommandFound) {
+
+    // command: wo bin ich?
+    if (command.search(RegexWoBinIch) != -1) processRoomCommand(socket, player, "base", "")
+
     switch(command) {
       /*
       case "gehe":
