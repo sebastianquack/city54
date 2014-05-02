@@ -8,7 +8,7 @@ var Cleverscript = require('./apis/cleverscript')
 var Spreadsheets = require('./apis/google_spreadsheets')
 var rooms = ['witten', 'oberhausen', 'gelsenkirchen']
 var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
-var RegexWoBinIch = /wo bin ich/i
+var RegexWoBinIch = /^(wo bin ich|umschauen|schaue um|schaue dich um|schau um|schau dich um)/i
 var worldVariables = []
 
 /* function declarations */
@@ -92,8 +92,8 @@ function processRoomCommand(socket, player, command, object) {
     }
 
     if (
-      data.command[i] == command 
-      && data.object[i] == object
+      data.command[i].split("|").indexOf(command) != -1
+      && data.object[i].split("|").indexOf(object) != -1
       && (condition == null || checkWV(condition)) // check condition
     ) { // TODO: SYNONYMS
       
