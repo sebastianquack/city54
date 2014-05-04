@@ -12,14 +12,13 @@ html, body {
 	overflow-y: scroll;
 	overflow-wrap: break-word;
 	height:70%;
-	background:#ccc;
+	background:#eee;
 	color:black;
 	line-height:1.3em;
 }
 
 ul#chat {
 	list-style-type:none;
-	list-style-position:inside;
 	margin:0;
 	padding:1em;
 }
@@ -30,18 +29,20 @@ ul#chat li {
 }
 
 ul#chat li:last-child {
-	padding-bottom:0em;
+	padding-bottom:0.5em;
 }
 
-ul#chat li:last-child b[data-command] {
+b[data-command] {
+	font-weight: 500;
 }
 
 b[data-command]:after {
 	content: " (\"" attr(data-command) "\")";
 	font-weight:normal;
+	color: rgba(0,0,0,0.5);
 }
 
-b[data-command]:hover {
+b[data-command]:hover, b[data-command]:after:hover {
 	cursor:pointer;
 }
 

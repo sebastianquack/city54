@@ -20,9 +20,18 @@ var PlayerSchema = new Schema({
  * Methods
  */
 
-PlayerSchema.method({
+PlayerSchema.methods.setRoom = function(room, socket) {
+	if (this.currentRoom != undefined) socket.leave(this.currentRoom)
+	socket.join(room)
+	if (this.currentRoom != "") this.currentRoom = room
+}
 
-})
+/**
+ * Events
+ */
+
+PlayerSchema.post('save', function () {
+});
 
 /**
  * Statics

@@ -45,7 +45,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 })
 
 // sockets
-var io = require('socket.io').listen(server)
+io = require('socket.io').listen(server)
 
 // launch game_controller
 require('./app/game_controller')(io)

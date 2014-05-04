@@ -8,7 +8,8 @@ var Cleverscript = require('./apis/cleverscript')
 var Spreadsheets = require('./apis/google_spreadsheets')
 var rooms = ['witten', 'oberhausen', 'gelsenkirchen']
 var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
-var RegexWoBinIch = /^(wo bin ich|umschauen|schaue um|schaue dich um|schau um|schau dich um)/i
+var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um)/i
+var RegexWerBinIch = /^(wer bin ich|werbinich|ich|schau dich an)/i
 var worldVariables = []
 
 /* function declarations */
@@ -46,11 +47,49 @@ function getObject(input) {
 // send text to client
 function chat(socket, player, value, mode) {
   var chat_item = new ChatItem({ player_uuid: player.uuid, player_name: player.name, value: value })
-  chat_item.save()          
-  if(mode == "everyone" || mode == "everyone else") 
-    socket.broadcast.emit('chat-update', chat_item) // broadcast to everyone
+  chat_item.save()        
+
+  // broadcast to everyone
+  if(mode == "everyone")  
+    socket.broadcast.emit('chat-update', chat_item)
+
+  // broadcast to everyone else in room
+  if(mode == "everyone else") {
+    socket.broadcast.to(player.currentRoom).emit('chat-update', chat_item) 
+  }
+
+  // send back to this socket
   if(mode == "everyone" || mode == "sender") 
-    socket.emit('chat-update', chat_item) // send back to this socket
+    socket.emit('chat-update', chat_item) 
+}
+
+// get a list of active player in a room
+function getPlayersInRoom(socket, room, callback) {
+
+  uuids = []
+  roomSockets = io.sockets.clients(room)
+
+  var queryPlayers = function (uuids){
+    console.log("ROOMUIDS")
+    console.log(uuids)
+    Player.find( { uuid: { $in: uuids } } , function(err, roomPlayers) {
+      if(err) return handleError(err)
+
+      callback(roomPlayers)
+    })
+  } 
+
+  console.log(roomSockets.length)
+  for (i in roomSockets) {
+    //if (uuids.indexOf(roomSockets[i]) == -1) 
+    roomSockets[i].get("uuid", function(err, uuid) {
+      if (uuid == undefined) return
+      else uuids.push(uuid)
+      if (i >= roomSockets.length-1) queryPlayers(uuids)
+    })
+  }
+  //uuids.push()
+
 }
 
 // parse WorldVariable String
@@ -62,7 +101,6 @@ function parseWV(string) {
 
 // check WorldVariable
 function checkWV(wv) {
-  console.log("check")
   if (wv == undefined) return true // no object given
   if (worldVariables[wv.name] == undefined) { // wv does not exist
     setWV(wv) // init at first appearance
@@ -106,17 +144,22 @@ function processRoomCommand(socket, player, command, object) {
       }   
 
       // collect reply
-      reply = reply + data.text[i] + " "
+      reply = reply + linkify(data.text[i]) + " "
+
+      // announce action publicly
+      if (data.announcement != undefined && data.announcement[i].length > 0) {
+        chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " " + linkify(data.announcement[i]), "everyone else") // todo only to people in room
+      } 
 
       // leave room
       if (data.exit != undefined && data.exit[i].length > 0) {
-        player.currentRoom = data.exit[i]
+        //chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
+        player.setRoom (data.exit[i], socket)
         player.currentRoomData = {}
         player.save()
-        chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
         //if (reply == "") chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db        
         explore(socket, player, null)
-      }
+      }  
 
       // touch bot
       if (data.bot != undefined && data.bot[i].length > 0) {
@@ -133,7 +176,7 @@ function processRoomCommand(socket, player, command, object) {
     }
   }
   // send reply
-  chat(socket, {name: "System"}, linkify(reply), "everyone") // TODO only to people in room  
+  chat(socket, {name: "System"}, reply, "sender")
 
   return roomCommandFound
 }
@@ -146,7 +189,7 @@ function intro(socket, player, input) {
     case "name": 
       player.name = input
       chat(socket, {name: "System"}, "Danke! Du springst aus dem Flugzeug, öffnest den Fallschirm und landest in...", "sender")
-      player.currentRoom = rooms[Math.floor(Math.random()*rooms.length)]
+      player.setRoom(rooms[Math.floor(Math.random()*rooms.length)], socket)
       player.state = "world"
       player.save()
       explore(socket, player, null)
@@ -164,10 +207,28 @@ function explore(socket, player, input) {
   
   if(!input) {
     var roomEntered = function(data){
-      chat(socket, {name: "System"}, player.name + " hat den Raum betreten.", "everyone else") // todo only to people in room  
+      player.setRoom(player.currentRoom, socket)
+      chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " betritt den Raum.", "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
+      getPlayersInRoom(socket, player.currentRoom, function(roomPlayers) {
+        console.log("ROOOOOOOOMPLAYERS")
+        playerNames = []
+        for (i in roomPlayers) { 
+          if (player.name != roomPlayers[i].name) 
+            playerNames.push(roomPlayers[i].name) 
+        }
+        console.log(playerNames)
+        console.log(playerNames.length)        
+        switch(playerNames.length) {
+          case 0:  return;
+          case 1:  var list= playerNames[0] + " ist"; break;
+          case 2:  var list= playerNames[0] + " und " + playerNames[1] + " sind"; break;
+          default: var list= playerNames.splice(0,-1).join(", ") + " und " + playerNames[playerNames.length-1] + " sind"
+        }
+        chat(socket, {name: "System", currentRoom: player.currentRoom}, linkify("[" + list + " auch hier.|sage Hallo]"), "sender")
+      })
     }     
     Spreadsheets.loadRoom(player.currentRoom, roomEntered)
     return
@@ -188,11 +249,17 @@ function explore(socket, player, input) {
       return
     }
 
+    // wer bin ich?
+    if (input.search(RegexWerBinIch) != -1) {
+      chat(socket, {name: "System"}, player.name, "sender")
+      return
+    }
+
     switch(command) {
       /*
       case "gehe":
         var room = getObject(input)      
-        player.currentRoom = room
+        player.setRoom(room, socket)
         player.save()
         chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
         chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db
@@ -205,8 +272,8 @@ function explore(socket, player, input) {
         botChat(socket, player, null)  
         break
       */
-      case "say":
-        chat(socket, player, getObject(input), "everyone")
+      case "sage":
+        chat(socket, player, getObject(input), "everyone else")
         break
       case "restart":
         // todo: make sure user really wants this
@@ -281,6 +348,8 @@ module.exports = function (io) {
               intro(socket, player, data.input)
           }
         }
+        //for (r in io.sockets) { console.log(r);}
+        socket.set("uuid", player.uuid)
       })      
     })
 
