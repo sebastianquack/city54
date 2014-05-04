@@ -68,6 +68,7 @@ var get_spreadsheet = function(token, room, callback) {
     if(err) {
     	//throw err
       // TODO: catch error and reset player
+      console.log(err)
     	return
     }
 	
