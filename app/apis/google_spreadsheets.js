@@ -31,6 +31,8 @@ var get_spreadsheet = function(token, room, callback) {
   
   spreadsheetName = room
   worksheetName = room
+
+  console.log("loading room " + room )
   
   // retrieve cache
   if (spreadsheetIdCache[spreadsheetName] != undefined && spreadsheetIdCache[spreadsheetName][worksheetName] != undefined) {
