@@ -189,7 +189,9 @@ function intro(socket, player, input) {
     case "name": 
       player.name = input
       chat(socket, {name: "System"}, "Danke! Du springst aus dem Flugzeug, öffnest den Fallschirm und landest in...", "sender")
-      player.setRoom(rooms[Math.floor(Math.random()*rooms.length)], socket)
+      randomRoom = rooms[Math.floor(Math.random()*rooms.length)]
+      player.setRoom(randomRoom, socket)
+      console.log("random room " + randomRoom + " -> " + player.currentRoom)
       player.state = "world"
       player.save()
       explore(socket, player, null)

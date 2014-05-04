@@ -21,9 +21,9 @@ var PlayerSchema = new Schema({
  */
 
 PlayerSchema.methods.setRoom = function(room, socket) {
-	if (this.currentRoom != undefined) socket.leave(this.currentRoom)
+	if (this.currentRoom != undefined && this.currentRoom != "") socket.leave(this.currentRoom)
 	socket.join(room)
-	if (this.currentRoom != "") this.currentRoom = room
+	this.currentRoom = room
 }
 
 /**
