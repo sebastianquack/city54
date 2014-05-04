@@ -8,7 +8,7 @@ var Cleverscript = require('./apis/cleverscript')
 var Spreadsheets = require('./apis/google_spreadsheets')
 var rooms = ['witten', 'oberhausen', 'gelsenkirchen','dortmund']
 var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
-var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um)/i
+var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um|schaue$)/i
 var RegexWerBinIch = /^(wer bin ich|werbinich|ich|schau dich an)/i
 var worldVariables = []
 
@@ -284,7 +284,10 @@ function explore(socket, player, input) {
         intro(socket, player, null)
         break
       default:
-        chat(socket, {name: "System"}, "unsupported command", "sender")
+        //chat(socket, {name: "System"}, command + " " + object + "? Das geht so nicht.", "sender")
+        if (!object) var apologies = (command + "en").replace(/ee/,"e") + " nicht möglich."
+        else var apologies = object + " lässt sich nicht " + (command + "en").replace(/ee/,"e") + "."
+        chat(socket, {name: "System"}, apologies, "sender")
     }
   }
 
