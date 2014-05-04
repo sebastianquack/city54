@@ -58,9 +58,15 @@ function chat(socket, player, value, mode) {
     socket.broadcast.to(player.currentRoom).emit('chat-update', chat_item) 
   }
 
+  // broadcast to everyone else in room and sender
+  if(mode == "everyone else and me") {
+    socket.to(player.currentRoom).emit('chat-update', chat_item)
+    socket.broadcast.to(player.currentRoom).emit('chat-update', chat_item) 
+  }
+
   // send back to this socket
   if(mode == "everyone" || mode == "sender") 
-    socket.emit('chat-update', chat_item) 
+    socket.emit('chat-update', chat_item) // TODO send to all sockets of player
 }
 
 // get a list of active player in a room
@@ -70,8 +76,6 @@ function getPlayersInRoom(socket, room, callback) {
   roomSockets = io.sockets.clients(room)
 
   var queryPlayers = function (uuids){
-    console.log("ROOMUIDS")
-    console.log(uuids)
     Player.find( { uuid: { $in: uuids } } , function(err, roomPlayers) {
       if(err) return handleError(err)
 
@@ -176,7 +180,7 @@ function processRoomCommand(socket, player, command, object) {
     }
   }
   // send reply
-  chat(socket, {name: "System"}, reply, "sender")
+  if (reply != "") chat(socket, {name: "System"}, reply, "sender")
 
   return roomCommandFound
 }
@@ -215,14 +219,11 @@ function explore(socket, player, input) {
       player.save()
       processRoomCommand(socket, player, "base", "")
       getPlayersInRoom(socket, player.currentRoom, function(roomPlayers) {
-        console.log("ROOOOOOOOMPLAYERS")
         playerNames = []
         for (i in roomPlayers) { 
           if (player.name != roomPlayers[i].name) 
             playerNames.push(roomPlayers[i].name) 
-        }
-        console.log(playerNames)
-        console.log(playerNames.length)        
+        }    
         switch(playerNames.length) {
           case 0:  return;
           case 1:  var list= playerNames[0] + " ist"; break;
@@ -275,7 +276,7 @@ function explore(socket, player, input) {
         break
       */
       case "sage":
-        chat(socket, player, getObject(input), "everyone else")
+        chat(socket, player, getObject(input), "everyone else and me")
         break
       case "restart":
         // todo: make sure user really wants this
@@ -296,7 +297,6 @@ function botChat(socket, player, input) {
     // todo: display general intro to bot
   }
   
-  // todo: check for exit keyword
   var command = getCommand(input)
   if(typeof command == "string" && command.search(RegexBotExit) != -1) {
     player.state = "world"
@@ -350,7 +350,7 @@ module.exports = function (io) {
               intro(socket, player, data.input)
           }
         }
-        //for (r in io.sockets) { console.log(r);}
+        // connect sockets and players (player can have several sockets)
         socket.set("uuid", player.uuid)
       })      
     })

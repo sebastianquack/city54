@@ -42,9 +42,9 @@ $(document).ready(function() {
 
     // todo: check what is going on
     if(data.player_name == "System") {
-      newElem = $('<li>' + data.value + '</li>')
+      newElem = $('<li data-sender="system">' + data.value + '</li>')
     } else {
-      newElem = $('<li>' + data.player_name + ': ' + data.value + '</li>')
+      newElem = $('<li data-sender="player">' + data.player_name + ': ' + data.value + '</li>')
     }
     
     $('ul#chat').append(newElem)

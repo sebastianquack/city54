@@ -28,6 +28,10 @@ ul#chat li {
 	padding-bottom:1em;
 }
 
+ul#chat li[data-sender=player]+li[data-sender=player] {
+	margin-top:-1em;
+}
+
 ul#chat li:last-child {
 	padding-bottom:0.5em;
 }
@@ -56,3 +60,13 @@ b[data-command]:hover, b[data-command]:after:hover {
 	height:20%;
 }
 
+@media print {
+
+	b[data-command] {
+		font-weight: normal;
+	}
+
+	b[data-command]:after {
+		display:none;
+	}
+}
