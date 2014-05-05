@@ -10,6 +10,7 @@ var rooms = ['witten', 'oberhausen', 'gelsenkirchen','dortmund']
 var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
 var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um|schaue$)/i
 var RegexWerBinIch = /^(wer bin ich|werbinich|ich|schau dich an)/i
+var RegexWerIstDa = /^(wer ist da|werbistda|wer|wer ist anwesend)/i
 var worldVariables = []
 
 /* function declarations */
@@ -83,7 +84,6 @@ function getPlayersInRoom(socket, room, callback) {
     })
   } 
 
-  console.log(roomSockets.length)
   for (i in roomSockets) {
     //if (uuids.indexOf(roomSockets[i]) == -1) 
     roomSockets[i].get("uuid", function(err, uuid) {
@@ -92,8 +92,23 @@ function getPlayersInRoom(socket, room, callback) {
       if (i >= roomSockets.length-1) queryPlayers(uuids)
     })
   }
-  //uuids.push()
+}
 
+function announceRoomPlayers(socket, player) {
+    getPlayersInRoom(socket, player.currentRoom, function(roomPlayers) {
+      playerNames = []
+      for (i in roomPlayers) { 
+        if (player.name != roomPlayers[i].name) 
+          playerNames.push(roomPlayers[i].name) 
+      }    
+      switch(playerNames.length) {
+        case 0:  return;
+        case 1:  var list= playerNames[0] + " ist"; break;
+        case 2:  var list= playerNames[0] + " und " + playerNames[1] + " sind"; break;
+        default: var list= playerNames.splice(0,-1).join(", ") + " und " + playerNames[playerNames.length-1] + " sind"
+      }
+      chat(socket, {name: "System", currentRoom: player.currentRoom}, linkify("[" + list + " auch hier.|sage Hallo]"), "sender")
+    })
 }
 
 // parse WorldVariable String
@@ -218,20 +233,7 @@ function explore(socket, player, input) {
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
-      getPlayersInRoom(socket, player.currentRoom, function(roomPlayers) {
-        playerNames = []
-        for (i in roomPlayers) { 
-          if (player.name != roomPlayers[i].name) 
-            playerNames.push(roomPlayers[i].name) 
-        }    
-        switch(playerNames.length) {
-          case 0:  return;
-          case 1:  var list= playerNames[0] + " ist"; break;
-          case 2:  var list= playerNames[0] + " und " + playerNames[1] + " sind"; break;
-          default: var list= playerNames.splice(0,-1).join(", ") + " und " + playerNames[playerNames.length-1] + " sind"
-        }
-        chat(socket, {name: "System", currentRoom: player.currentRoom}, linkify("[" + list + " auch hier.|sage Hallo]"), "sender")
-      })
+      announceRoomPlayers(socket, player)
     }     
     Spreadsheets.loadRoom(player.currentRoom, roomEntered)
     return
@@ -249,12 +251,19 @@ function explore(socket, player, input) {
     // wo bin ich?
     if (input.search(RegexWoBinIch) != -1) {
       processRoomCommand(socket, player, "base", "")
+      announceRoomPlayers(socket, player)
       return
     }
 
     // wer bin ich?
     if (input.search(RegexWerBinIch) != -1) {
       chat(socket, {name: "System"}, player.name, "sender")
+      return
+    }
+
+    // wer ist da?
+    if (input.search(RegexWerIstDa) != -1) {
+      announceRoomPlayers(socket, player)
       return
     }
 

@@ -29,10 +29,14 @@ var loadRoom = function (room, callback) {
 
 var get_spreadsheet = function(token, room, callback) {
   
-  spreadsheetName = room
-  worksheetName = room
+  var parts = room.split("/")
 
-  console.log("loading room " + room )
+  spreadsheetName = parts[0]
+
+  if (parts.length == 1) worksheetName = parts[0]
+  else worksheetName = parts[1]
+
+  console.log("loading room " + room + " (" + spreadsheetName + "/" + worksheetName +")")
   
   // retrieve cache
   if (spreadsheetIdCache[spreadsheetName] != undefined && spreadsheetIdCache[spreadsheetName][worksheetName] != undefined) {
