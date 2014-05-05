@@ -234,7 +234,7 @@ function explore(socket, player, input) {
         d = new Date(new Date().setFullYear(2044))
         chat(socket, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
       //}
-      chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " kommt an.", "everyone else")
+      chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " kommt.", "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
