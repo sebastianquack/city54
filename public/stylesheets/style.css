@@ -28,12 +28,26 @@ ul#chat li {
 	padding-bottom:1em;
 }
 
-ul#chat li[data-sender=player]+li[data-sender=player] {
+ul#chat li[data-sender=player]+li[data-sender=player],
+ul#chat li.error+li.error {
 	margin-top:-1em;
 }
 
 ul#chat li:last-child {
 	padding-bottom:0.5em;
+}
+
+ul#chat li.chapter {
+	font-weight: 700;
+	text-transform: capitalize;
+}
+
+ul#chat li.error:first-letter {
+	text-transform: capitalize;
+}
+
+ul#chat li.error {
+	text-decoration: line-through;
 }
 
 b[data-command] {

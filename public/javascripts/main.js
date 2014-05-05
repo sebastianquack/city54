@@ -44,9 +44,10 @@ $(document).ready(function() {
     if(data.player_name == "System") {
       newElem = $('<li data-sender="system">' + data.value + '</li>')
     } else {
-      newElem = $('<li data-sender="player">' + data.player_name + ': ' + data.value + '</li>')
+      newElem = $('<li data-sender="player"><i>' + data.player_name + ':</i> ' + data.value + '</li>')
     }
-    
+    if (data.type != undefined) newElem = newElem.addClass(data.type)
+      console.log(data)
     $('ul#chat').append(newElem)
     // scroll up to fit new item
 	  $('ul#chat').animate( {

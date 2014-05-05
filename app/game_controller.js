@@ -46,9 +46,9 @@ function getObject(input) {
 }
 
 // send text to client
-function chat(socket, player, value, mode) {
-  var chat_item = new ChatItem({ player_uuid: player.uuid, player_name: player.name, value: value })
-  chat_item.save()        
+function chat(socket, player, value, mode, type) {
+  var chat_item = new ChatItem({ player_uuid: player.uuid, player_name: player.name, value: value, type: type })
+  chat_item.save()
 
   // broadcast to everyone
   if(mode == "everyone")  
@@ -122,6 +122,7 @@ function parseWV(string) {
 function checkWV(wv) {
   if (wv == undefined) return true // no object given
   if (worldVariables[wv.name] == undefined) { // wv does not exist
+    console.log("init WV " + wv.name + "=" + wv.value)
     setWV(wv) // init at first appearance
     return true
   }
@@ -180,7 +181,7 @@ function processRoomCommand(socket, player, command, object) {
         explore(socket, player, null)
       }  
 
-      // touch bot
+      // enter bot
       if (data.bot != undefined && data.bot[i].length > 0) {
         player.state = "bot"
         player.currentBot = data.bot[i]
@@ -229,7 +230,11 @@ function explore(socket, player, input) {
   if(!input) {
     var roomEntered = function(data){
       player.setRoom(player.currentRoom, socket)
-      chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " betritt den Raum.", "everyone else")
+      //if (player.currentRoom.split("/")[0] != player.previousRoom.split("/")[0]) { // city changed
+        d = new Date(new Date().setFullYear(2044))
+        chat(socket, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
+      //}
+      chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " kommt an.", "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
@@ -296,7 +301,7 @@ function explore(socket, player, input) {
         //chat(socket, {name: "System"}, command + " " + object + "? Das geht so nicht.", "sender")
         if (!object) var apologies = (command + "en").replace(/ee/,"e") + " nicht möglich."
         else var apologies = object + " lässt sich nicht " + (command + "en").replace(/ee/,"e") + "."
-        chat(socket, {name: "System"}, apologies, "sender")
+        chat(socket, {name: "System"}, apologies, "sender", "error")
     }
   }
 
