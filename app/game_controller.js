@@ -273,22 +273,6 @@ function explore(socket, player, input) {
     }
 
     switch(command) {
-      /*
-      case "gehe":
-        var room = getObject(input)      
-        player.setRoom(room, socket)
-        player.save()
-        chat(socket, {name: "System"}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
-        chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db
-        explore(socket, player, null)
-        break
-      // todo: support alle command from room
-      case "bot":
-        player.state = "bot"
-        player.save()
-        botChat(socket, player, null)  
-        break
-      */
       case "sage":
         chat(socket, player, getObject(input), "everyone else and me")
         break
@@ -296,6 +280,12 @@ function explore(socket, player, input) {
         // todo: make sure user really wants this
         chat(socket, {name: "System"}, "restarting game...", "sender")
         intro(socket, player, null)
+        break
+      case "taxi":
+        player.setRoom (object, socket)
+        player.currentRoomData = {}
+        player.save()
+        explore(socket, player, null)
         break
       default:
         //chat(socket, {name: "System"}, command + " " + object + "? Das geht so nicht.", "sender")
