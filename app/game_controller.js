@@ -3,7 +3,7 @@
 var mongoose = require('mongoose')
 var Player = mongoose.model('Player')
 var ChatItem = mongoose.model('ChatItem')
-var joke = "langweiliger witz" // just for testing, todo: manage bot variables in db
+var Bot = mongoose.model('Bot')
 var Cleverscript = require('./apis/cleverscript')
 var Spreadsheets = require('./apis/google_spreadsheets')
 var rooms = ['witten', 'oberhausen', 'gelsenkirchen','dortmund']
@@ -12,6 +12,19 @@ var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um
 var RegexWerBinIch = /^(wer bin ich|werbinich|ich|schau dich an)/i
 var RegexWerIstDa = /^(wer ist da|werbistda|wer|wer ist anwesend)/i
 var worldVariables = []
+
+// helper extensions to javascript string prototype, checks if string starts or ends with another string
+if (typeof String.prototype.endsWith != 'function') {
+  String.prototype.endsWith = function (str){
+    return this.slice(-str.length) == str;
+  };
+}
+
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function (str){
+    return this.slice(0, str.length) == str;
+  };
+}
 
 /* function declarations */
 
@@ -185,6 +198,7 @@ function processRoomCommand(socket, player, command, object) {
       if (data.bot != undefined && data.bot[i].length > 0) {
         player.state = "bot"
         player.currentBot = data.bot[i]
+        console.log("entering botchat " + player.currentBot)
         player.save()
         botChat(socket, player, null)
       }
@@ -300,27 +314,79 @@ function explore(socket, player, input) {
 // handle bot chat
 function botChat(socket, player, input) {
   
-  if(!input) {
-    // todo: display general intro to bot
-  }
-  
   var command = getCommand(input)
-  if(typeof command == "string" && command.search(RegexBotExit) != -1) {
+  if(typeof command == "string" && command.search(RegexBotExit) != -1) { // abort bot session
     player.state = "world"
+    player.bots[player.currentBot].state = null // reset bot state for this player
+    player.markModified('bots');
     player.save()
     explore(socket, player, null)
     return
   }
     
-  // cleverscript
-  Cleverscript.talkToBot(process.env.cleverAPIKey, input, player.botState, joke, function(data) {
-    chat(socket, {name: "Bot"}, data.output, "sender")
-    player.botState = data.cs
-    player.save()
-    if(data.newjoke_other) {
-      // just for testing, todo: manage bot variables
-      joke = data.newjoke_other
+  // look up the global bot object
+  Bot.findOne( { id: player.currentBot } , function(err, bot) {
+    if(err) return handleError(err)   
+    if(!bot) { // if bot hasen't been created, create a new one
+      bot = new Bot({ id: player.currentBot })
+      bot.save()
     }
+     
+    // call cleverscript with player and bot and process result
+    Cleverscript.talkToBot(process.env.cleverAPIKey, player, bot, input, function(data) {
+      console.log("data object sent back by cleverscript:")
+      console.log(data)
+      
+      chat(socket, {name: player.currentBot}, data.output, "sender") // inform the player what the bot said
+
+      if(player.bots[player.currentBot] == undefined)
+        player.bots[player.currentBot] = {} // in case bots object isn't set yet
+      if(player.bots[player.currentBot].variables == undefined)
+        player.bots[player.currentBot].variables = {} // in case variables object isn't set yet        
+      player.bots[player.currentBot].state = data.cs // store the state variable
+
+      // save bot variables    
+      for (var key in data) {    
+        
+        switch(key) {
+          
+        // global bot variables
+        case "botname_other": 
+          //bot.variables[key] = data[key]
+          break
+        case "joke_other": 
+          bot.variables[key] = data[key]
+          break
+        
+        // player specific bot variables
+        case "playername_other": 
+          player.bots[player.currentBot].variables[key] = data[key]
+          break
+        
+        // check if bot kicked player out of conversation
+        case 'bot_abort':
+          if(data[key] == 1) {
+            player.state = "world" // send player back into world
+            player.bots[player.currentBot].state = null // reset bot state for this player
+          }
+        }
+      
+      }
+  
+      player.markModified('bots');
+      player.save()
+      bot.markModified('variables');
+      bot.save()
+      
+      console.log(player.bots)
+      console.log(bot)      
+      
+      if(player.state == 'world') {
+        explore(socket, player, null) 
+      }
+      
+    })
+
   })
   
 }
@@ -351,6 +417,7 @@ module.exports = function (io) {
               explore(socket, player, data.input)
               break
             case "bot":
+              console.log(player.bots)
               botChat(socket, player, data.input)  
               break
             default:
