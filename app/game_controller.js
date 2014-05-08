@@ -332,6 +332,10 @@ function botChat(socket, player, input) {
       bot.save()
     }
      
+    // reflect input to player
+    if (input != null && input != "")
+    chat(socket, {name: player.name}, input, "sender")
+
     // call cleverscript with player and bot and process result
     Cleverscript.talkToBot(process.env.cleverAPIKey, player, bot, input, function(data) {
       console.log("data object sent back by cleverscript:")
