@@ -33,9 +33,17 @@ module.exports.init = function (io) {
         } else {
 
           if(data.firstPlayerAction) {
-            if(player.state = "bot") {
-              Bots.leaveBot(player)
-            }
+            switch(player.state) {
+              case "world":
+                break
+              case "bot":
+                Bots.leaveBot(player)
+                break
+              default: // reset intro to start
+                player.state = "welcome"
+                player.save()
+                break
+            }            
           }
 
           // check player status and hand off to different parsers

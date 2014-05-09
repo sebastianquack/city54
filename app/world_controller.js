@@ -216,6 +216,8 @@ var handleInput = function(socket, player, input) {
       case "restart":
         // todo: make sure user really wants this
         Util.write(socket, {name: "System"}, "restarting game...", "sender")
+        player.state = "welcome"
+        player.save()
         Intro.handleInput(socket, player, null)
         break
       default:
