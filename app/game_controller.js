@@ -20,6 +20,9 @@ module.exports.init = function (io) {
       // check if player exists
       Player.findOne({ uuid: data.uuid }, function(err, player) {
         if(err) return Util.handleError(err)
+        
+        if(data.input)
+          data.input = data.input.toLowerCase()
 
         if(!player) {
 

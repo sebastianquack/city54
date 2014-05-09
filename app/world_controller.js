@@ -98,11 +98,13 @@ function enterRoom(player, room, socket) {
 
 // parse and execute room commands
 function processRoomCommand(socket, player, command, object) {
-  data = player.currentRoomData;
-  roomCommandFound = false;
+  data = player.currentRoomData
+  roomCommandFound = false
   if (data == undefined) return false
   var reply = ""
   for (i in data.command) {
+    data.command[i] = data.command[i].toLowerCase()
+    data.object[i] = data.object[i].toLowerCase()
 
     var condition = null
 
@@ -160,8 +162,7 @@ function processRoomCommand(socket, player, command, object) {
 }
 
 // handle world exploration
-var handleInput = function(socket, player, input) {
-  
+var handleInput = function(socket, player, input) {  
   if(!input) {
     var roomEntered = function(data){
       player.setRoom(player.currentRoom, socket)
