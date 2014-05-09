@@ -204,19 +204,17 @@ var handleInput = function(socket, player, input) {
     }
 
     switch(command) {
-      case "sage":
-        Util.write(socket, player, Util.getObject(input), "everyone else and me")
-        break
       case "restart":
         // todo: make sure user really wants this
         Util.write(socket, {name: "System"}, "restarting game...", "sender")
         Intro.handleInput(socket, player, null)
         break
       default:
-        //chat(socket, {name: "System"}, command + " " + object + "? Das geht so nicht.", "sender")
-        if (!object) var apologies = (command + "en").replace(/ee/,"e") + " nicht möglich."
-        else var apologies = object + " lässt sich nicht " + (command + "en").replace(/ee/,"e") + "."
-        Util.write(socket, {name: "System"}, apologies, "sender", "error")
+        Util.write(socket, player, input, "everyone else and me")
+
+        //if (!object) var apologies = (command + "en").replace(/ee/,"e") + " nicht möglich."
+        //else var apologies = object + " lässt sich nicht " + (command + "en").replace(/ee/,"e") + "."
+        //Util.write(socket, {name: "System"}, apologies, "sender", "error")
     }
   }
 
