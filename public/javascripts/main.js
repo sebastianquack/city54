@@ -30,7 +30,7 @@ $(document).ready(function() {
     $.cookie('city54_uuid', uuid.v1()) // create new uuid
   }
   // send cookie to server for check 
-  socket.emit('player-action', { uuid: $.cookie('city54_uuid') })
+  socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
 
   // focus input field
   $('#input-command').focus()

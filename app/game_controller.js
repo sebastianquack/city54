@@ -32,6 +32,12 @@ module.exports.init = function (io) {
 
         } else {
 
+          if(data.firstPlayerAction) {
+            if(player.state = "bot") {
+              Bots.leaveBot(player)
+            }
+          }
+
           // check player status and hand off to different parsers
           switch(player.state) {
             case "world": 

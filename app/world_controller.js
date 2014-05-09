@@ -6,10 +6,11 @@ var ChatItem = mongoose.model('ChatItem')
 
 var Util = require('./util.js')
 var Bots = require('./bot_controller.js')
+var Intro = require('./intro_controller.js')
 
 var rooms = ['witten', 'oberhausen', 'gelsenkirchen','dortmund']
 var Spreadsheets = require('./apis/google_spreadsheets')
-var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
+
 var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um|schaue$)/i
 var RegexWerBinIch = /^(wer bin ich|werbinich|ich|schau dich an)/i
 var RegexWerIstDa = /^(wer ist da|werbistda|wer|wer ist anwesend)/i
