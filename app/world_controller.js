@@ -205,7 +205,7 @@ var handleInput = function(socket, player, input) {
 
     switch(command) {
       case "sage":
-        Util.write(socket, player, getObject(input), "everyone else and me")
+        Util.write(socket, player, Util.getObject(input), "everyone else and me")
         break
       case "restart":
         // todo: make sure user really wants this
