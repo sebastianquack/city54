@@ -87,6 +87,15 @@ function setWV(vw) {
   worldVariables[vw.name] = vw.value
 }
 
+// move player to a room
+function enterRoom(player, room, socket) {
+  player.setRoom(room, socket)
+  player.currentRoomData = {}
+  player.save()
+  //if (reply == "") chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db        
+  handleInput(socket, player, null)
+}
+
 // parse and execute room commands
 function processRoomCommand(socket, player, command, object) {
   data = player.currentRoomData;
@@ -126,12 +135,7 @@ function processRoomCommand(socket, player, command, object) {
 
       // leave room
       if (data.exit != undefined && data.exit[i].length > 0) {
-        //chat(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " hat den Raum verlassen.", "everyone else") // todo only to people in room
-        player.setRoom (data.exit[i], socket)
-        player.currentRoomData = {}
-        player.save()
-        //if (reply == "") chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db        
-        handleInput(socket, player, null)
+        enterRoom(player, data.exit[i], socket)
       }  
 
       // enter bot
@@ -204,6 +208,11 @@ var handleInput = function(socket, player, input) {
     }
 
     switch(command) {
+      case "warp":
+        var target = object + "/" + object
+        console.log(target)
+        enterRoom(player, target, socket)
+        break
       case "restart":
         // todo: make sure user really wants this
         Util.write(socket, {name: "System"}, "restarting game...", "sender")
