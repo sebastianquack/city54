@@ -20,6 +20,9 @@ module.exports.init = function (io) {
       // check if player exists
       Player.findOne({ uuid: data.uuid }, function(err, player) {
         if(err) return Util.handleError(err)
+        
+        if(data.input)
+          data.input = data.input.toLowerCase()
 
         if(!player) {
 
@@ -31,6 +34,20 @@ module.exports.init = function (io) {
           Intro.handleInput(socket, player, null)
 
         } else {
+
+          if(data.firstPlayerAction) {
+            switch(player.state) {
+              case "world":
+                break
+              case "bot":
+                Bots.leaveBot(player)
+                break
+              default: // reset intro to start
+                player.state = "welcome"
+                player.save()
+                break
+            }            
+          }
 
           // check player status and hand off to different parsers
           switch(player.state) {

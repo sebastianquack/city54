@@ -1,94 +1,136 @@
 /* variable declarations */
 
 var mongoose = require('mongoose')
-var Bot = mongoose.model('Bot')
+var Bots = mongoose.model('Bot')
 var Cleverscript = require('./apis/cleverscript')
 var RegexBotExit = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
 
 var Util = require('./util.js')
 var World = require('./world_controller.js')
 
+var globalBotVariables = ["botname", "joke", "jokeauthor"]
+var playerBotVariables = ["playername"]
+
 /* function declarations */
+
+var encodeBotVariables = function(bot, player) {
+  
+  input = "/"
+  globalBotVariables.forEach(function(key) {    
+    input += bot.globalVariables[key] + "/"  
+  })
+
+  playerBotVariables.forEach(function(key) {
+    input += bot.playerInfo[player.uuid].variables[key] + "/"
+  })
+  
+  return input 
+}
+
+var saveBotState = function(bot, player, data) {
+    
+  bot.playerInfo[player.uuid].state = data.cs // save the state
+
+  globalBotVariables.forEach(function(key) {    
+    if(data[key + "_other"])
+      bot.globalVariables[key] = data[key + "_other"]
+    else
+      bot.globalVariables[key] = data[key]
+  })
+
+  playerBotVariables.forEach(function(key) {
+    if(data[key + "_other"])
+      bot.playerInfo[player.uuid].variables[key] = data[key + "_other"]
+    else 
+      bot.playerInfo[player.uuid].variables[key] = data[key]
+  })
+
+  bot.markModified('globalVariables');
+  bot.markModified('playerInfo');
+  bot.save()
+  
+}
+
+var leaveBot = function(player) {
+  player.state = "world" // send player back into world
+  player.save()
+  
+  Bots.findOne( { id: player.currentBot } , function(err, bot) {
+    if(err) return Util.handleError(err)   
+    if(!bot) return
+
+    bot.playerInfo[player.uuid].state = "" // reset bot state for this player 
+    bot.markModified('playerInfo');
+    bot.save()   
+  })
+}
 
 // handle bot chat
 var handleInput = function(socket, player, input) {
   
   var command = Util.getCommand(input)
   if(typeof command == "string" && command.search(RegexBotExit) != -1) { // abort bot session
-    player.state = "world"
-    player.bots[player.currentBot].state = null // reset bot state for this player
-    player.markModified('bots');
-    player.save()
+    leaveBot(player)
     World.handleInput(socket, player, null)
     return
   }
     
   // look up the global bot object
-  Bot.findOne( { id: player.currentBot } , function(err, bot) {
+  Bots.findOne( { id: player.currentBot } , function(err, bot) {
     if(err) return Util.handleError(err)   
-    if(!bot) { // if bot hasen't been created, create a new one
-      bot = new Bot({ id: player.currentBot })
+
+    // if nothing has been stored about this bot, create one
+    if(!bot) { 
+      bot = new Bots({ id: player.currentBot })
+      bot.globalVariables = {botname: player.currentBot} // set bot name on init
+      bot.markModified('globalVariables');
       bot.save()
     }
-     
-    // call cleverscript with player and bot and process result
-    Cleverscript.talkToBot(process.env.cleverAPIKey, player, bot, input, function(data) {
+       
+    // check if the bot meets this player for the first time
+    if(!bot.playerInfo[player.uuid]) {
+
+      // setup empty player info
+      bot.playerInfo[player.uuid] = {}
+      bot.playerInfo[player.uuid].state = ""
+      bot.playerInfo[player.uuid].variables = {}
+      bot.markModified('playerInfo');
+      bot.save()
+            
+    }
+
+    // check if there is no ongoing conversation to continue
+    if(bot.playerInfo[player.uuid].state == "") {
+      // we need to reset the bots internal state through the first input we send to it
+      input = encodeBotVariables(bot, player)
+    }
+
+    // call up cleverscript and process response
+    Cleverscript.talkToBot(process.env.cleverAPIKey, bot.playerInfo[player.uuid].state, input, function(data) {
+      
       console.log("data object sent back by cleverscript:")
       console.log(data)
-      
-      Util.write(socket, {name: player.currentBot}, data.output, "sender") // inform the player what the bot said
-
-      if(player.bots[player.currentBot] == undefined)
-        player.bots[player.currentBot] = {} // in case bots object isn't set yet
-      if(player.bots[player.currentBot].variables == undefined)
-        player.bots[player.currentBot].variables = {} // in case variables object isn't set yet        
-      player.bots[player.currentBot].state = data.cs // store the state variable
-
-      // save bot variables    
-      for (var key in data) {    
-        
-        switch(key) {
-          
-        // global bot variables
-        case "botname_other": 
-          //bot.variables[key] = data[key]
-          break
-        case "joke_other": 
-          bot.variables[key] = data[key]
-          break
-        
-        // player specific bot variables
-        case "playername_other": 
-          player.bots[player.currentBot].variables[key] = data[key]
-          break
-        
-        // check if bot kicked player out of conversation
-        case 'bot_abort':
-          if(data[key] == 1) {
-            player.state = "world" // send player back into world
-            player.bots[player.currentBot].state = null // reset bot state for this player
-          }
-        }
-      
-      }
   
-      player.markModified('bots');
-      player.save()
-      bot.markModified('variables');
-      bot.save()
-      
-      console.log(player.bots)
-      console.log(bot)      
-      
-      if(player.state == 'world') {
+      // inform the player what the bot said
+      Util.write(socket, {name: player.currentBot}, data.output, "sender") 
+
+      saveBotState(bot, player, data)
+      console.log("updated bot data")
+      console.log(bot)
+      console.log(bot.playerInfo[player.uuid])      
+
+      // check if bot kicked player out
+      if(data['bot_abort'] == '1') {
+        leaveBot(player)
         World.handleInput(socket, player, null) 
       }
       
-    })
-
+    }) 
+                  
   })
   
 }
 
 /* expose functionality */
+module.exports.leaveBot = leaveBot
 module.exports.handleInput = handleInput

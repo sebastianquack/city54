@@ -7,7 +7,8 @@ var Schema = mongoose.Schema
 
 var BotSchema = new Schema({
   id: { type: String, default: '' },
-  variables: { type: Object, default: {} }
+  globalVariables: { type: Object, default: {} },
+  playerInfo: { type: Object, default: {} }
 })
 
 /**
