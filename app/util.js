@@ -29,7 +29,14 @@ var getObject = function(input) {
 
 // send text to client
 var write = function(socket, player, value, mode, type) {
-  var chat_item = new ChatItem({ player_uuid: player.uuid, player_name: player.name, value: value, type: type })
+  var chat_item = new ChatItem({ 
+    player_uuid: player.uuid, 
+    player_name: player.name, 
+    player_room: player.currentRoom, 
+    player_state: player.state,
+    value: value, 
+    type: type
+  })
   chat_item.save()
 
   // broadcast to everyone

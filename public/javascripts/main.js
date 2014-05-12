@@ -70,5 +70,25 @@ $(document).ready(function() {
       submitCommand() 
     }
   })
+
+  //$('body').keydown(function(e) {keyboard(e)})
   
 })
+
+/*
+var keyboard = function(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    // Enter key?
+    if(code == 13)
+    {
+        // Don't put a newline if this is the first command
+        if ($('#PastCommands').html() != '')
+            $('#PastCommands').append('<br />');
+        $('#PastCommands').append($(this).val());
+        $(this).val('');
+    }
+    else
+        $('#input-command').html($(this).val());
+}
+*/
+

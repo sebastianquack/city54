@@ -6,6 +6,7 @@ var ChatItem = mongoose.model('ChatItem')
 
 var Util = require('./util.js')
 var Bots = require('./bot_controller.js')
+var Intro = require('./intro_controller.js')
 
 var rooms = ['witten', 'oberhausen', 'gelsenkirchen','dortmund']
 var Spreadsheets = require('./apis/google_spreadsheets')
