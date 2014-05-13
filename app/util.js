@@ -28,9 +28,16 @@ var getObject = function(input) {
 }
 
 // send text to client
-var write = function(socket, player, value, mode, type) {
+// player: playing belonging to the socket, both causing the message
+// emitter: player object of the sender ( usually the player again, or {name: "System"})
+// value: the message
+// mode: the recipients group
+// type: info about the message type for the front end
+var write = function(socket, player, emitter, value, mode, type) {
+
   var chat_item = new ChatItem({ 
     player_uuid: player.uuid, 
+    sender_name: emitter.name,
     player_name: player.name, 
     player_room: player.currentRoom, 
     player_state: player.state,
@@ -39,7 +46,7 @@ var write = function(socket, player, value, mode, type) {
   })
   chat_item.save()
 
-  // broadcast to everyone
+  // broadcast to everyone in room
   if(mode == "everyone")  
     socket.broadcast.emit('chat-update', chat_item)
 
@@ -54,9 +61,15 @@ var write = function(socket, player, value, mode, type) {
     socket.broadcast.to(player.currentRoom).emit('chat-update', chat_item) 
   }
 
+  // send back to sender
+  if(mode == "everyone" || mode == "sender") {
+    socket.emit('chat-update', chat_item) // TODO: send to all sockets of the player
+  }
+
   // send back to this socket
-  if(mode == "everyone" || mode == "sender") 
-    socket.emit('chat-update', chat_item) // TODO send to all sockets of player
+  if(mode == "everyone" || mode == "socket") {
+    socket.emit('chat-update', chat_item) 
+  }
 }
 
 module.exports.getCommand = getCommand

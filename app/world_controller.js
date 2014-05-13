@@ -60,7 +60,7 @@ function announceRoomPlayers(socket, player) {
         case 2:  var list= playerNames[0] + " und " + playerNames[1] + " sind"; break;
         default: var list= playerNames.splice(0,-1).join(", ") + " und " + playerNames[playerNames.length-1] + " sind"
       }
-      Util.write(socket, {name: "System", currentRoom: player.currentRoom}, linkify("[" + list + " auch hier.|sage Hallo]"), "sender")
+      Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, linkify("[" + list + " auch hier.|sage Hallo]"), "sender")
     })
 }
 
@@ -132,7 +132,7 @@ function processRoomCommand(socket, player, command, object) {
 
       // announce action publicly
       if (data.announcement != undefined && data.announcement[i].length > 0) {
-        Util.write(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " " + linkify(data.announcement[i]), "everyone else") // todo only to people in room
+        Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " " + linkify(data.announcement[i]), "everyone else") // todo only to people in room
       } 
 
       // leave room
@@ -156,7 +156,7 @@ function processRoomCommand(socket, player, command, object) {
     }
   }
   // send reply
-  if (reply != "") Util.write(socket, {name: "System"}, reply, "sender")
+  if (reply != "") Util.write(socket, player, {name: "System"}, reply, "sender")
 
   return roomCommandFound
 }
@@ -168,9 +168,9 @@ var handleInput = function(socket, player, input) {
       player.setRoom(player.currentRoom, socket)
       //if (player.currentRoom.split("/")[0] != player.previousRoom.split("/")[0]) { // city changed
         d = new Date(new Date().setFullYear(2044))
-        Util.write(socket, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
+        Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
       //}
-      Util.write(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " kommt.", "everyone else")
+      Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " kommt.", "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
@@ -198,7 +198,7 @@ var handleInput = function(socket, player, input) {
 
     // wer bin ich?
     if (input.search(RegexWerBinIch) != -1) {
-      Util.write(socket, {name: "System"}, player.name, "sender")
+      Util.write(socket, player, {name: "System"}, player.name, "sender")
       return
     }
 
@@ -216,17 +216,17 @@ var handleInput = function(socket, player, input) {
         break
       case "restart":
         // todo: make sure user really wants this
-        Util.write(socket, {name: "System"}, "restarting game...", "sender")
+        Util.write(socket, player, {name: "System"}, "restarting game...", "sender")
         player.state = "welcome"
         player.save()
         Intro.handleInput(socket, player, null)
         break
       default:
-        Util.write(socket, player, input, "everyone else and me")
+        Util.write(socket, player, player, input, "everyone else and me")
 
         //if (!object) var apologies = (command + "en").replace(/ee/,"e") + " nicht möglich."
         //else var apologies = object + " lässt sich nicht " + (command + "en").replace(/ee/,"e") + "."
-        //Util.write(socket, {name: "System"}, apologies, "sender", "error")
+        //Util.write(socket, player, {name: "System"}, apologies, "sender", "error")
     }
   }
 
