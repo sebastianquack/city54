@@ -11,6 +11,11 @@
     "socket.io": "*",
     "mongoose": "*",
     "google-oauth-jwt": "*",
-    "colors": "*"
+    "colors": "~0.6.0-1",
+    "googleclientlogin": "~0.2.6",
+    "lodash": "~1.2.1",
+    "request": "~2.21.0",
+    "google-oauth-jwt": "0.0.4",
+    "async": "~0.2.9"
   }
 }
