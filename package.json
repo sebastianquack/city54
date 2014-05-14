@@ -10,6 +10,7 @@
     "jade": "*",
     "socket.io": "*",
     "mongoose": "*",
-    "google-oauth-jwt": "*"
+    "google-oauth-jwt": "*",
+    "colors": "*"
   }
 }
