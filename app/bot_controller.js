@@ -74,6 +74,11 @@ var handleInput = function(socket, player, input) {
     World.handleInput(socket, player, null)
     return
   }
+
+  // reflect player input back to player
+  if (input != null & input != "") {
+    Util.write(socket, player, player, input , "sender") 
+  }
     
   // look up the global bot object
   Bots.findOne( { id: player.currentBot } , function(err, bot) {
@@ -112,7 +117,7 @@ var handleInput = function(socket, player, input) {
       console.log(data)
   
       // inform the player what the bot said
-      Util.write(socket, {name: player.currentBot}, data.output, "sender") 
+      Util.write(socket, player, {name: player.currentBot}, data.output, "sender") 
 
       saveBotState(bot, player, data)
       console.log("updated bot data")
