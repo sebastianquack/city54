@@ -46,6 +46,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 // sockets
 io = require('socket.io').listen(server)
+io.set('log level', 1) // disable verbose socket log
 
 // launch game_controller
 var Game = require('./app/game_controller')
