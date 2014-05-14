@@ -1,27 +1,38 @@
 html, body {
 	height:100%;
 	font-family:Roboto, sans-serif;
+	padding:0;
+	margin:0;
 }
 
 #top {
-	height:0%;
-	display:none;
+	width:100%;
+	padding:1em;
+	display:block;
+	position:absolute;
+	top:0;
+	background:rgba(255,255,255,1);
+	z-index:1;
+	box-sizing:border-box;
+}
+
+#top b {
+	padding-right:2ex;
+
 }
 
 #chat {
 	overflow-y: scroll;
 	overflow-wrap: break-word;
-	height:70%;
+	height:100%;
 	background:#eee;
 	color:black;
 	line-height:1.3em;
-}
-
-#chat {
+	box-sizing:border-box;
 	margin:0;
-	padding:1em;
+	padding:1em;	
+	padding-top:3em;
 }
-
 
 #chat p {
 	padding-bottom:0.7em;
@@ -72,7 +83,7 @@ b[data-command] {
 	padding:0.2em 0.5em;
 	margin:0 0.5em;
 	position:relative;
-	bottom:0.2em;
+	bottom:0.2em;	
 }
 
 /*
@@ -106,9 +117,20 @@ b[data-command]:hover, b[data-command]:after:hover {
 }
 
 #input-command {
-	width:96%;
-	padding:0.4em;
-	font-size:110%;
+	background:transparent;
+	border:none;
+	outline:none;
+	padding:0;
+	font-size: 100%;
+	width: 100%;
+	font-weight: 700;
+}
+
+#input-command.block {
+	text-transform: uppercase;
+}
+
+#input-command.inline {
 }
 
 #bottom {

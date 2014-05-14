@@ -2,7 +2,11 @@ extends ../layouts/default
 
 block content  
 
-  h1#top multi-user chat with bot
+  div#top
+    b(data-command='hilfe') Hilfe
+    b(data-command='info') Info
+    b(data-command='wo bin ich') Wo bin ich?
   div#chat
-  div#bottom
     input(type='text', id='input-command')
+    p(id='input')
+

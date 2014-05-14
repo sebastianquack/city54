@@ -37,6 +37,9 @@ $(document).ready(function() {
 
   // focus input field
   $('#input-command').focus()
+  $('body').on("keypress keyup keydown click focus resize", function() {
+    $('#input-command').focus()
+  })
 
   /* events */
 
@@ -64,6 +67,10 @@ $(document).ready(function() {
     }
     if (data.type != undefined) newElem = newElem.addClass(data.type)
     $('#chat section:last-child').append(newElem)
+  
+    $('#chat section:last-child').append($("#input-command").detach())
+    $("#input-command").focus()
+
     // scroll up to fit new item
 	  $('#chat').animate( {
 		    scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
@@ -82,7 +89,7 @@ $(document).ready(function() {
   // user hits enter in console
   $('#input-command').on("keypress", function(e) {
     if (e.keyCode == 13) { 
-      submitCommand() 
+      submitCommand()
     }
   })
 
