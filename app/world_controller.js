@@ -18,11 +18,6 @@ var worldVariables = []
 
 /* function declarations */
 
-// parse world descriptions for links
-function linkify(text) {
-	return text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>')
-}
-
 // get a list of active player in a room
 function getPlayersInRoom(socket, room, callback) {
 
@@ -60,7 +55,7 @@ function announceRoomPlayers(socket, player) {
         case 2:  var list= playerNames[0] + " und " + playerNames[1] + " sind"; break;
         default: var list= playerNames.splice(0,-1).join(", ") + " und " + playerNames[playerNames.length-1] + " sind"
       }
-      Util.write(socket, {name: "System", currentRoom: player.currentRoom}, linkify("[" + list + " auch hier.|sage Hallo]"), "sender")
+      Util.write(socket, {name: "System", currentRoom: player.currentRoom}, Util.linkify("[" + list + " auch hier.|sage Hallo]"), "sender")
     })
 }
 
@@ -128,11 +123,11 @@ function processRoomCommand(socket, player, command, object) {
       }   
 
       // collect reply
-      reply = reply + linkify(data.text[i]) + " "
+      reply = reply + Util.linkify(data.text[i]) + " "
 
       // announce action publicly
       if (data.announcement != undefined && data.announcement[i].length > 0) {
-        Util.write(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " " + linkify(data.announcement[i]), "everyone else") // todo only to people in room
+        Util.write(socket, {name: "System", currentRoom: player.currentRoom}, player.name + " " + Util.linkify(data.announcement[i]), "everyone else") // todo only to people in room
       } 
 
       // leave room

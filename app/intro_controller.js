@@ -11,7 +11,7 @@ var handleInput = function(socket, player, input) {
   switch(player.state) {
   case "welcome":
     Util.write(socket, {name: "System"}, "Auf den ersten Blick liegt die Stadt einfach da, nicht friedlich und doch stumm, ein riesiges Raumschiff, das gelandet ist, um von hier aus die Welt zu erobern. Die gläsernen Hallen und weißen Monolithen, die vielen Villages und Grünflächen sehen aus, als wüßten sie von nichts. Luftschlitten jagen leise zischend hin und her.", "sender")
-    Util.write(socket, {name: "Stewardess"}, "Wie heißt du?", "sender")
+    Util.write(socket, {name: "Flugcomputer"}, "Wie heißt du?", "sender")
     player.state = "name"
     player.save()
     break
@@ -20,7 +20,8 @@ var handleInput = function(socket, player, input) {
     player.name = input
     player.state = "jump"
     player.save()
-    Util.write(socket, {name: "Stewardess"}, "Danke! Und jetzt... spring!", "sender")
+    Util.write(socket, {name: "Flugcomputer"}, "Danke! Und jetzt... spring!", "sender")
+    Util.write(socket, {name: "System"}, Util.linkify("Du schaust nach unten und zögerst. [Springst du?|springe]"), "sender")
     break
     
   case "jump":

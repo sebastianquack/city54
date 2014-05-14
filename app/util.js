@@ -27,6 +27,11 @@ var getObject = function(input) {
   return words.join(" ")
 }
 
+// parse world descriptions for links
+var linkify = function(text) {
+	return text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>')
+}
+
 // send text to client
 var write = function(socket, player, value, mode, type) {
   var chat_item = new ChatItem({ player_uuid: player.uuid, player_name: player.name, value: value, type: type })
@@ -52,6 +57,7 @@ var write = function(socket, player, value, mode, type) {
     socket.emit('chat-update', chat_item) // TODO send to all sockets of player
 }
 
+module.exports.linkify = linkify
 module.exports.getCommand = getCommand
 module.exports.getObject = getObject
 module.exports.handleError = handleError
