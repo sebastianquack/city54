@@ -29,7 +29,10 @@ var getObject = function(input) {
 
 // parse world descriptions for links
 var linkify = function(text) {
-	return text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>')
+  text = text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>') // parse old links
+  text = text.replace(/\[(.*?)\]/g,'<b data-command="$1"></b>') // parse new links
+  
+	return text
 }
 
 // send text to client

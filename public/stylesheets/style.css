@@ -66,8 +66,8 @@ b[data-command] {
 	/*font-weight:normal;*/
 }
 
-#chat section:last-child b[data-command] {
-	font-weight: 700;
+#chat section:last-child b[data-command], #chat section b {
+	font-weight:normal;
 }
 
 #chat section:last-child b[data-command]:after {
@@ -81,7 +81,7 @@ b[data-command] {
 	background: rgba(0,0,0,0.8);
 	border-radius:3px;	
 	padding:0.2em 0.5em;
-	margin:0 0.5em;
+	margin:0 0.4em;
 	position:relative;
 	bottom:0.2em;	
 }
