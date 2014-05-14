@@ -20,7 +20,7 @@ exports.create = exports.load = function(opts, callback) {
   if(!opts.spreadsheetId  && !opts.spreadsheetName)
     return callback("Missing 'spreadsheetId' or 'spreadsheetName'");
 
-  if(!opts.worksheetId || !opts.worksheetName) {
+  if(!opts.worksheetName) {
     opts.useDefaultWorksheet = true
     //return callback("Missing 'worksheetId' or 'worksheetName'");    
   }
