@@ -11,7 +11,7 @@ var googleConf = {
 	  // specify the scopes you wish to access 
 	  scopes: ['https://www.googleapis.com/auth/drive.readonly','https://spreadsheets.google.com/feeds']
 }
-var Spreadsheet = require('edit-google-spreadsheet')
+var Spreadsheet = require('./edit-google-spreadsheet-patched')
 var TokenCache = require('google-oauth-jwt').TokenCache
 var tokens = new TokenCache()
 var spreadsheetIdCache = {}
@@ -33,10 +33,12 @@ var get_spreadsheet = function(token, room, callback) {
 
   spreadsheetName = parts[0]
 
-  if (parts.length == 1) worksheetName = parts[0]
-  else worksheetName = parts[1]
+  if (parts.length == 1) 
+    worksheetName = undefined
+  else 
+    worksheetName = parts[1]
 
-  console.log("loading room " + room + " (" + spreadsheetName + "/" + worksheetName +")")
+  //console.log("loading room " + room + " (" + spreadsheetName + "/" + worksheetName +")")
   
   // retrieve cache
   if (spreadsheetIdCache[spreadsheetName] != undefined && spreadsheetIdCache[spreadsheetName][worksheetName] != undefined) {
@@ -49,7 +51,7 @@ var get_spreadsheet = function(token, room, callback) {
   	spreadsheetId = undefined
   	worksheetId = undefined
   }
-
+  
   Spreadsheet.load({
     debug: true,
     spreadsheetName: spreadsheetName,
@@ -77,16 +79,16 @@ var get_spreadsheet = function(token, room, callback) {
       console.log(err)
     	return
     }
-	
+    
   	// populate cache
   	if (typeof spreadsheetIdCache[spreadsheetName] == "undefined") {
   		spreadsheetIdCache[spreadsheetName] = {} 
-  		spreadsheetIdCache[spreadsheetName][worksheetName] = {spreadsheetId: spreadsheet.spreadsheetId, worksheetId: spreadsheet.worksheetId}
-  		console.log("cached spreadsheet IDs for " +spreadsheetName + " / " + worksheetName + " as " + spreadsheet.spreadsheetId + " / " + spreadsheet.worksheetId)
+  		spreadsheetIdCache[spreadsheetName][spreadsheet.worksheetName] = {spreadsheetId: spreadsheet.spreadsheetId, worksheetId: spreadsheet.worksheetId}
+  		console.log("cached spreadsheet IDs for " + spreadsheetName + " / " + spreadsheet.worksheetName + " as " + spreadsheet.spreadsheetId + " / " + spreadsheet.worksheetId)
   	}
-  	else if (typeof spreadsheetIdCache[spreadsheetName][worksheetName] == "undefined") {
-  		spreadsheetIdCache[spreadsheetName][worksheetName] = {spreadsheetId: spreadsheet.spreadsheetId, worksheetId: spreadsheet.worksheetId}
-  		console.log("cached spreadsheet IDs for " +spreadsheetName + " / " + worksheetName + " as " + spreadsheet.spreadsheetId + " / " + spreadsheet.worksheetId)
+  	else if (typeof spreadsheetIdCache[spreadsheetName][spreadsheet.worksheetName] == "undefined") {
+  		spreadsheetIdCache[spreadsheetName][spreadsheet.worksheetName] = {spreadsheetId: spreadsheet.spreadsheetId, worksheetId: spreadsheet.worksheetId}
+  		console.log("cached spreadsheet IDs for " + spreadsheetName + " / " + spreadsheet.worksheetName + " as " + spreadsheet.spreadsheetId + " / " + spreadsheet.worksheetId)
   	}
     
     // process worksheet

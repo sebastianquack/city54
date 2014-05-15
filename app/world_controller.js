@@ -205,7 +205,7 @@ var handleInput = function(socket, player, input) {
 
     switch(command) {
       case "warp":
-        var target = object + "/" + object
+        var target = object
         console.log(target)
         enterRoom(player, target, socket)
         break
