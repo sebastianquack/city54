@@ -61,7 +61,9 @@ $(document).ready(function() {
 
     if (player.currentRoom != data.player_room) {
       $('#chat').append($('<section>'))
+      if (["bergkamen","bönen","fröndenberg","holzwickede","kamen","lünen","schwerte","selm","unna","werne"].indexOf(player.currentRoom) != -1) $('body').trigger('startRumble');
     }
+    else $('body').trigger('stopRumble');
 
     // todo: just submit the damn player object itself
     player = {
