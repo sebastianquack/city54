@@ -64,7 +64,7 @@ html, body {
 	text-decoration: line-through;
 }
 
-p[data-sender]:not([data-state=world]):before {
+p[data-sender]:not([data-state=world]):not([data-state=jump]):before {
 	content:attr(data-sender) ": ";
 	font-style: italic;
 }
@@ -103,7 +103,9 @@ b[data-command]:hover, b[data-command]:after:hover {
 
 #chat section:last-child b[data-command]:after,
 #input[data-state=world].chars #input-fake,
-#input[data-state=world].chars #input-command {
+#input[data-state=world].chars #input-command,
+#input[data-state=jump].chars #input-fake,
+#input[data-state=jump].chars #input-command {
 	content: "" attr(data-command) "";
 	color: rgba(255,255,255,1);
 	vertical-align:middle;
@@ -119,7 +121,8 @@ b[data-command]:hover, b[data-command]:after:hover {
 	font-weight: normal;
 }
 
-#input[data-state=world].chars #cursor:before {
+#input[data-state=world].chars #cursor:before,
+#input[data-state=jump].chars #cursor:before {
 	border-color: white;
 }
 
