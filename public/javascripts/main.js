@@ -59,7 +59,7 @@ $(document).ready(function() {
 
     console.log(data)
 
-    if (player.currentRoom != data.player_room) {
+    if (data.player_room != null && player.currentRoom != data.player_room) {
       $('#chat').append($('<section>'))
       if (["bergkamen","bönen","fröndenberg","holzwickede","kamen","lünen","schwerte","selm","unna","werne"].indexOf(player.currentRoom) != -1) $('body').trigger('startRumble');
     }
@@ -67,9 +67,9 @@ $(document).ready(function() {
 
     // todo: just submit the damn player object itself
     player = {
-      name:         data.player_name,
-      currentRoom:  data.player_room,
-      state:        data.player_state,
+      name:         (data.player_name != null) ? data.player_name : player.name,
+      currentRoom:  (data.player_room != null) ? data.player_room : player.currentRoom,
+      state:        (data.player_state != null) ? data.player_state : player.state,
     }
 
     // todo: check what is going on

@@ -42,8 +42,8 @@ html, body {
 	margin:0;
 }
 
-#chat p[data-sender]+p[data-sender],
-#chat p.error+li.error {
+#chat p[data-sender]+p[data-sender]:not([data-state=world]),
+#chat p.error+p.error {
 	margin-top:-0.7em;
 }
 
@@ -57,11 +57,9 @@ html, body {
 }
 
 #chat p.error:first-letter {
-	text-transform: capitalize;
 }
 
 #chat p.error {
-	text-decoration: line-through;
 }
 
 p[data-sender]:not([data-state=world]):not([data-state=jump]):before {

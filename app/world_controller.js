@@ -6,14 +6,15 @@ var ChatItem = mongoose.model('ChatItem')
 
 var Util = require('./util.js')
 var Bots = require('./bot_controller.js')
+var Chat = require('./chat_controller.js')
 var Intro = require('./intro_controller.js')
 
 var rooms = ['witten', 'oberhausen', 'gelsenkirchen','dortmund']
 var Spreadsheets = require('./apis/google_spreadsheets')
 
 var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um|schaue$)/i
-var RegexWerBinIch = /^(wer bin ich|werbinich|ich|schau dich an)/i
-var RegexWerIstDa = /^(wer ist da|werbistda|wer|wer ist anwesend)/i
+var RegexWerBinIch = /^(wer bin ich|werbinich|ich$|schau dich an)/i
+var RegexWerIstDa = /^(wer ist da|werbistda|wer$|wer ist anwesend)/i
 var worldVariables = []
 
 /* function declarations */
@@ -89,6 +90,15 @@ function enterRoom(player, room, socket) {
   player.save()
   //if (reply == "") chat(socket, {name: "System"}, "Du verlässt den Raum...", "sender") // todo get response from db        
   handleInput(socket, player, null)
+}
+
+// enter chat
+function enterChat(socket, player, chatRoom, message) {
+  player.currentChat = chatRoom
+  socket.join(chatRoom)
+  player.state = "chat"
+  player.save()
+  Chat.handleInput(socket, player, message)
 }
 
 // parse and execute room commands
@@ -204,6 +214,41 @@ var handleInput = function(socket, player, input) {
     }
 
     switch(command) {
+      case "sage" :
+        if (object) {
+          playerOrMessage = Util.getCommand(object)
+          var targetPlayer = undefined
+          var message = Util.getObject(object)
+          getPlayersInRoom(socket, player.currentRoom, function(roomPlayers) {
+            for (i in roomPlayers) { 
+              if (roomPlayers[i].name == playerOrMessage) {
+                targetPlayer = roomPlayers[i]
+              }
+            }
+            // target player found
+            if (targetPlayer != undefined) {
+              if (message) {
+                // enter chat with targetPlayer & message
+                Util.write(socket, targetPlayer, {name: "System"}, player.name + " spricht so zu dir, dass nur du es hören kannst...", "sender")
+                Util.write(socket, player, {name: "System"}, "Du wendest dich " + targetPlayer.name + " zu.", "sender")
+                Util.write(socket, player, player, message, "everyone else", null, targetPlayer )
+              }
+              else {
+                // enter chat with targetPlayer
+              }
+            }
+            // no target player found
+            else {
+              // enter chat with room and message
+              enterChat(socket, player, player.currentRoom, object) // use "chat_" + player.currentRoom to create a seperate room
+            }
+          })
+        }
+        else {
+          enterChat(socket, player, player.currentRoom) // use "chat_" + player.currentRoom to create a seperate room
+          Util.write(socket, player, {name: "System"}, "Du wendest dich an die Anwesenden und hebst an zu sprechen.", "sender")
+        }
+        break
       case "warp":
         var target = object
         console.log(target)
@@ -216,12 +261,23 @@ var handleInput = function(socket, player, input) {
         player.save()
         Intro.handleInput(socket, player, null)
         break
+      case "admin":
+          switch(object) {
+            case "print player":
+              Util.write(socket, player, {name: "System"}, player, "sender")
+            break
+          }
+        break
       default:
-        Util.write(socket, player, player, input, "everyone else and me")
+        //Util.write(socket, player, player, input, "everyone else and me")
 
         //if (!object) var apologies = (command + "en").replace(/ee/,"e") + " nicht möglich."
         //else var apologies = object + " lässt sich nicht " + (command + "en").replace(/ee/,"e") + "."
         //Util.write(socket, player, {name: "System"}, apologies, "sender", "error")
+
+        if (!object) var apologies = "Du versuchst zu " + (command + "en").replace(/ee/,"e") + ", aber das klappt nicht."
+        else var apologies = "Du versuchst, " + object + " zu " + (command + "en").replace(/ee/,"e") + ", aber das klappt nicht."
+        Util.write(socket, player, {name: "System"}, apologies, "sender", "error")        
     }
   }
 
