@@ -124,7 +124,7 @@ b[data-command]:hover, b[data-command]:after:hover {
 	border-color: white;
 }
 
-#input-command {
+body #input-command {
 	background:transparent;
 	//border:none;
 	//outline:none;
@@ -135,6 +135,9 @@ b[data-command]:hover, b[data-command]:after:hover {
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	resize:none;
+}
+
+body.nontouch #input-command {
 	position:absolute;
 	z-index:-1;
 	position:absolute;
@@ -157,6 +160,10 @@ b[data-command]:hover, b[data-command]:after:hover {
 
 #input-fake {
 	white-space: pre-wrap;
+}
+
+body.touch #input-fake {
+	display:none;
 }
 
 @media print {

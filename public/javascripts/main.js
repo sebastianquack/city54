@@ -96,9 +96,15 @@ $(document).ready(function() {
         easing: "swing"
       })
   })
+
+  // detect touch device (roughly)
+  $('body').on("touchstart", function() {
+    $('body').removeClass("nontouch")
+    $('body').addClass("touch")
+  })
     
   // focus input field
-  $('body').on("keypress keyup keydown click focus resize touchstart touchleave load", updateInput)
+  $('body').on("keypress keyup keydown click focus resize load", updateInput)
 
   // user clicks on commands
   $("body").on("click","b[data-command]", null, function() { 
