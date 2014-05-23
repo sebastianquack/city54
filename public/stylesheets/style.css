@@ -17,9 +17,26 @@ html, body {
 	-moz-box-sizing:border-box;
 }
 
-#top b {
-	padding-right:2ex;
+#top h1 {
+	font-size:100%;
+	padding:0;
+	margin:0;
+}
 
+#bottom {
+	width:100%;
+	padding:1em;
+	display:block;
+	position:absolute;
+	bottom:0;
+	background:rgba(255,255,255,1);
+	z-index:1;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+}
+
+#bottom b {
+	padding-right:2ex;
 }
 
 #chat {
@@ -34,6 +51,7 @@ html, body {
 	margin:0;
 	padding:1em;	
 	padding-top:3em;
+	padding-bottom:3em;
 }
 
 #chat p {
@@ -165,6 +183,16 @@ body.nontouch #input-command {
 body.touch #input-fake {
 	display:none;
 }
+
+
+
+
+
+
+
+
+
+
 
 @media print {
 
