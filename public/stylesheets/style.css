@@ -5,6 +5,31 @@ html, body {
 	margin:0;
 }
 
+body {
+	-webkit-box-shadow: inset #19d4ff 0 0 0 5px;
+	-moz-box-shadow: inset #19d4ff 0 0 0 5px;
+	box-shadow: inset #19d4ff 0 0 0 5px;
+}
+
+#top-border, #bottom-border, #left-border, #right-border {
+	background: #a5ebff;
+	position: fixed;
+	z-index: 2;
+	}
+	#left-border, #right-border {
+		top: 0; bottom: 0;
+		width: 5px;
+		}
+		#left-border { left: 0; }
+		#right-border { right: 0; }
+		
+	#top-border, #bottom-border {
+		left: 0; right: 0;
+		height: 5px;
+		}
+		#top-border { top: 0; }
+		#bottom-border { bottom: 0; }
+
 #top {
 	width:100%;
 	padding:1em;
@@ -52,6 +77,7 @@ html, body {
 	padding:1em;	
 	padding-top:4em;
 	padding-bottom:4em;
+
 }
 
 #chat p {
