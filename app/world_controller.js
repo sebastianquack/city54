@@ -164,8 +164,11 @@ var handleInput = function(socket, player, input) {
       //if (player.currentRoom.split("/")[0] != player.previousRoom.split("/")[0]) { // city changed
         d = new Date(new Date().setFullYear(2044))
         Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
+
+        //var place = player.currentRoom.split('/')[0]
+        //Util.write(socket, player, {name: "System"}, place + ", "+d.getDate()+"."+d.getMonth()+"."+d.getFullYear(), "sender", "chapter")
       //}
-      Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " kommt.", "everyone else")
+      Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " ist jetzt auch hier.", "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
