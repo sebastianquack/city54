@@ -6,6 +6,7 @@ var Player = mongoose.model('Player')
 var Util = require('./util.js')
 var World = require('./world_controller.js')
 var Bots = require('./bot_controller.js')
+var Chat = require('./chat_controller.js')
 var Intro = require('./intro_controller.js')
 
 /* expose functionality */
@@ -58,12 +59,16 @@ module.exports.init = function (io) {
               console.log(player.bots)
               Bots.handleInput(socket, player, data.input)  
               break
+            case "chat":
+              Chat.handleInput(socket, player, data.input)  
+              break              
             default:
               Intro.handleInput(socket, player, data.input)
           }
         }
         // connect sockets and players (player can have several sockets)
         socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
+        socket.join(player.uuid)
       })      
     })
 
