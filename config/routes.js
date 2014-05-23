@@ -9,4 +9,10 @@ module.exports = function (app) {
     res.render('home', {title: '54. Stadt'})
   })
 
+  // render iframe embed tool
+  app.get('/embed', function (req, res) {
+    res.render('embed', {title: '54. Stadt'})
+  })
+
+
 }
