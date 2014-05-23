@@ -19,6 +19,11 @@ function submitCommand() {
   updateInput()
 }
 
+// submit a command to the server and clear input field 
+function submitMenuCommand(val) {
+  socket.emit('player-action', { uuid: $.cookie('city54_uuid'), input: val, menu: true })
+}
+
 // fill fake input with text, set cursor element
 splitCursor = function (text, position) {
   begin = text.substr(0,position)
@@ -29,11 +34,11 @@ splitCursor = function (text, position) {
 
 // update fake input
 updateInput = function() {
-    $('#input-fake').html(splitCursor($('#input-command').val(), $('#input-command').getCursorPosition()))
-    $('#input-command').focus()
-    if ($('#input-command').val().length >= 1) $('#input').addClass('chars')
-    else $('#input').removeClass('chars')
-  }
+  $('#input-fake').html(splitCursor($('#input-command').val(), $('#input-command').getCursorPosition()))
+  $('#input-command').focus()
+  if ($('#input-command').val().length >= 1) $('#input').addClass('chars')
+  else $('#input').removeClass('chars')
+}
 
 /* let's go! */
 
@@ -83,8 +88,8 @@ $(document).ready(function() {
   
     // move input field to bottom and update data
     $('#chat section:last-child').append($("#input").detach())
-    $("#input").attr("data-sender",player.name)
-    $("#input").attr("data-state",player.state)
+    $("#input").attr("data-sender", player.name)
+    $("#input").attr("data-state", player.state)
     $("#input-command").focus()
 
     // scroll up to fit new item
@@ -107,9 +112,15 @@ $(document).ready(function() {
   $('body').on("keypress keyup keydown click focus resize load", updateInput)
 
   // user clicks on commands
-  $("body").on("click","b[data-command]", null, function() { 
-    autoType($(this).data("command")) 
+  $("body").on("click","b[data-menu]", null, function() { 
+    submitMenuCommand($(this).data("menu"))      
   })
+
+  // user clicks on menu
+  $("body").on("click","b[data-command]", null, function() { 
+    autoType($(this).data("command"))
+  })
+
 
   // user hits enter in console
   $('#input-command').on("keypress", function(e) {

@@ -113,7 +113,7 @@ b[data-command] {
 	bottom:0.2em;	
 }
 
-b[data-command]:hover, b[data-command]:after:hover {
+b[data-command]:hover, b[data-command]:after:hover, b[data-menu]:hover {
 	cursor:pointer;
 }
 

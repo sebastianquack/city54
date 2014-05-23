@@ -8,6 +8,7 @@ var World = require('./world_controller.js')
 var Bots = require('./bot_controller.js')
 var Chat = require('./chat_controller.js')
 var Intro = require('./intro_controller.js')
+var Menu = require('./menu_controller.js')
 
 /* expose functionality */
 module.exports.init = function (io) {
@@ -49,22 +50,30 @@ module.exports.init = function (io) {
                 break
             }            
           }
+          
+          // see if 
+          if(data.menu == true) {
+            Menu.handleInput(socket, player, data.input)
+          } else {
 
-          // check player status and hand off to different parsers
-          switch(player.state) {
-            case "world": 
-              World.handleInput(socket, player, data.input)
-              break
-            case "bot":
-              console.log(player.bots)
-              Bots.handleInput(socket, player, data.input)  
-              break
-            case "chat":
-              Chat.handleInput(socket, player, data.input)  
-              break              
-            default:
-              Intro.handleInput(socket, player, data.input)
+            // check player status and hand off to different parsers
+            switch(player.state) {
+              case "world": 
+                World.handleInput(socket, player, data.input)
+                break
+              case "bot":
+                console.log(player.bots)
+                Bots.handleInput(socket, player, data.input)  
+                break
+              case "chat":
+                Chat.handleInput(socket, player, data.input)  
+                break              
+              default:
+                Intro.handleInput(socket, player, data.input)
+            }
+          
           }
+          
         }
         // connect sockets and players (player can have several sockets)
         socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
