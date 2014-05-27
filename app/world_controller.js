@@ -108,8 +108,8 @@ function processRoomCommand(socket, player, command, object) {
   if (data == undefined) return false
   var reply = ""
   for (i in data.command) {
-    data.command[i] = data.command[i].toLowerCase()
-    data.object[i] = data.object[i].toLowerCase()
+    data.command[i] = data.command[i].toLowerCase().trim()
+    data.object[i] = data.object[i].toLowerCase().trim()
 
     var condition = null
 
