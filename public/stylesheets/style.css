@@ -75,9 +75,10 @@ body {
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	margin:0;
-	padding:1em;	
+	padding-left:1em;	
+	padding-right:1em;
 	padding-top:4em;
-	padding-bottom:4em;
+	/*padding-bottom:4em;*/
 
 }
 
@@ -95,6 +96,10 @@ body {
 
 #chat p:last-child {
 	padding-bottom:0.5em;
+}
+
+#chat p#input	{
+	margin-bottom: 4em;
 }
 
 #chat p.chapter {
