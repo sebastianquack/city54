@@ -3,7 +3,7 @@ var ifrm = null
 
 $(document).ready(function() {
 
-  $('#width').val(350) // default values
+  $('#width').val(300) // default values
   $('#height').val(400) // default values
 
   $('#submit').on('click', function(event) {
