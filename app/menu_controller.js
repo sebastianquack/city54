@@ -9,8 +9,12 @@ var handleInput = function(socket, player, input) {
 
   switch(input) {
 
-    case "spielanleitung": 
+    case "hilfe": 
       menu_response = "Spielanleitung"
+      break
+
+    case "spielstand": 
+      menu_response = "Spielstand"
       break
 
     case "credits":
