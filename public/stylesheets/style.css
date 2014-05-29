@@ -228,9 +228,6 @@ header .show ul {
 #chat p:last-child {
   padding-bottom: 0.5em;
 }
-#chat p#input {
-  margin-bottom: 4em;
-}
 #chat p.chapter {
   font-weight: 700;
   text-transform: capitalize;
@@ -297,12 +294,15 @@ body #input-command {
   -moz-box-sizing: border-box;
   resize: none;
 }
+
 body.nontouch #input-command {
-  z-index: -1;
+	display:none;
+  /*z-index: -1;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 0;*/
 }
+
 #cursor:before {
   content: "";
   width: 2px;

@@ -61,7 +61,7 @@ $(document).ready(function() {
 
   // a chat item comes in from the server
   socket.on('chat-update', function (data) {
-
+    
     console.log(data)
 
     if (data.player_room != null && player.currentRoom != data.player_room) {
@@ -92,8 +92,8 @@ $(document).ready(function() {
     $("#input").attr("data-state", player.state)
     $("#input-command").focus()
 
+    
     // scroll up to fit new item
-	  
     $('#chat').animate( {
 		    scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
       }, {
