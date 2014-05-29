@@ -1,252 +1,284 @@
-html, body {
-	height:100%;
-	font-family:Roboto, sans-serif;
-	padding:0;
-	margin:0;
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Roboto Thin'), local('Roboto-Thin'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/vzIUHo9z-oJ4WgkpPOtg13YhjbSpvc47ee6xR_80Hnw.woff) format('woff');
 }
-
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Roboto Light'), local('Roboto-Light'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/Hgo13k-tfSpn0qi1SFdUfbO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Regular'), local('Roboto-Regular'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Roboto Medium'), local('Roboto-Medium'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/RxZJdnzeo3R5zSexge8UUbO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Roboto Black'), local('Roboto-Black'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/mnpfi9pxYH-Go5UiibESIrO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 100;
+  src: local('Roboto Thin Italic'), local('Roboto-ThinItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/12mE4jfMSBTmg-81EiS-Yb3hpw3pgy2gAi-Ip7WPMi0.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Roboto Light Italic'), local('Roboto-LightItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/7m8l7TlFO-S3VkhHuR0at7rIa-7acMAeDBVuclsi6Gc.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Roboto Italic'), local('Roboto-Italic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/1pO9eUAp8pSF8VnRTP3xnnYhjbSpvc47ee6xR_80Hnw.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 500;
+  src: local('Roboto Medium Italic'), local('Roboto-MediumItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/OLffGBTaF0XFOW1gnuHF0brIa-7acMAeDBVuclsi6Gc.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Roboto Bold Italic'), local('Roboto-BoldItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/t6Nd4cfPRhZP44Q5QAjcC7rIa-7acMAeDBVuclsi6Gc.woff) format('woff');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 900;
+  src: local('Roboto Black Italic'), local('Roboto-BlackItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/bmC0pGMXrhphrZJmniIZpbrIa-7acMAeDBVuclsi6Gc.woff) format('woff');
+}
+html,
 body {
-	-webkit-box-shadow: inset #19d4ff 0 0 0 5px;
-	-moz-box-shadow: inset #19d4ff 0 0 0 5px;
-	box-shadow: inset #19d4ff 0 0 0 5px;
+  height: 100%;
+  font-family: Roboto, sans-serif;
+  color: #fefefe;
+  background: #222222;
+  padding: 0;
+  margin: 0;
 }
-
-#top-border, #bottom-border, #left-border, #right-border {
-	background: #a5ebff;
-	position: fixed;
-	z-index: 2;
-	}
-	#left-border, #right-border {
-		top: 0; bottom: 0;
-		width: 5px;
-		}
-		#left-border { left: 0; }
-		#right-border { right: 0; }
-		
-	#top-border, #bottom-border {
-		left: 0; right: 0;
-		height: 5px;
-		}
-		#top-border { top: 0; }
-		#bottom-border { bottom: 0; }
-
+body {
+  -webkit-box-shadow: inset #19d4ff 0 0 0 5px;
+  -moz-box-shadow: inset #19d4ff 0 0 0 5px;
+  box-shadow: inset #19d4ff 0 0 0 5px;
+}
+#top-border,
+#bottom-border,
+#left-border,
+#right-border {
+  background: #fdc81c;
+  position: fixed;
+  z-index: 2;
+}
+#left-border,
+#right-border {
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+#left-border {
+  left: 0;
+}
+#right-border {
+  right: 0;
+}
+#top-border,
+#bottom-border {
+  left: 0;
+  right: 0;
+  height: 5px;
+}
+#top-border {
+  top: 0;
+}
+#bottom-border {
+  bottom: 0;
+}
 #top {
-	width:100%;
-	padding:0.9em;
-	display:block;
-	position:absolute;
-	top:0;
-	background:rgba(255,255,255,1);
-	z-index:1;
-	box-sizing:border-box;
-	-moz-box-sizing:border-box;
+  width: 100%;
+  padding: 0.9em;
+  display: block;
+  position: absolute;
+  top: 0;
+  background: #555555;
+  z-index: 1;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
-
 #top h1 {
-	font-size:90%;
-	padding:0;
-	margin:0;
+  font-size: 90%;
+  padding: 0;
+  margin: 0;
 }
-
 #bottom {
-	width:100%;
-	padding:0.9em;
-	display:block;
-	position:absolute;
-	bottom:0;
-	background:rgba(255,255,255,1);
-	z-index:1;
-	box-sizing:border-box;
-	-moz-box-sizing:border-box;
+  width: 100%;
+  padding: 0.9em;
+  display: none;
+  position: absolute;
+  bottom: 0;
+  background: #fdc81c;
+  z-index: 1;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
-
 #bottom b {
-	font-size:90%;
-	padding-right:2ex;
+  font-size: 90%;
+  padding-right: 2ex;
 }
-
 #chat {
-	overflow-y: scroll;
-	overflow-wrap: break-word;
-	height:100%;
-	background:#eee;
-	color:black;
-	line-height:1.3em;
-	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	margin:0;
-	padding-left:1em;	
-	padding-right:1em;
-	padding-top:4em;
-	/*padding-bottom:4em;*/
-
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+  height: 100%;
+  line-height: 1.3em;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  margin: 0;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 4em;
+  /*padding-bottom:4em;*/
 }
-
 #chat p {
-	padding-bottom:0.7em;
-	line-height:1.4em;
-	margin:0;
-	font-size: 0.9em;
+  padding-bottom: 0.7em;
+  line-height: 1.4em;
+  margin: 0;
+  font-size: 0.9em;
 }
-
-#chat p[data-sender]+p[data-sender]:not([data-state=world]),
-#chat p.error+p.error {
-	margin-top:-0.7em;
+#chat p[data-sender] + p[data-sender]:not([data-state=world]),
+#chat p.error + p.error {
+  margin-top: -0.7em;
 }
-
 #chat p:last-child {
-	padding-bottom:0.5em;
+  padding-bottom: 0.5em;
 }
-
-#chat p#input	{
-	margin-bottom: 4em;
+#chat p#input {
+  margin-bottom: 4em;
 }
-
 #chat p.chapter {
-	font-weight: 700;
-	text-transform: capitalize;
+  font-weight: 700;
+  text-transform: capitalize;
 }
-
-#chat p.error:first-letter {
-}
-
-#chat p.error {
-}
-
 p[data-sender]:not([data-state=world]):not([data-state=jump]):before {
-	content:attr(data-sender) ": ";
-	font-style: italic;
+  content: attr(data-sender) ": ";
+  font-style: italic;
 }
-
 b[data-command] {
-	font-weight: 700;
+  font-weight: 700;
 }
-
-#chat section:last-child b[data-command], #chat section b {
-	font-weight:normal;
+#chat section:last-child b[data-command],
+#chat section b {
+  font-weight: normal;
 }
-
 #chat section b[data-command] {
-	font-weight: normal;
+  font-weight: normal;
 }
-
 #chat section:last-child b[data-command]:after {
-	content: "" attr(data-command) "";
-	color: rgba(255,255,255,1);
-	vertical-align:middle;
-	font-size:0.6em; 
-	line-height:100%;
-	text-transform:uppercase;
-	letter-spacing:0.1em;
-	background: rgba(0,0,0,0.8);
-	border-radius:3px;	
-	padding:0.2em 0.5em;
-	margin:0 0.4em;
-	position:relative;
-	bottom:0.2em;	
+  content: "" attr(data-command) "";
+  color: #060606;
+  vertical-align: middle;
+  font-size: 0.6em;
+  line-height: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: #ffdf14;
+  padding: 0.2em 0.5em;
+  margin: 0 0.4em;
+  position: relative;
+  bottom: 0.2em;
 }
-
-b[data-command]:hover, b[data-command]:after:hover, b[data-menu]:hover {
-	cursor:pointer;
+b[data-command]:hover,
+b[data-command]:after:hover,
+b[data-menu]:hover {
+  cursor: pointer;
 }
-
 #chat section:last-child b[data-command]:after,
 #input[data-state=world].chars #input-fake,
 #input[data-state=world].chars #input-command,
 #input[data-state=jump].chars #input-fake,
 #input[data-state=jump].chars #input-command {
-	content: "" attr(data-command) "";
-	color: rgba(255,255,255,1);
-	vertical-align:middle;
-	font-size:0.6em; 
-	line-height:100%;
-	text-transform:uppercase;
-	letter-spacing:0.1em;
-	background: rgba(0,0,0,0.8);
-	border-radius:3px;	
-	padding:0.2em 1em;
-	position:relative;
-	bottom:0.2em;
-	font-weight: normal;
+  content: "" attr(data-command) "";
+  color: #060606;
+  vertical-align: middle;
+  font-size: 0.6em;
+  line-height: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: #ffdf14;
+  padding: 0.2em 1em;
+  font-weight: normal;
 }
-
 #input[data-state=world].chars #cursor:before,
 #input[data-state=jump].chars #cursor:before {
-	border-color: white;
+  border-color: white;
 }
-
 body #input-command {
-	background:transparent;
-	//border:none;
-	//outline:none;
-	//padding:0;
-	font-size: 100%;
-	width:100%;
-	margin:0 !important;
-	box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	resize:none;
+  background: transparent;
+  font-size: 100%;
+  width: 100%;
+  margin: 0 !important;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  resize: none;
 }
-
 body.nontouch #input-command {
-	position:absolute;
-	z-index:-1;
-	position:absolute;
-	top:0;
-	left:0;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
-
 #cursor:before {
-	content:"";
-	width:2px;
-	border-style: solid; 
-	border-color: black;
-	border-width:0 0 0 2px;
-	padding-left:-2px;	
+  content: "";
+  width: 2px;
+  border-style: solid;
+  border-color: #fefefe;
+  border-width: 0 0 0 2px;
+  padding-left: -2px;
 }
-
 #cursor.inverted:before {
-	visibility: hidden;
+  visibility: hidden;
 }
-
 #input-fake {
-	white-space: pre-wrap;
+  white-space: pre-wrap;
 }
-
 body.touch #input-fake {
-	display:none;
+  display: none;
 }
-
-
-
-
-
-
-
-
-
-
-
 @media print {
-
-	b[data-command] {
-		font-weight: normal;
-	}
-
-	b[data-command]:after {
-		display:none;
-	}
-
-	#chat {
-		overflow-y: visible;
-	}
-
-	#input-command {
-		display: none;
-	}
+  b[data-command] {
+    font-weight: normal;
+  }
+  b[data-command]:after {
+    display: none;
+  }
+  #chat {
+    overflow-y: visible;
+  }
+  #input-command {
+    display: none;
+  }
 }
-
-
 /*
 #chat p:last-child b[data-command] {
 	font-weight: 700;
@@ -272,3 +304,4 @@ body.touch #input-fake {
 	bottom:0.1em;
 }
 */
+/*# sourceMappingURL=css/city54-temp.css.map */

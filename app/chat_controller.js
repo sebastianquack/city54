@@ -17,7 +17,7 @@ var leaveChat = function(socket, player) {
   player.previousChat = player.currentChat
   player.currentChat = ""
   player.state = "world" // send player back into world
-  player.save()
+  // no save, chat is volatile
 }
 
 // handle player chat
