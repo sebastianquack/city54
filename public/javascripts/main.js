@@ -92,7 +92,6 @@ $(document).ready(function() {
     $("#input").attr("data-state", player.state)
     $("#input-command").focus()
 
-    
     // scroll up to fit new item
     $('#chat').animate( {
 		    scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
