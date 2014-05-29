@@ -112,7 +112,7 @@ $(document).ready(function() {
   $('body').on("keypress keyup keydown click focus resize load", updateInput)
 
   // user clicks on commands
-  $("body").on("click","b[data-menu]", null, function() { 
+  $("body").on("click","*[data-menu]", null, function() { 
     submitMenuCommand($(this).data("menu"))      
   })
 
