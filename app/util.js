@@ -3,6 +3,7 @@ var ChatItem = mongoose.model('ChatItem')
 
 // handle errors
 var handleError = function(err) {
+  console.log("error")
   console.log(err)
   return err
 }

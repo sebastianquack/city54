@@ -51,12 +51,12 @@ module.exports.init = function (io) {
             }            
           }
           
-          // see if 
+          // see if this is a menu event
           if(data.menu == true) {
             Menu.handleInput(socket, player, data.input)
           } else {
 
-            // check player status and hand off to different parsers
+            // check player state and hand off to different parsers
             switch(player.state) {
               case "world": 
                 World.handleInput(socket, player, data.input)

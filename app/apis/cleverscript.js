@@ -2,7 +2,7 @@ var Util = require('../util.js')
 
 var http = require('http')
 
-var talkToBot = function(APIKey, state, input, callback) {
+var talkToBot = function(APIKey, state, input, variableString, callback) {
 
   var cleverRequestCallback = function(response) {
     var str = ''
@@ -16,6 +16,7 @@ var talkToBot = function(APIKey, state, input, callback) {
     path: '/csapi?key=' + process.env.cleverAPIKey + 
                   '&cs=' + state + 
                   '&input=' + encodeURIComponent(input) + 
+                  variableString +
                   '&callback=callback',
     method: 'GET',
     headers: {
