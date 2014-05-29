@@ -80,16 +80,17 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
 
   // send to chat
   if(mode == "chat") {
+    chat_item.player_state = "chat"
     socket.broadcast.to(player.currentChat).emit('chat-update', chat_item) 
   }
 
   // send to player
-  if(mode == "everyone" || mode == "sender") {
+  if(mode == "sender") {
     socket.to(player.uuid).emit('chat-update', chat_item) 
   }
 
   // send back to socket
-  if(mode == "everyone" || mode == "socket") {
+  if(mode == "socket") {
     socket.emit('chat-update', chat_item) 
   }  
 }

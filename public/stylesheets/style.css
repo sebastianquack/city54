@@ -280,8 +280,6 @@ b[data-menu]:hover {
   letter-spacing: 0.1em;
   background: #ffdf14;
   padding: 0.2em 1em;
-  position: relative;
-  bottom: 0.2em;
   font-weight: normal;
 }
 #input[data-state=world].chars #cursor:before,
