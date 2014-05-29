@@ -160,6 +160,12 @@ $(document).ready(function() {
               return sel.text.length - selLen;
           }
       }
+
+  // toggle navigation
+  $('.navbar-toggle').click( function(){
+    $(this).parent().toggleClass('show');
+  });
+
   })(jQuery);
 
 })
