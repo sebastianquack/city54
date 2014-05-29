@@ -211,7 +211,9 @@ header .show ul {
   -moz-box-sizing: border-box;
   margin: 0;
   padding: 20px;
-  padding-top: 110px;
+	padding-top: 110px;
+	position: absolute;
+	top: 0;
 }
 #chat p {
   padding-bottom: 0.7em;

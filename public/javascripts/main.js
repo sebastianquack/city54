@@ -93,7 +93,8 @@ $(document).ready(function() {
     $("#input-command").focus()
 
     // scroll up to fit new item
-	  $('#chat').animate( {
+	  
+    $('#chat').animate( {
 		    scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
       }, {
 	      duration: 600, //$("ul#chat p:last-child").height()*100,
@@ -115,12 +116,11 @@ $(document).ready(function() {
   $("body").on("click","*[data-menu]", null, function() { 
     submitMenuCommand($(this).data("menu"))      
   })
-
+  
   // user clicks on menu
   $("body").on("click","b[data-command]", null, function() { 
     autoType($(this).data("command"))
   })
-
 
   // user hits enter in console
   $('#input-command').on("keypress", function(e) {
@@ -130,7 +130,7 @@ $(document).ready(function() {
   })
 
   // Initialize jRumble on Selector
-  $('body').jrumble();
+  //$('body').jrumble();
 
   /*
   // Start rumble on element
