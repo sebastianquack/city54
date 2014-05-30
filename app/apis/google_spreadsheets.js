@@ -6,7 +6,7 @@ var googleConf = {
 	  // use the PEM file we generated from the downloaded key
 	  //keyFile: 'key.pem',
 	  key: process.env.googleAPIKey,
-	  //expiration: 5000,
+	  expiration: 30000,
 	  useHTTPS: false,
 	  // specify the scopes you wish to access 
 	  scopes: ['https://www.googleapis.com/auth/drive.readonly','https://spreadsheets.google.com/feeds']
