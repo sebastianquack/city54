@@ -15,6 +15,7 @@ var PlayerSchema = new Schema({
   currentBot: { type: String, default: '' },
   currentChat: { type: String, default: '' },
   previousChat: { type: String, default: '' },
+  quests: { type: Array, default: [] }
 })
 
 /**
@@ -34,6 +35,27 @@ PlayerSchema.methods.setRoom = function(room, socket) {
     this.previousRoom = this.currentRoom
     this.currentRoom = room
     this.previousChat = "" // a new chance for chat
+  }
+}
+
+PlayerSchema.methods.addQuest(questGiver, fromBot, toBot, message) {
+  this.quests.push({questGiver: questGiver, fromBot: fromBot, toBot: toBot, message: message, status: 'active'})
+}
+
+PlayerSchema.methods.getQuest(fromBot) {
+  for (i in this.quests) {
+    if((this.quests[i].fromBot == fromBot) && this.quests[i].status == 'active') {
+      return this.quests[i]
+    }
+  }
+}
+
+PlayerSchema.methods.resolveQuest(quest) {
+  for (i in this.quests) {
+    if(this.quests[i] == quest) {
+      this.quests[i].status = 'resolved'
+      return
+    }
   }
 }
 
