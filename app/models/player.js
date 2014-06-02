@@ -42,13 +42,34 @@ PlayerSchema.methods.addQuest = function(questGiver, fromBot, toBot, message) {
   this.quests.push({questGiver: questGiver, fromBot: fromBot, toBot: toBot, message: message, status: 'active'})
 }
 
-PlayerSchema.methods.getQuest = function(fromBot) {
+PlayerSchema.methods.getActiveQuestFromBot = function(fromBot) {
   for (i in this.quests) {
     if((this.quests[i].fromBot == fromBot) && this.quests[i].status == 'active') {
       return this.quests[i]
     }
   }
+  return null
 }
+
+PlayerSchema.methods.getActiveQuestToBot = function(toBot) {
+  for (i in this.quests) {
+    if((this.quests[i].toBot == toBot) && this.quests[i].status == 'active') {
+      return this.quests[i]
+    }
+  }
+  return null
+}
+
+PlayerSchema.methods.getActiveQuest = function(fromBot, toBot) {
+  for (i in this.quests) {
+    if((this.quests[i].fromBot == fromBot) && (this.quests[i].toBot == toBot) && this.quests[i].status == 'active') {
+      return this.quests[i]
+    }
+  }
+  return null
+}
+
+
 
 PlayerSchema.methods.resolveQuest = function(quest) {
   for (i in this.quests) {
