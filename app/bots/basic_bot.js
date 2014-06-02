@@ -76,13 +76,14 @@ var handleInput = function(bot, player, input) {
       } else {
         bot.setState(player, "generate_mission")        
       }
+      output = handleInput(bot, player, input)
       
       break
       
     case "ask_content":
       output.answer = "Sag mal, kennst du gute Anmachsprüche? Kannst du mir einen sagen?"
       // todo: branch for message type
-      bot.setState(player, "get_message_confirmation")
+      bot.setState(player, "get_content")
       break
 
     case "get_content":
@@ -95,8 +96,11 @@ var handleInput = function(bot, player, input) {
         output.abort = true         
       }
       else {
-        bot.globalVariables.messages.push({text: input, type: 'compliment'})
-        output.answer = "Danke! Kennst du noch eins?"
+        if(!bot.globalVariables.messages) {
+          bot.globalVariables.messages = []
+        }
+        bot.globalVariables.messages.push({text: input, type: 'anmachspruch'})
+        output.answer = "Danke! Kennst du noch einen?"
         bot.setState(player, "get_content")        
       }
       break
@@ -108,16 +112,19 @@ var handleInput = function(bot, player, input) {
       
     case "get_mission_confirmation":
       if(input.search(RegexYes) != -1) {
-        var message = "Ich bin so einsam wie die letzte Tankstelle vor der Wüste."
-        if(bot.globalVariables.messages.length > 0) {
-          message = bot.globalVariables.messages[Math.floor(Math.random() * bot.globalVariables.messages.length)].text
+        var message = {text: "Ich bin so einsam wie die letzte Tankstelle vor der Wüste."}
+        if(bot.globalVariables.messages) {
+          if(bot.globalVariables.messages.length > 0) {
+            message = bot.globalVariables.messages[Math.floor(Math.random() * bot.globalVariables.messages.length)].text
+          }
         }
         output.answer = "Super, die Nachricht ist: " + message.text + " Danke, dass du das für mich machst! Gute Reise!" 
+        output.abort = true
         player.addQuest(bot.name, bot.name, bot._love_interest.name, message)        
       } 
       else if(input.search(RegexNo) != -1) {
-        prefix = "Schade... aber ok, du hast wahrscheinlich viel zu tun." 
-        bot.setState(player, "ask_content", prefix)        
+        output.answer = "Schade... aber ok, du hast wahrscheinlich viel zu tun. Tschüss!" 
+        output.abort = true
       }
       else {
         output.answer = "Bitte rede mal Klartext. Das ist wichtig für mich! Ja oder nein?"
