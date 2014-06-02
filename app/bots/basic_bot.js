@@ -92,7 +92,7 @@ var handleInput = function(bot, player, input) {
         bot.setState(player, "get_content")
       } 
       else if(input.search(RegexNo) != -1) {
-        prefix = "Ok, trotzdem danke! Bis bald!"
+        output.answer = "Ok, trotzdem danke! Bis bald!"
         output.abort = true         
       }
       else {
