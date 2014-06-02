@@ -2,7 +2,7 @@
 
 var RegexBye = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
 var RegexYes = /^(ja|jaa|yo|yep|genau|ja)?[\s!\.]*$/i
-var RegexNo = = /^(nein|no|nö|nee|ne)?[\s!\.]*$/i
+var RegexNo = /^(nein|no|nö|nee|ne)?[\s!\.]*$/i
 
 /* function declarations */
 
@@ -59,21 +59,19 @@ var handleInput = function(bot, player, input) {
 
     case "greeting":  
       output.answer = "Schön dich wiederzusehen, " + bot.playerInfo[player.uuid].playerName + "! "
-      output.answer += "Bin aber gerade sehr beschäftigt. Tschüss!"
       bot.setState(player, "check_keyphrase")
       break
       
-    case "check_keyphase":
+    case "check_keyphrase":
       // todo: check if user input matches keyphrase stored in player mission object
       
-      
-      player.addQuest(bot.name, bot.name, bot._love_interest.name, message)        
+      //player.addQuest(bot.name, bot.name, bot._love_interest.name, message)        
         
       // it matched
-      bot.setState(player, "ask_sender_confirmation")
+      //bot.setState(player, "ask_sender_confirmation")
       
       // it didn"t match      
-      if(Math.random() >= 0.5) {
+      if(Math.random() >= 0.5) { // todo: or if no messages are saved
         bot.setState(player, "ask_content")
       } else {
         bot.setState(player, "generate_mission")        
@@ -155,7 +153,8 @@ var handleInput = function(bot, player, input) {
       break
       
     default:
-      output.answer = "Ich weiß nicht, was heute mit mir los ist..."
+      output.answer = "Ich weiß nicht, was heute mit mir los ist... sprich lieber nicht mit mir! Tschüss!"
+      output.abort = true
       bot.setState(player, "")
   }  
   

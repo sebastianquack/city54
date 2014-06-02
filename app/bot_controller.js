@@ -61,7 +61,7 @@ var handleInput = function(socket, player, input) {
 
       // check if bot kicked player out
       if(output.abort) {
-        output.botplayerInfo[player.uuid].state = "" // reset bot state for this player     
+        output.bot.playerInfo[player.uuid].state = "" // reset bot state for this player     
         player.state = "world" // send player back into world
         player.save()
         World.handleInput(socket, player, null) 

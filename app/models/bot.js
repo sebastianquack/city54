@@ -15,7 +15,7 @@ var BotSchema = new Schema({
 
 /* expose functionality */
 
-BotSchema.methods.setState(player, state) {
+BotSchema.methods.setState = function(player, state) {
   this.playerInfo[player.uuid].state = state
 }
 

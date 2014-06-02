@@ -38,11 +38,11 @@ PlayerSchema.methods.setRoom = function(room, socket) {
   }
 }
 
-PlayerSchema.methods.addQuest(questGiver, fromBot, toBot, message) {
+PlayerSchema.methods.addQuest = function(questGiver, fromBot, toBot, message) {
   this.quests.push({questGiver: questGiver, fromBot: fromBot, toBot: toBot, message: message, status: 'active'})
 }
 
-PlayerSchema.methods.getQuest(fromBot) {
+PlayerSchema.methods.getQuest = function(fromBot) {
   for (i in this.quests) {
     if((this.quests[i].fromBot == fromBot) && this.quests[i].status == 'active') {
       return this.quests[i]
@@ -50,7 +50,7 @@ PlayerSchema.methods.getQuest(fromBot) {
   }
 }
 
-PlayerSchema.methods.resolveQuest(quest) {
+PlayerSchema.methods.resolveQuest = function(quest) {
   for (i in this.quests) {
     if(this.quests[i] == quest) {
       this.quests[i].status = 'resolved'
