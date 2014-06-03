@@ -1,4 +1,5 @@
 var FuzzySet = require('fuzzyset.js')
+var Util = require('../util.js')
 
 /* variable declarations */
 
@@ -29,7 +30,11 @@ var handleInput = function(bot, player, input) {
     case "":
       // add intro depending on love interest status
       if(bot._love_interest) {
-        prefix = bot._love_interest.name + " liebt mich, " + bot._love_interest.name + " liebt mich nicht... oh hallo! Ich hab dich gar nicht gesehen."
+        prefix = 
+          Util.capitaliseFirstLetter(bot._love_interest.name) + 
+          " liebt mich, " + 
+          Util.capitaliseFirstLetter(bot._love_interest.name) + 
+          " liebt mich nicht... oh hallo! Ich hab dich gar nicht gesehen."
       }
       // check if bot knows player's name
       if(bot.playerInfo[player.uuid].playerName) {
@@ -52,7 +57,8 @@ var handleInput = function(bot, player, input) {
       break
 
     case "greeting":  
-      output.answer = "Schön dich wiederzusehen, " + bot.playerInfo[player.uuid].playerName + "! "
+      output.answer = "Schön dich wiederzusehen, " + 
+      Util.capitaliseFirstLetter(bot.playerInfo[player.uuid].playerName) + "! "
       bot.setState(player, "check_keyphrase")
       // todo: ask how quest is going if there is one?         
       break
@@ -62,14 +68,15 @@ var handleInput = function(bot, player, input) {
       console.log(quest)
       if(quest != null) {
 
-        fuzzy = FuzzySet([quest.message.text])
-        console.log(fuzzy)
+        var fuzzy = FuzzySet([quest.message.text])        
+        var fuzzyResult = fuzzy.get(input) // fuzzy comparison
         
-        if((fuzzy.get(input))[0][0] > 0.5) { // fuzzy comparison
-          bot.setState(player, "ask_sender_confirmation")
-        } else { 
-          bot.setState(player, "ask_content") 
-        }  
+        bot.setState(player, "ask_content") //default
+        if(fuzzyResult) {
+          if((fuzzy.get(input))[0][0] > 0.5) { 
+            bot.setState(player, "ask_sender_confirmation")
+          } 
+        }
       } else { // there is no quest
         if(!bot.globalVariables.messages || !bot._love_interest) { 
           bot.setState(player, "ask_content") // bot doesn't know any messages or isn't in love: collect 
@@ -101,14 +108,14 @@ var handleInput = function(bot, player, input) {
         if(!bot.globalVariables.messages) {
           bot.globalVariables.messages = []
         }
-        bot.globalVariables.messages.push({text: input, type: 'anmachspruch'})
+        bot.globalVariables.messages.push({text: Util.capitaliseFirstLetter(input), type: 'anmachspruch'})
         output.answer = "Danke! Kennst du vielleicht noch einen?"
         bot.setState(player, "get_content")        
       }
       break
       
     case "offer_quest":
-      output.answer = "Hey, kannst du nach " + bot._love_interest.room + " gehen und " + bot._love_interest.name + " eine Nachricht von mir übermitteln?"
+      output.answer = "Hey, kannst du nach " + Util.capitaliseFirstLetter(bot._love_interest.room.split('/')[0]) + " gehen und " + Util.capitaliseFirstLetter(bot._love_interest.name) + " eine Nachricht von mir übermitteln?"
       bot.setState(player, "get_quest_confirmation")
       break
       
@@ -120,7 +127,7 @@ var handleInput = function(bot, player, input) {
             message = bot.globalVariables.messages[Math.floor(Math.random() * bot.globalVariables.messages.length)]
           }
         }
-        output.answer = "Super, die Nachricht ist: " + message.text + " Danke, dass du das für mich machst! Gute Reise!" 
+        output.answer = "Super, die Nachricht ist: '" + message.text + "' Danke, dass du das für mich machst! Gute Reise!" 
         output.abort = true
         player.addQuest(bot.name, bot.name, bot._love_interest.name, message)        
       } 
@@ -138,7 +145,7 @@ var handleInput = function(bot, player, input) {
       // todo: respond to message type
       output.answer = "Ohhhh, das berührt mich sehr."
       
-      output.answer += "Hat dir " + bot._love_interest.name + " aus " + bot._love_interest.room + " gesagt, dass du mir das sagen sollst?"
+      output.answer += "Hat dir " + Util.capitaliseFirstLetter(bot._love_interest.name) + " aus " + Util.capitaliseFirstLetter(bot._love_interest.room.split('/')[0]) + " gesagt, dass du mir das sagen sollst?"
       bot.setState(player, "get_sender_confirmation")
       break
       
@@ -151,7 +158,7 @@ var handleInput = function(bot, player, input) {
       } 
       else if(input.search(RegexNo) != -1) {
         // todo: respond to message type
-        prefix = "Schade... von " + bot._love_interest.name + " hätte ich gerne mal wieder was gehört."
+        prefix = "Schade... von " + Util.capitaliseFirstLetter(bot._love_interest.name) + " hätte ich gerne mal wieder was gehört."
         bot.setState(player, "ask_content")
         output = handleInputPrefix(bot, player, input, prefix)
       }

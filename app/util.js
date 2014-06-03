@@ -8,6 +8,11 @@ var handleError = function(err) {
   return err
 }
 
+// capitalize first letter of string
+var capitaliseFirstLetter = function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 // returns first word
 var getCommand = function(input) {
   if(input) {
@@ -96,6 +101,7 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
   }  
 }
 
+module.exports.capitaliseFirstLetter = capitaliseFirstLetter
 module.exports.linkify = linkify
 module.exports.getCommand = getCommand
 module.exports.getObject = getObject

@@ -240,6 +240,7 @@ p[data-sender]:not([data-state=world]):not([data-state=jump]):before {
   content: attr(data-sender) ": ";
 	color: #fdc81c;
   font-style: italic;
+  text-transform: capitalize;
 }
 b[data-command] {
   font-weight: 700;
