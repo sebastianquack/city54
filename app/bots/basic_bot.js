@@ -58,6 +58,8 @@ var handleInput = function(bot, player, input, callback, prefix) {
       break
       
     case "check_keyphrase":
+      bot.setState(player, "offer_quest") // default option
+      
       var quests = player.getActiveQuestsToBot(bot.name) // get all active quests leading to this bot
       if(quests.length > 0) {
         
@@ -87,13 +89,10 @@ var handleInput = function(bot, player, input, callback, prefix) {
           if(bestMatchIndex != -1) { 
             bot.playerInfo[player.uuid].currentQuest = quests[bestMatchIndex] // save the current quest
             bot.setState(player, "ask_sender_confirmation")
-          } else {
-            bot.setState(player, "offer_quest")
           }
+        
         }
         
-      } else { // there is no quest leading to this bot
-        bot.setState(player, "offer_quest")
       } 
       handleInput(bot, player, input, callback) 
       return
@@ -221,9 +220,9 @@ var handleInput = function(bot, player, input, callback, prefix) {
       activeQuests = player.getActiveQuestsFromBot(bot.name)
 
       if(!bot.globalVariables.messages) bot.globalVariables.messages = [] 
-      if(bot.globalVariables.messages.length < 2 || Math.random() < 0.5) { 
+      if(bot.globalVariables.messages.length < 2 || Math.random() < 0.3) { 
 
-        bot.setState(player, "ask_content") 
+        bot.setState(player, "ask_content")
         handleInput(bot, player, input, callback, prefix)
         return
 
