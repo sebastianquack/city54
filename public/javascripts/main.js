@@ -52,7 +52,7 @@ $(document).ready(function() {
   
   // check for cookie
   if(!$.cookie('city54_uuid')) {
-    $.cookie('city54_uuid', uuid.v1()) // create new uuid
+    $.cookie('city54_uuid', uuid.v1(), { expires: 31 }) // create new uuid
   }
   // send cookie to server for check 
   socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
@@ -111,12 +111,13 @@ $(document).ready(function() {
   // focus input field
   $('body').on("keypress keyup keydown click focus resize load", updateInput)
 
-  // user clicks on commands
+  // user clicks on menu
   $("body").on("click","*[data-menu]", null, function() { 
+    $('nav').removeClass('show');
     submitMenuCommand($(this).data("menu"))      
   })
   
-  // user clicks on menu
+  // user clicks on command
   $("body").on("click","b[data-command]", null, function() { 
     autoType($(this).data("command"))
   })

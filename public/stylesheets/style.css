@@ -14,7 +14,7 @@
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
-  src: local('Roboto Regular'), local('Roboto-Regular'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+  src: local('Roboto Regular'), local('Roboto-Regular'), url(../fonts/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
 }
 @font-face {
   font-family: 'Roboto';
@@ -26,7 +26,7 @@
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 700;
-  src: local('Roboto Bold'), local('Roboto-Bold'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(../fonts/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
 }
 @font-face {
   font-family: 'Roboto';
@@ -131,7 +131,7 @@ header {
   z-index: 1;
 }
 header h1 {
-  background: #222222 url("images/c54_header.gif") no-repeat;
+  background: #222222 url("../images/c54_header.jpg") no-repeat;
   height: 70px;
   padding: 0;
   margin: 0 35px 0 0;
@@ -152,17 +152,21 @@ header button {
   cursor: pointer;
   background: #fdc81c;
   background-image: none;
-  border: 1px solid transparent;
+  border: 1px solid #222222;
 }
 header button.fullscreen-toggle {
   right: 35px;
 }
+header button.help-btn {
+	 background: #222222 url("../images/help_button.png") no-repeat;
+}
 header button.navbar-toggle {
   top: 35px;
+  background: #222222 url("../images/nav_button.png") no-repeat;
 }
 header button:hover {
-  background: #060606;
-  color: #fdc81c;
+  /*background: #060606;
+  color: #fdc81c;*/
 }
 header ul {
   position: absolute;
@@ -238,7 +242,9 @@ header .show ul {
 }
 p[data-sender]:not([data-state=world]):not([data-state=jump]):before {
   content: attr(data-sender) ": ";
+	color: #fdc81c;
   font-style: italic;
+  text-transform: capitalize;
 }
 b[data-command] {
   font-weight: 700;

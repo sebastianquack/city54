@@ -13,7 +13,7 @@ var leaveBot = function(player) {
   Bots.findOne( { name: player.currentBot } , function(err, bot) {
     if(bot) {
       bot.playerInfo[player.uuid].state = ""
-      bot.markModified('playerInfo');
+      bot.markModified('playerInfo')
       bot.save()   
     }
   })
@@ -52,29 +52,25 @@ var handleInput = function(socket, player, input) {
       bot.save()   
     }
 
-    console.log(bot._love_interest)    
-
-    bot.findLoveInterest(function() {
-      console.log(bot._love_interest)    
+    bot.findLoveInterest(function() { // locate the bots current love interest
       
       var output = BasicBot.handleInput(bot, player, input) // get the bots response
-      bot = output.bot // overwrite the updated bot
 
       // write answer to console
       Util.write(socket, player, {name: player.currentBot}, output.answer, "sender") 
 
       // check if bot kicked player out
       if(output.abort) {
-        bot.playerInfo[player.uuid].state = "" // reset bot state for this player     
+        output.bot.playerInfo[player.uuid].state = "" // reset bot state for this player     
         player.state = "world" // send player back into world
         player.save()
         World.handleInput(socket, player, null) 
       }
 
       // save updated bot to db
-      bot.markModified('globalVariables')
-      bot.markModified('playerInfo')
-      bot.save()
+      output.bot.markModified('globalVariables')
+      output.bot.markModified('playerInfo')
+      output.bot.save()
       
     })
                               

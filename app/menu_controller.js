@@ -15,6 +15,12 @@ var handleInput = function(socket, player, input) {
 
     case "spielstand": 
       menu_response = "Spielstand"
+      
+      // name
+      // städte besucht
+      // aufgaben
+      
+      
       break
 
     case "credits":

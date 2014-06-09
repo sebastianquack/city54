@@ -24,7 +24,7 @@ module.exports.init = function (io) {
         if(err) return Util.handleError(err)
         
         if(data.input)
-          data.input = data.input.toLowerCase()
+          data.input = data.input.trim().toLowerCase()
 
         if(!player) {
 
@@ -37,6 +37,7 @@ module.exports.init = function (io) {
 
         } else {
 
+          // if client was just reloaded
           if(data.firstPlayerAction) {
             switch(player.state) {
               case "world":
@@ -46,6 +47,7 @@ module.exports.init = function (io) {
                 break
               default: // reset intro to start
                 player.state = "welcome"
+                player.name = ""
                 player.save()
                 break
             }            

@@ -13,6 +13,12 @@ var BotSchema = new Schema({
   playerInfo: { type: Schema.Types.Mixed, default: {} }
 })
 
+/* expose functionality */
+
+BotSchema.methods.setState = function(player, state) {
+  this.playerInfo[player.uuid].state = state
+}
+
 BotSchema.methods.findLoveInterest = function(callback) {
   if(this._love_interest) {
     this.populate('_love_interest', callback)
