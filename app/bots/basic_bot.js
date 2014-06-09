@@ -153,6 +153,10 @@ var handleInput = function(bot, player, input) {
       if(input.search(RegexYes) != -1) {
         // todo: respond to message type & interest_level
         prefix = "Puuuh. Das ist ja was. Ich bin wirklich total verliebt. Danke!"
+        
+        
+        
+        
         bot.setState(player, "offer_quest")
         output = handleInputPrefix(bot, player, input, prefix)
       } 

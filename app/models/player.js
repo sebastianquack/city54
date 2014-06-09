@@ -9,7 +9,8 @@ var PlayerSchema = new Schema({
   uuid: { type: String, default: '' },
   name: { type: String, default: '' },
   state: { type: String, default: '' },
-  active: { tpye: Boolean, default: false },
+  active: { type: Boolean, default: false },
+  inMenu: { type: Boolean, default: false },
   passphrase: { type: String, default: null },
   currentRoom: { type: String, default: '' },
   previousRoom: { type: String, default: '' },
@@ -17,7 +18,8 @@ var PlayerSchema = new Schema({
   currentBot: { type: String, default: '' },
   currentChat: { type: String, default: '' },
   previousChat: { type: String, default: '' },
-  quests: { type: Array, default: [] }
+  quests: [],
+  cities: []
 })
 
 /**
@@ -37,6 +39,12 @@ PlayerSchema.methods.setRoom = function(room, socket) {
     this.previousRoom = this.currentRoom
     this.currentRoom = room
     this.previousChat = "" // a new chance for chat
+    
+    var currentCity = this.currentRoom.split("/")[0]
+    if(this.cities.indexOf(currentCity) == -1) {
+      this.cities.push(currentCity)
+      console.log(this.cities)
+    } 
   }
 }
 
