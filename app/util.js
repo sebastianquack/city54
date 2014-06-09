@@ -41,6 +41,7 @@ var linkify = function(text) {
 	return text
 }
 
+
 // send text to client
 // player: playing belonging to the socket, both causing the message
 // emitter: player object of the sender ( usually the player again, or {name: "System"})

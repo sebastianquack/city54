@@ -39,6 +39,9 @@ module.exports.init = function (io) {
 
           // if client was just reloaded
           if(data.firstPlayerAction) {
+            player.inMenu = false
+            player.save()
+            
             switch(player.state) {
               case "world":
                 break
@@ -54,7 +57,9 @@ module.exports.init = function (io) {
           }
           
           // see if this is a menu event
-          if(data.menu == true) {
+          if(data.menu == true || player.inMenu == true) {
+            player.inMenu = true
+            player.save()
             Menu.handleInput(socket, player, data.input)
           } else {
 
@@ -64,7 +69,6 @@ module.exports.init = function (io) {
                 World.handleInput(socket, player, data.input)
                 break
               case "bot":
-                console.log(player.bots)
                 Bots.handleInput(socket, player, data.input)  
                 break
               case "chat":

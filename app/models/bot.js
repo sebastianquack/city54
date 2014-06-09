@@ -8,7 +8,7 @@ var Schema = mongoose.Schema
 var BotSchema = new Schema({
   name: { type: String, default: '' },
   room: { type: String, default: ''},
-  _love_interest : { type: String, ref: 'Bot' },
+  relationships: [],
   globalVariables: { type: Object, default: {} },
   playerInfo: { type: Schema.Types.Mixed, default: {} }
 })
@@ -19,22 +19,15 @@ BotSchema.methods.setState = function(player, state) {
   this.playerInfo[player.uuid].state = state
 }
 
-BotSchema.methods.findLoveInterest = function(callback) {
-  if(this._love_interest) {
-    this.populate('_love_interest', callback)
-    return
-  }
-  
+BotSchema.methods.findRandomOtherBot = function(callback) {  
   var thisbot = this
   mongoose.model('Bot', BotSchema).find({ name: { $ne: thisbot.name } }, function (err, all_bots) {
     if(all_bots.length > 0) {
-      var love_interest = all_bots[Math.floor(Math.random() * all_bots.length)]
+      var randomBot = all_bots[Math.floor(Math.random() * all_bots.length)]
       //console.log(thisbot.name + " liebt " + love_interest.name + " in " + love_interest.room)
-      thisbot._love_interest = love_interest._id
-      thisbot.save()      
-      thisbot.populate('_love_interest', callback)
+      callback(randomBot)
     } else {
-      callback()
+      callback(null)
     }
   })  
 }

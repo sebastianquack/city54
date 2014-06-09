@@ -9,7 +9,8 @@ var PlayerSchema = new Schema({
   uuid: { type: String, default: '' },
   name: { type: String, default: '' },
   state: { type: String, default: '' },
-  active: { tpye: Boolean, default: false },
+  active: { type: Boolean, default: false },
+  inMenu: { type: Boolean, default: false },
   passphrase: { type: String, default: null },
   currentRoom: { type: String, default: '' },
   previousRoom: { type: String, default: '' },
@@ -17,7 +18,8 @@ var PlayerSchema = new Schema({
   currentBot: { type: String, default: '' },
   currentChat: { type: String, default: '' },
   previousChat: { type: String, default: '' },
-  quests: { type: Array, default: [] }
+  quests: [],
+  cities: []
 })
 
 /**
@@ -37,49 +39,48 @@ PlayerSchema.methods.setRoom = function(room, socket) {
     this.previousRoom = this.currentRoom
     this.currentRoom = room
     this.previousChat = "" // a new chance for chat
+    
+    var currentCity = this.currentRoom.split("/")[0]
+    if(this.cities.indexOf(currentCity) == -1) {
+      this.cities.push(currentCity)
+      console.log(this.cities)
+    } 
   }
 }
 
-PlayerSchema.methods.addQuest = function(questGiver, fromBot, toBot, message) {
-  this.quests.push({questGiver: questGiver, fromBot: fromBot, toBot: toBot, message: message, status: 'active'})
-}
-
-PlayerSchema.methods.getActiveQuestFromBot = function(fromBot) {
-  for (i in this.quests) {
-    if((this.quests[i].fromBot == fromBot) && this.quests[i].status == 'active') {
-      return this.quests[i]
+PlayerSchema.methods.getActiveQuestsToBot = function(toBot) {
+  var quests = []
+  this.quests.forEach(function(q) {
+    if((q.toBot == toBot) && q.status == 'active') {
+      quests.push(q)
     }
-  }
-  return null
+  })
+  return quests
 }
 
-PlayerSchema.methods.getActiveQuestToBot = function(toBot) {
-  for (i in this.quests) {
-    if((this.quests[i].toBot == toBot) && this.quests[i].status == 'active') {
-      return this.quests[i]
+PlayerSchema.methods.getActiveQuestsFromBot = function(fromBot) {
+  var quests = []
+  this.quests.forEach(function(q) {
+    if((q.fromBot == fromBot) && q.status == 'active') {
+      quests.push(q)
     }
-  }
-  return null
+  })
+  return quests
 }
-
-PlayerSchema.methods.getActiveQuest = function(fromBot, toBot) {
-  for (i in this.quests) {
-    if((this.quests[i].fromBot == fromBot) && (this.quests[i].toBot == toBot) && this.quests[i].status == 'active') {
-      return this.quests[i]
-    }
-  }
-  return null
-}
-
-
 
 PlayerSchema.methods.resolveQuest = function(quest) {
-  for (i in this.quests) {
-    if(this.quests[i] == quest) {
-      this.quests[i].status = 'resolved'
+  thisPlayer = this
+  console.log("resolving quest")
+  console.log(quest)
+  this.quests.forEach(function(q, index) {
+    if(q.fromBot == quest.fromBot && q.toBot == quest.toBot && q.message.text == quest.message.text) {
+      thisPlayer.quests[index].status = 'resolved'
+      thisPlayer.markModified('quests')
+      thisPlayer.save()
+      console.log(thisPlayer.quests[index])
       return
     }
-  }
+  })
 }
 
 /**
