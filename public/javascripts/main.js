@@ -15,7 +15,7 @@ function autoType(text) {
     remaining = text.substr(1)
     elem = $('#input-command')
     elem.val(elem.val() + character)
-    elem.trigger("keyup")
+    elem.trigger("keypress")
     if (remaining != "") setTimeout(function () {type(remaining,delay)}, delay)
   }
   type(text,delay)
@@ -136,7 +136,7 @@ $(document).ready(function() {
   })
     
   // focus input field
-  $('body').on("keypress keyup keydown click focus resize load", updateInput)
+  $('body').on("keypress keyup click focus resize load", updateInput)
 
   // user clicks on menu
   $("body").on("click","*[data-menu]", null, function() { 

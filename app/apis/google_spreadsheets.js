@@ -89,6 +89,7 @@ var get_spreadsheet = function(token, room, callback) {
     if(err) {
     	//throw err
       // TODO: catch error and reset player
+      console.log("Error in sheetReady, Message follows:")
       console.log(err)
     	return
     }
