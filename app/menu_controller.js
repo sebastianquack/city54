@@ -11,8 +11,10 @@ var handleInput = function(socket, player, input) {
   switch(input) {
 
     case "hilfe": 
+      player.inMenu = true
+      player.save()
       Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "chapter")
-      text = "Herzlich Willkommen bei Einsame Immobilien, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung]"
+      text = "Herzlich Willkommen bei Einsame Immobilien, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung] [zurück zum spiel]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
 
@@ -68,8 +70,6 @@ var handleInput = function(socket, player, input) {
       }
       info += quests
       
-      info += "[zurück zum spiel]"
-      
       Util.write(socket, player, {name: "System"}, Util.linkify(info), "sender")
       
       break
@@ -77,7 +77,7 @@ var handleInput = function(socket, player, input) {
     case "credits":
       Util.write(socket, player, {name: "System"}, "Credits", "sender", "chapter")
       
-      text = "Ein Spiel von Invisible Playground, frei nach dem Roman 'Anarchie in Ruhrstadt' von Jörg Albrecht. Game-Design: Sebastian Quack, Holger Heissmeyer, Daniel Boy, Christiane Hütter. Recherchen: Christina Prfötschner. Programmierung: Sebastian Quack und Holger Heissmeyer. Grafik: V2A.net. Teil des Gesamtprojekts '54. Stadt' von Ringlokschuppen Ruhr, Theater Oberhausen und Urbane Künste Ruhr. [zurück zum spiel]"
+      text = "Ein Spiel von Invisible Playground, frei nach dem Roman 'Anarchie in Ruhrstadt' von Jörg Albrecht. Game-Design: Sebastian Quack, Holger Heissmeyer, Daniel Boy, Christiane Hütter. Recherchen: Christina Prfötschner. Programmierung: Sebastian Quack und Holger Heissmeyer. Grafik: V2A.net. Teil des Gesamtprojekts '54. Stadt' von Ringlokschuppen Ruhr, Theater Oberhausen und Urbane Künste Ruhr."
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
@@ -86,7 +86,7 @@ var handleInput = function(socket, player, input) {
     case "agbs":
       Util.write(socket, player, {name: "System"}, "Nutzungsbedingungen", "sender", "chapter")
       
-      text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der Immobilien werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an tobias.fritzsche@ringlokschuppen.de [zurück zum spiel]"
+      text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der Immobilien werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an tobias.fritzsche@ringlokschuppen.de"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
@@ -95,7 +95,7 @@ var handleInput = function(socket, player, input) {
     case "theater-tour":
       Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "chapter")
       
-      text = "Einsame Immobilien ist Teil der 54. Stadt, einer spektakulären Theatertour von kainkollektiv, LIGNA, Invisible Playground und Copy & Waste, die vom 12.-14. 2014 September in Mülheim und Oberhausen stattfinden wird. Infos und Karten unter ringlokschuppen.ruhr (oder einfach auf das Logo oben klicken!)<br/> [zurück zum spiel]"
+      text = "Einsame Immobilien ist Teil der 54. Stadt, einer spektakulären Theatertour von kainkollektiv, LIGNA, Invisible Playground und Copy & Waste, die vom 12.-14. 2014 September in Mülheim und Oberhausen stattfinden wird. Infos und Karten unter ringlokschuppen.ruhr (oder einfach auf das Logo oben klicken!)"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
