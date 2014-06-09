@@ -108,7 +108,6 @@ function processRoomCommand(socket, player, command, object) {
   if (data == undefined) return false
   var reply = ""
   for (i in data.command) {
-    console.log(data)
     if (i >= data.command.length) { // prevent a strange bug having to do with cached data object being too large
       console.log("error prevented: player.currentRoomData too large!")
       continue
