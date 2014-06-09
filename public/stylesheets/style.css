@@ -251,6 +251,12 @@ p[data-sender]:not([data-state=world]):not([data-state=jump]):before {
 b[data-command] {
   font-weight: 700;
 }
+#chat section {
+  transition:color 2s;
+}
+#chat section:not(:last-child) {
+  color:#bbb;
+}
 #chat section:last-child b[data-command],
 #chat section b {
   font-weight: normal;
