@@ -165,8 +165,8 @@ header button.navbar-toggle {
   background: #222222 url("../images/nav_button.png") no-repeat;
 }
 header button:hover {
-  background: #060606;
-  color: #fdc81c;
+  /*background: #060606;
+  color: #fdc81c;*/
 }
 header ul {
   position: absolute;
