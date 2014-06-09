@@ -267,7 +267,6 @@ b[data-command] {
   letter-spacing: 0.1em;
   background: #ffdf14;
   padding: 0.2em 0.5em;
-  margin: 0 0.4em;
   position: relative;
   bottom: 0.2em;
   opacity: 0;
@@ -283,7 +282,7 @@ b[data-menu]:hover,
 b#einbetten {
   cursor: pointer;
 }
-#chat section:last-child b[data-command]:after,
+
 #input[data-state=world].chars #input-fake,
 #input[data-state=world].chars #input-command,
 #input[data-state=jump].chars #input-fake,
@@ -297,6 +296,7 @@ b#einbetten {
   letter-spacing: 0.1em;
   background: #ffdf14;
   padding: 0.2em 1em;
+  margin: 0 0.4em;
   font-weight: normal;
 }
 #input[data-state=world].chars #cursor:before,
