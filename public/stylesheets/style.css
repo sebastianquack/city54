@@ -256,7 +256,7 @@ b[data-command] {
 #chat section b[data-command] {
   font-weight: normal;
 }
-#chat section:last-child b[data-command]:after {
+#chat section b[data-command]:after {
   content: "" attr(data-command) "";
   color: #060606;
   vertical-align: middle;
@@ -269,6 +269,12 @@ b[data-command] {
   margin: 0 0.4em;
   position: relative;
   bottom: 0.2em;
+  opacity: 0;
+  transition: opacity 2s;
+  transition-delay: 0.5s;
+}
+#chat section:last-child b[data-command]:after {
+  opacity:1;
 }
 b[data-command]:hover,
 b[data-command]:after:hover,
