@@ -6,9 +6,21 @@ var socket
 
 // type command in input field and submit to server
 function autoType(text) {
+  // TODO: scroll to input field
   $('#input-command').focus()
-  $('#input-command').val(text)
-  setTimeout(submitCommand, 800)
+  var delay=90
+
+  var type = function(text,delay) {
+    character = text.substr(0,1)
+    remaining = text.substr(1)
+    elem = $('#input-command')
+    elem.val(elem.val() + character)
+    elem.trigger("keyup")
+    if (remaining != "") setTimeout(function () {type(remaining,delay)}, delay)
+  }
+  type(text,delay)
+
+  setTimeout(submitCommand, delay*(text.length+2))
 }
 
 // submit a command to the server and clear input field 
@@ -70,36 +82,51 @@ $(document).ready(function() {
     }
     else $('body').trigger('stopRumble');
 
-    // todo: just submit the damn player object itself
     player = {
       name:         (data.player_name != null) ? data.player_name : player.name,
       currentRoom:  (data.player_room != null) ? data.player_room : player.currentRoom,
       state:        (data.player_state != null) ? data.player_state : player.state,
     }
 
-    // todo: check what is going on
     if(data.sender_name == "System") {
       newElem = $('<p>' + data.value + '</p>')
     } else {
       newElem = $('<p data-sender="'+data.sender_name+'">' + data.value + '</p>')
     }
     if (data.type != undefined) newElem = newElem.addClass(data.type)
-    $('#chat section:last-child').append(newElem)
-  
+    newElem = newElem.addClass("incoming")
+    newElem = $('#chat section:last-child').append(newElem)
+
     // move input field to bottom and update data
     $('#chat section:last-child').append($("#input").detach())
     $("#input").attr("data-sender", player.name)
     $("#input").attr("data-state", player.state)
     $("#input-command").focus()
 
+/*
+    tt = $(".incoming")
+    t = $(tt.last())
+    t.removeClass("incoming")
+    t.addClass("typing")
+    console.log("all :" + tt.length)
+    console.log("type:" + t.html())
+    t.typewrite({ delay: 60 }, function () {
+      console.log("remove:" + $(t).html() )
+      $(t).removeClass("incoming")
+      $(t).removeClass("typing")
+    })
+*/
+
     // scroll up to fit new item
+    var delta_y = $("#chat")[0].scrollHeight -$("#chat").innerHeight()-$("#chat").scrollTop()
     $('#chat').animate( {
 		    scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
       }, {
-	      duration: 600, //$("ul#chat p:last-child").height()*100,
+	      duration: delta_y*50, //$("ul#chat p:last-child").height()*100,
         queue: false,
-        easing: "swing"
-      })
+        easing: "easeOutSine"
+    })
+    
   })
 
   // detect touch device (roughly)
@@ -150,7 +177,7 @@ $(document).ready(function() {
   */
 
   // blink cursor
-  setInterval(function(){ $("#cursor").toggleClass("inverted")}, 800);
+  setInterval(function(){ $("#cursor").toggleClass("inverted")}, 650);
 
   // detect cursor position in <input>
   (function($) {
