@@ -61,6 +61,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
       bot.setState(player, "offer_quest") // default option
       
       var quests = player.getActiveQuestsToBot(bot.name) // get all active quests leading to this bot
+      console.log(quests)
       if(quests.length > 0) {
         
         var messages = []
@@ -75,6 +76,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
           // determine the best match
           var bestMatchIndex = -1
           fuzzyResult.forEach(function(result, index) {
+            console.log(result)
             if(result[0] > 0.5) {
               if(bestMatchIndex != -1) {
                 if(result[0] > fuzzyResult[bestMatchIndex][0]) {
@@ -87,8 +89,12 @@ var handleInput = function(bot, player, input, callback, prefix) {
           })
           
           if(bestMatchIndex != -1) { 
-            bot.playerInfo[player.uuid].currentQuest = quests[bestMatchIndex] // save the current quest
-            bot.setState(player, "ask_sender_confirmation")
+            quests.forEach(function(q) {
+              if(q.message.text == fuzzyResult[bestMatchIndex][1]) {
+                bot.playerInfo[player.uuid].currentQuest = q // save the current quest
+                bot.setState(player, "ask_sender_confirmation")                
+              }
+            })
           }
         
         }
