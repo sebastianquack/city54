@@ -90,7 +90,7 @@ var handleInput = function(socket, player, input) {
     case "theater-tour":
       Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "chapter")
       
-      text = "Einsame Immobilien ist nur ein kleiner Vorgeschmack auf 54. Stadt, die spektakuläre Theater-Tour mit kainkollektiv, Ligna, Invisible Playground und Copy & Waster, vom 12.-14. 2014 September in Mülheim und Oberhausen. Infos und Karten unter ringlokschuppen.ruhr<br/> [zurück zum spiel]"
+      text = "Einsame Immobilien ist nur ein kleiner Vorgeschmack auf 54. Stadt, die spektakuläre Theater-Tour mit kainkollektiv, LIGNA, Invisible Playground und Copy & Waste, vom 12.-14. 2014 September in Mülheim und Oberhausen. Infos und Karten unter ringlokschuppen.ruhr<br/> [zurück zum spiel]"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
