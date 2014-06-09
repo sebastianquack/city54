@@ -57,7 +57,6 @@ module.exports.init = function (io) {
           }
           
           // see if this is a menu event
-          console.log("player.inMenu = " + player.inMenu)
           if(data.menu == true || player.inMenu == true) {
             player.inMenu = true
             player.save()
@@ -70,7 +69,6 @@ module.exports.init = function (io) {
                 World.handleInput(socket, player, data.input)
                 break
               case "bot":
-                console.log(player.bots)
                 Bots.handleInput(socket, player, data.input)  
                 break
               case "chat":

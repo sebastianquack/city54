@@ -51,10 +51,8 @@ var handleInput = function(socket, player, input) {
       bot.markModified('playerInfo')
       bot.save()   
     }
-
-    bot.findLoveInterest(function() { // locate the bots current love interest
       
-      var output = BasicBot.handleInput(bot, player, input) // get the bots response
+    BasicBot.handleInput(bot, player, input, function(output) { // process the bots response
 
       // write answer to console
       Util.write(socket, player, {name: player.currentBot}, output.answer, "sender") 
@@ -64,14 +62,19 @@ var handleInput = function(socket, player, input) {
         output.bot.playerInfo[player.uuid].state = "" // reset bot state for this player     
         player.state = "world" // send player back into world
         player.save()
-        World.handleInput(socket, player, null) 
+        if(output.abort == 'bot') {
+          Util.write(socket, player, {name: "System"}, output.bot.name + " wendet sich von dir ab.", "sender")
+        } else {
+          Util.write(socket, player, {name: "System"}, "Du wendest dich von " + output.bot.name + " ab.", "sender")
+        }
       }
 
       // save updated bot to db
       output.bot.markModified('globalVariables')
+      output.bot.markModified('relationships')
       output.bot.markModified('playerInfo')
       output.bot.save()
-      
+    
     })
                               
   })

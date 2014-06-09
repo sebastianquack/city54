@@ -8,17 +8,15 @@ var World = require('./world_controller.js')
 // handle introduction
 var handleInput = function(socket, player, input) {
 
-  console.log("menu command: " + input)
-
   switch(input) {
 
     case "hilfe": 
       Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "chapter")
-      text = "Herzlich Willkommen bei Einsame Immobilien, dem Webspiel zur 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics.<br>[erkläre spielwelt]"
+      text = "Herzlich Willkommen bei Einsame Immobilien, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
 
-    case "erkläre spielwelt":
+    case "starte anleitung":
       text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene Städte besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
@@ -56,13 +54,20 @@ var handleInput = function(socket, player, input) {
       info += ".<br>"
             
       // quests
+      var quests = ""
+      var resolved = 0
       player.quests.forEach(function(quest) {
-        //{questGiver: questGiver, fromBot: fromBot, toBot: toBot, message: message, status: 'active'}
         if(quest.status == 'active') {
-          info += Util.capitaliseFirstLetter(quest.questGiver) + " hat dich gefragt, ob du an " + Util.capitaliseFirstLetter(quest.toBot) + " folgende Nachricht überbringen kannst: '" + quest.message.text + "'.<br>"
+          quests += Util.capitaliseFirstLetter(quest.questGiver) + " hat dich vor kurzem gefragt, ob du an " + Util.capitaliseFirstLetter(quest.toBot) + " in " + quest.toPlace + " folgende Nachricht überbringen kannst: '" + quest.message.text + "'.<br>"
+        } else if(quest.status == 'resolved') {
+          resolved += 1
         }
       })
-
+      if(resolved > 0) {
+        info += "Du hast bereits " + resolved + " Nachrichten für Immobilien überbracht.<br>"
+      }
+      info += quests
+      
       info += "[zurück zum spiel]"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(info), "sender")
@@ -90,7 +95,7 @@ var handleInput = function(socket, player, input) {
     case "theater-tour":
       Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "chapter")
       
-      text = "Einsame Immobilien ist Teil der 54. Stadt, eine spektakuläre Theater-Tour mit kainkollektiv, LIGNA, Invisible Playground und Copy & Waste, die vom 12.-14. 2014 September in Mülheim und Oberhausen stattfinden wird. Infos und Karten unter ringlokschuppen.ruhr<br/> [zurück zum spiel]"
+      text = "Einsame Immobilien ist Teil der 54. Stadt, einer spektakulären Theatertour von kainkollektiv, LIGNA, Invisible Playground und Copy & Waste, die vom 12.-14. 2014 September in Mülheim und Oberhausen stattfinden wird. Infos und Karten unter ringlokschuppen.ruhr (oder einfach auf das Logo oben klicken!)<br/> [zurück zum spiel]"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
