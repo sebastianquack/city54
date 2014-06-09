@@ -14,7 +14,9 @@ var googleConf = {
 var Spreadsheet = require('./edit-google-spreadsheet-patched')
 var TokenCache = require('google-oauth-jwt').TokenCache
 var tokens = new TokenCache()
+
 var spreadsheetIdCache = {}
+var spreadsheetCache = {}
 
 /* functions */
 
@@ -29,6 +31,15 @@ var loadRoom = function (room, callback) {
 
 var get_spreadsheet = function(token, room, callback) {
   
+  // retrieve spreadsheet cache
+  if (spreadsheetCache[room] != undefined) {
+    console.log("found " + room + " in spreadsheet cache.")
+    callback(spreadsheetCache[room])
+    var cacheDelivered = true
+  }
+
+  // define spreadsheet names
+
   var parts = room.split("/")
 
   spreadsheetName = parts[0]
@@ -39,8 +50,9 @@ var get_spreadsheet = function(token, room, callback) {
     worksheetName = parts[1]
 
   //console.log("loading room " + room + " (" + spreadsheetName + "/" + worksheetName +")")
-  
-  // retrieve cache
+
+
+  // retrieve spreadsheet ID cache
   if (spreadsheetIdCache[spreadsheetName] != undefined && spreadsheetIdCache[spreadsheetName][worksheetName] != undefined) {
   	spreadsheetId = spreadsheetIdCache[spreadsheetName][worksheetName].spreadsheetId
   	worksheetId = spreadsheetIdCache[spreadsheetName][worksheetName].worksheetId
@@ -58,6 +70,7 @@ var get_spreadsheet = function(token, room, callback) {
     spreadsheetId: spreadsheetId,
     worksheetName: worksheetName,
     worksheetId: worksheetId,
+    useDefaultWorksheet: (worksheetId == undefined && worksheetName == undefined),
     // Choose from 1 of the 3 authentication methods:
     //    1. Username and Password
     //username: 'my-name@google.email.com',
@@ -108,9 +121,11 @@ var get_spreadsheet = function(token, room, callback) {
     			}
     		}
     	}
-    
-      //console.log(data)
-      callback(data)
+      
+      // populate cache
+      spreadsheetCache[room] = data
+      // callback
+      if (!cacheDelivered) callback(data)
       
     })
   })

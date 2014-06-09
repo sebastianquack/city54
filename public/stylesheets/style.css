@@ -224,6 +224,10 @@ header .show ul {
   line-height: 1.4em;
   margin: 0;
   font-size: 0.9em;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;  
 }
 #chat p[data-sender] + p[data-sender]:not([data-state=world]),
 #chat p.error + p.error {
