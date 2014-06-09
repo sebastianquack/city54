@@ -56,16 +56,18 @@ var handleInput = function(socket, player, input) {
     
         // check if passphrase is correct
         if(existingPlayer.passphrase == input) {
-                  
-          // use existingPlayer from now on, remove temporary player document
+
+          Util.write(socket, player, {name: "Flugcomputer"}, "Ah, du bist das. Ich bringe dich runter...", "sender")
+
+          // use existingPlayer from now on with this cookie, remove temporary player document
           existingPlayer.uuid = player.uuid
           existingPlayer.save()
           player.remove()
-                    
-          Util.write(socket, existingPlayer, {name: "Flugcomputer"}, "Ah, du bist das. Ich bringe dich runter...", "sender")
+
           Util.write(socket, existingPlayer, {name: "System"}, Util.linkify("Der Flugcomputer landet, lässt dich aussteigen und fliegt davon."), "sender")
           World.handleInput(socket, existingPlayer, null)
-
+                  
+                    
         } else {
 
           player.name = "Du"
