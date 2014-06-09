@@ -9,7 +9,7 @@ var Bots = require('./bot_controller.js')
 var Chat = require('./chat_controller.js')
 var Intro = require('./intro_controller.js')
 
-var rooms = ['hamm']
+var rooms = ['hamm', 'camp lintfort']
 var Spreadsheets = require('./apis/google_spreadsheets')
 
 var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um|schaue$)/i

@@ -15,7 +15,9 @@ $(document).ready(function() {
     
     // create the iframe
     ifrm = document.createElement("iframe")
-    ifrm.setAttribute("src", "http://city54.herokuapp.com")
+    
+    var url = location.protocol + '//' + location.hostname + (location.port ? ':'+location.port : '')
+    ifrm.setAttribute("src", url)
     ifrm.frameBorder = "0"
     ifrm.style.width = $('#width').val()+"px"
     ifrm.style.height = $('#height').val()+"px"

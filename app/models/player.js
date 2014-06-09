@@ -9,6 +9,8 @@ var PlayerSchema = new Schema({
   uuid: { type: String, default: '' },
   name: { type: String, default: '' },
   state: { type: String, default: '' },
+  active: { tpye: Boolean, default: false },
+  passphrase: { type: String, default: null },
   currentRoom: { type: String, default: '' },
   previousRoom: { type: String, default: '' },
   currentRoomData: { type: Object, default: {}},  

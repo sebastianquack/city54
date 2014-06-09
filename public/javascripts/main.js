@@ -52,7 +52,7 @@ $(document).ready(function() {
   
   // check for cookie
   if(!$.cookie('city54_uuid')) {
-    $.cookie('city54_uuid', uuid.v1()) // create new uuid
+    $.cookie('city54_uuid', uuid.v1(), { expires: 31 }) // create new uuid
   }
   // send cookie to server for check 
   socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
