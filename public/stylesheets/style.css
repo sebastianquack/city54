@@ -135,6 +135,7 @@ header h1 {
   height: 70px;
   padding: 0;
   margin: 0 35px 0 0;
+	cursor: pointer;
 }
 header h2 {
   font-size: .8em;
@@ -272,7 +273,8 @@ b[data-command] {
 }
 b[data-command]:hover,
 b[data-command]:after:hover,
-b[data-menu]:hover {
+b[data-menu]:hover,
+b#einbetten {
   cursor: pointer;
 }
 #chat section:last-child b[data-command]:after,

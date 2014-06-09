@@ -128,6 +128,15 @@ $(document).ready(function() {
       submitCommand()
     }
   })
+  
+  $('header h1').click(function() {
+    window.open("http://www.ringlokschuppen.de/ringlokschuppen/produktionen/vorschau-2014/festivals/54-stadt-das-ende-der-zukunft/");
+  })
+  
+  $('#einbetten').click(function() {
+    var embed_url = location.protocol + '//' + location.hostname + (location.port ? ':'+location.port : '') + '/embed'
+    window.open(embed_url)
+  })
 
   // Initialize jRumble on Selector
   //$('body').jrumble();

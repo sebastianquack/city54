@@ -19,7 +19,12 @@ $(document).ready(function() {
     var url = location.protocol + '//' + location.hostname + (location.port ? ':'+location.port : '')
     ifrm.setAttribute("src", url)
     ifrm.frameBorder = "0"
-    ifrm.style.width = $('#width').val()+"px"
+    width = $('#width').val().trim()
+    if(width[width.length - 1] == "%") { 
+      ifrm.style.width = $('#width').val()
+    } else {
+      ifrm.style.width = $('#width').val()+"px"      
+    }
     ifrm.style.height = $('#height').val()+"px"
     document.body.appendChild(ifrm)
     
