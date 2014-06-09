@@ -33,7 +33,7 @@ var get_spreadsheet = function(token, room, callback) {
   
   // retrieve spreadsheet cache
   if (spreadsheetCache[room] != undefined) {
-    console.log("retrieving " + room + " from cache.")
+    console.log("found " + room + " in spreadsheet cache.")
     callback(spreadsheetCache[room])
     var cacheDelivered = true
   }
@@ -70,6 +70,7 @@ var get_spreadsheet = function(token, room, callback) {
     spreadsheetId: spreadsheetId,
     worksheetName: worksheetName,
     worksheetId: worksheetId,
+    useDefaultWorksheet: (worksheetId == undefined && worksheetName == undefined),
     // Choose from 1 of the 3 authentication methods:
     //    1. Username and Password
     //username: 'my-name@google.email.com',
