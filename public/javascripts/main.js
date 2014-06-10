@@ -2,12 +2,14 @@
 
 var socket
 
+var slowScroll
+
 /* function declarations */
 
 // type command in input field and submit to server
 function autoType(text, menuFlag, menuValue) {
   // TODO: scroll to input field
-  $('#input-command').focus()
+  scrollInput()
   var delay=90
 
   var type = function(text,delay) {
@@ -52,10 +54,22 @@ splitCursor = function (text, position) {
 
 // update fake input
 updateInput = function() {
+  scrollInput()
   $('#input-fake').html(splitCursor($('#input-command').val(), $('#input-command').getCursorPosition()))
   $('#input-command').focus()
   if ($('#input-command').val().length >= 1) $('#input').addClass('chars')
   else $('#input').removeClass('chars')
+}
+
+// fast scroll to input
+scrollInput = function() {
+  $('#chat').stop().animate( {
+      scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
+    }, {
+      duration: 800,
+      queue: false,
+      easing: "swing"
+  })
 }
 
 /* let's go! */
@@ -125,18 +139,24 @@ $(document).ready(function() {
 
     // scroll up to fit new item
     var delta_y = $("#chat")[0].scrollHeight -$("#chat").innerHeight()-$("#chat").scrollTop()
-    $('#chat').animate( {
+    $('#chat').stop().animate( {
 		    scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
       }, {
 	      duration: delta_y*50, //$("ul#chat p:last-child").height()*100,
-        queue: false,
+        queue: true,
         easing: "easeOutSine",
-        complete: function() {
-          //$("#chat section:not(:last-child) b[data-command]").hide()
+        done: function(){
+          console.log("fini")
         }
     })
     
   })
+
+  // user scroll breaks autp scroll
+  $("#chat").bind("mousedown DOMMouseScroll mousewheel keyup", function(){
+    $('#chat').stop();
+    console.log("scroll")
+  });
 
   // detect touch device (roughly)
   $('body').on("touchstart", function() {
