@@ -124,7 +124,10 @@ $(document).ready(function() {
       }, {
 	      duration: delta_y*50, //$("ul#chat p:last-child").height()*100,
         queue: false,
-        easing: "easeOutSine"
+        easing: "easeOutSine",
+        complete: function() {
+          //$("#chat section:not(:last-child) b[data-command]").hide()
+        }
     })
     
   })
