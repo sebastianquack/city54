@@ -57,9 +57,7 @@ module.exports.init = function (io) {
           }
           
           // see if this is a menu event
-          if(data.menu == true || player.inMenu == true) {
-            Menu.handleInput(socket, player, data.input)
-          } else {
+          if(!Menu.handleInput(socket, player, data.input)) {
 
             // check player state and hand off to different parsers
             switch(player.state) {

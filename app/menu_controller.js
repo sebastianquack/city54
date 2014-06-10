@@ -11,8 +11,6 @@ var handleInput = function(socket, player, input) {
   switch(input) {
 
     case "hilfe": 
-      player.inMenu = true
-      player.save()
       Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "chapter")
       text = "Herzlich Willkommen bei Einsame Immobilien, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
@@ -102,16 +100,9 @@ var handleInput = function(socket, player, input) {
       break
 
     default:
-      player.inMenu = false
-      player.save()
-      
-      if(player.state == "world") {
-        World.handleInput(socket, player, null)
-      } else {
-        Intro.handleInput(socket, player, null)
-      }
-      break
+      return false
   }
+  return true
   
 }
 
