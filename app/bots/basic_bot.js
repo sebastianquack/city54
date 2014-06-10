@@ -22,6 +22,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
       output.answer = "Tschüss!"
       output.abort = 'player'
       callback(output)
+      return
     }
   }
   

@@ -5,7 +5,7 @@ var socket
 /* function declarations */
 
 // type command in input field and submit to server
-function autoType(text) {
+function autoType(text, menuFlag, menuValue) {
   // TODO: scroll to input field
   $('#input-command').focus()
   var delay=90
@@ -20,7 +20,11 @@ function autoType(text) {
   }
   type(text,delay)
 
-  setTimeout(submitCommand, delay*(text.length+2))
+  if(menuFlag == true) {
+    setTimeout(function() { submitMenuCommand(menuValue) }, delay*(text.length+2))
+  } else {
+    setTimeout(submitCommand, delay*(text.length+2))
+  }
 }
 
 // submit a command to the server and clear input field 
@@ -31,9 +35,11 @@ function submitCommand() {
   updateInput()
 }
 
-// submit a command to the server and clear input field 
+// submit a menu command to the server and clear input field 
 function submitMenuCommand(val) {
   socket.emit('player-action', { uuid: $.cookie('city54_uuid'), input: val, menu: true })
+  $('#input-command').val('')
+  updateInput()
 }
 
 // fill fake input with text, set cursor element
@@ -76,9 +82,9 @@ $(document).ready(function() {
     
     console.log(data)
 
-    if (data.player_room != null && player.currentRoom != data.player_room) {
+    if (data.player_room != null && player.currentRoom != data.player_room || data.type == "chapter") {
       $('#chat').append($('<section>'))
-      if (["bergkamen","bönen","fröndenberg","holzwickede","kamen","lünen","schwerte","selm","unna","werne"].indexOf(player.currentRoom) != -1) $('body').trigger('startRumble');
+      //if (["bergkamen","bönen","fröndenberg","holzwickede","kamen","lünen","schwerte","selm","unna","werne"].indexOf(player.currentRoom) != -1) $('body').trigger('startRumble');
     }
     else $('body').trigger('stopRumble');
 
@@ -144,7 +150,8 @@ $(document).ready(function() {
   // user clicks on menu
   $("body").on("click","*[data-menu]", null, function() { 
     $('nav').removeClass('show');
-    submitMenuCommand($(this).data("menu"))      
+    //submitMenuCommand($(this).data("menu"))      
+    autoType($(this).data("menu"), true, $(this).data("menu"))
   })
   
   // user clicks on command

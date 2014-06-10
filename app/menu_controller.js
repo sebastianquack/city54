@@ -11,15 +11,13 @@ var handleInput = function(socket, player, input) {
   switch(input) {
 
     case "hilfe": 
-      player.inMenu = true
-      player.save()
       Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "chapter")
-      text = "Herzlich Willkommen bei Einsame Immobilien, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung] [zurück zum spiel]"
+      text = "Herzlich Willkommen bei Einsame Immobilien, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
 
     case "starte anleitung":
-      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene Städte besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien]"
+      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene Städte besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Du kannst jederzeit 'schaue' eingeben, um dich umzuschauen. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
       
@@ -83,7 +81,7 @@ var handleInput = function(socket, player, input) {
       
       break
             
-    case "agbs":
+    case "bedingungen":
       Util.write(socket, player, {name: "System"}, "Nutzungsbedingungen", "sender", "chapter")
       
       text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der Immobilien werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an tobias.fritzsche@ringlokschuppen.de"
@@ -92,29 +90,19 @@ var handleInput = function(socket, player, input) {
       
       break
 
-    case "theater-tour":
+    case "theatertour":
       Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "chapter")
       
-      text = "Einsame Immobilien ist Teil der 54. Stadt, einer spektakulären Theatertour von kainkollektiv, LIGNA, Invisible Playground und Copy & Waste, die vom 12.-14. 2014 September in Mülheim und Oberhausen stattfinden wird. Infos und Karten unter ringlokschuppen.ruhr (oder einfach auf das Logo oben klicken!)"
+      text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von kainkollektiv, LIGNA, Invisible Playground und Copy & Waste, die vom 12.-14. 2014 September in Mülheim und Oberhausen stattfinden wird. Infos und Karten unter ringlokschuppen.ruhr (oder einfach auf das Logo oben klicken!)"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
       break
 
-    case "zurück zum spiel":
-      player.inMenu = false
-      player.save()
-      
-      if(player.state == "world") {
-        World.handleInput(socket, player, null)
-      } else {
-        Intro.handleInput(socket, player, null)
-      }
-      break
-
     default:
-      Util.write(socket, player, {name: "System"}, "Befehl nicht erkannt.", "sender")
+      return false
   }
+  return true
   
 }
 
