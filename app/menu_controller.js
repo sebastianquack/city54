@@ -19,7 +19,7 @@ var handleInput = function(socket, player, input) {
       break
 
     case "starte anleitung":
-      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene Städte besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien]"
+      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene Städte besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Du kannst jederzeit 'schaue' eingeben, um dich umzuschauen. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
       
