@@ -144,6 +144,9 @@ function processRoomCommand(socket, player, command, object) {
         Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " " + Util.linkify(data.announcement[i]), "everyone else") // todo only to people in room
       } 
 
+      // send reply
+      if (reply != "") Util.write(socket, player, {name: "System"}, reply, "sender")
+
       // leave room
       if (data.exit != undefined && data.exit[i].length > 0) {
         enterRoom(player, data.exit[i], socket)
@@ -164,8 +167,6 @@ function processRoomCommand(socket, player, command, object) {
       }
     }
   }
-  // send reply
-  if (reply != "") Util.write(socket, player, {name: "System"}, reply, "sender")
 
   return roomCommandFound
 }
