@@ -174,6 +174,13 @@ function processRoomCommand(socket, player, command, object) {
 var handleInput = function(socket, player, input) {  
   if(!input) {
     var roomEntered = function(data){
+      if (data == undefined) {
+        // no data delivered - send player back to previous room (there is a slight risk of infinite loops here)
+        console.log("room " + player.currentRoom + " delivered no data. sending player back to " + player.previousRoom)
+        player.currentRoom = player.previousRoom
+        Spreadsheets.loadRoom(player.currentRoom, roomEntered)
+        return
+      }
       player.setRoom(player.currentRoom, socket)
       //if (player.currentRoom.split("/")[0] != player.previousRoom.split("/")[0]) { // city changed
         d = new Date(new Date().setFullYear(2044))

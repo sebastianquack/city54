@@ -1,19 +1,13 @@
 /* variables */
 
 var googleConf = {
-	  // use the email address of the service account, as seen in the API console
-	  email: '446725146509@developer.gserviceaccount.com',
-	  // use the PEM file we generated from the downloaded key
-	  //keyFile: 'key.pem',
-	  key: process.env.googleAPIKey,
-	  expiration: 30000,
-	  useHTTPS: false,
-	  // specify the scopes you wish to access 
-	  scopes: ['https://www.googleapis.com/auth/drive.readonly','https://spreadsheets.google.com/feeds']
-}
+      email: '446725146509@developer.gserviceaccount.com',
+      key: process.env.googleAPIKey,
+      useHTTPS: false,
+      scopes: ['http://docs.google.com/feeds/','http://spreadsheets.google.com/feeds']
+    }
+
 var Spreadsheet = require('./edit-google-spreadsheet-patched')
-var TokenCache = require('google-oauth-jwt').TokenCache
-var tokens = new TokenCache()
 
 var spreadsheetIdCache = {}
 var spreadsheetCache = {}
@@ -21,15 +15,11 @@ var spreadsheetCache = {}
 /* functions */
 
 var loadRoom = function (room, callback) {
-	// will automatically acquire new token if expired
-	tokens.get(googleConf, function (err, token) {
-	  console.log("google OAuth token: " + token)
-	  try { get_spreadsheet(token, room, callback) }
-    catch (err) { throw err }
-	})
+	get_spreadsheet(room, callback) 
+  return
 }
 
-var get_spreadsheet = function(token, room, callback) {
+var get_spreadsheet = function(room, callback) {
   
   // retrieve spreadsheet cache
   if (spreadsheetCache[room] != undefined) {
@@ -51,7 +41,6 @@ var get_spreadsheet = function(token, room, callback) {
 
   //console.log("loading room " + room + " (" + spreadsheetName + "/" + worksheetName +")")
 
-
   // retrieve spreadsheet ID cache
   if (spreadsheetIdCache[spreadsheetName] != undefined && spreadsheetIdCache[spreadsheetName][worksheetName] != undefined) {
   	spreadsheetId = spreadsheetIdCache[spreadsheetName][worksheetName].spreadsheetId
@@ -64,33 +53,24 @@ var get_spreadsheet = function(token, room, callback) {
   	worksheetId = undefined
   }
   
+  var useDefaultWorksheet = (worksheetId == undefined && worksheetName == undefined)
+
   Spreadsheet.load({
     debug: true,
     spreadsheetName: spreadsheetName,
     spreadsheetId: spreadsheetId,
     worksheetName: worksheetName,
     worksheetId: worksheetId,
-    useDefaultWorksheet: (worksheetId == undefined && worksheetName == undefined),
-    // Choose from 1 of the 3 authentication methods:
-    //    1. Username and Password
-    //username: 'my-name@google.email.com',
-    //password: 'my-5uper-t0p-secret-password',
-    // OR 2. OAuth
-    //oauth : {
-    //  email: '446725146509@developer.gserviceaccount.com',
-    //  keyFile: 'key.pem'
-    //}
-    // OR 3. Token
-    accessToken : {
-      type: 'Bearer',
-      token: token
-    }
+    useDefaultWorksheet: useDefaultWorksheet,
+    oauth : googleConf
   }, function sheetReady(err, spreadsheet) {
     if(err) {
     	//throw err
-      // TODO: catch error and reset player
       console.log("Error in sheetReady, Message follows:")
       console.log(err)
+      if (!cacheDelivered) {
+        callback(undefined)
+      }      
     	return
     }
     

@@ -146,7 +146,6 @@ $(document).ready(function() {
         queue: true,
         easing: "easeOutSine",
         done: function(){
-          console.log("fini")
         }
     })
     
@@ -155,7 +154,6 @@ $(document).ready(function() {
   // user scroll breaks autp scroll
   $("#chat").bind("mousedown DOMMouseScroll mousewheel keyup", function(){
     $('#chat').stop();
-    console.log("scroll")
   });
 
   // detect touch device (roughly)
