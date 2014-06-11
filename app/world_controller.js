@@ -107,6 +107,8 @@ function processRoomCommand(socket, player, command, object) {
   roomCommandFound = false
   if (data == undefined) return false
   var reply = ""
+  var bot = ""
+  var exit = ""
   for (i in data.command) {
     if (i >= data.command.length) { // prevent a strange bug having to do with cached data object being too large
       console.log("error prevented: player.currentRoomData too large!")
@@ -144,21 +146,14 @@ function processRoomCommand(socket, player, command, object) {
         Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " " + Util.linkify(data.announcement[i]), "everyone else") // todo only to people in room
       } 
 
-      // send reply
-      if (reply != "") Util.write(socket, player, {name: "System"}, reply, "sender")
-
       // leave room
       if (data.exit != undefined && data.exit[i].length > 0) {
-        enterRoom(player, data.exit[i], socket)
+        exit = data.exit[i]
       }  
 
       // enter bot
       if (data.bot != undefined && data.bot[i].length > 0) {
-        player.state = "bot"
-        player.currentBot = data.bot[i]
-        console.log("entering botchat " + player.currentBot)
-        player.save()
-        Bots.handleInput(socket, player, null)
+        bot = data.bot[i]
       }
 
       // play audio
@@ -166,6 +161,24 @@ function processRoomCommand(socket, player, command, object) {
         // play audio
       }
     }
+  }
+  // send reply
+  if (reply != "") {
+    Util.write(socket, player, {name: "System"}, reply, "sender")
+  }
+
+  // leave room
+  if (exit != "") {
+    enterRoom(player, exit, socket)
+  }  
+
+  // or enter bot
+  else if (bot != "") {
+    player.state = "bot"
+    player.currentBot = data.bot[i]
+    console.log("entering botchat " + player.currentBot)
+    player.save()
+    Bots.handleInput(socket, player, null)
   }
 
   return roomCommandFound
