@@ -13,6 +13,12 @@ var capitaliseFirstLetter = function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// lower case and trim
+var lowerTrim = function(input) {
+  if(input) return input.trim().toLowerCase()
+  else return input
+}
+
 // returns first word
 var getCommand = function(input) {
   if(input) {
@@ -108,3 +114,4 @@ module.exports.getCommand = getCommand
 module.exports.getObject = getObject
 module.exports.handleError = handleError
 module.exports.write = write
+module.exports.lowerTrim = lowerTrim

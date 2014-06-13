@@ -8,7 +8,7 @@ var World = require('./world_controller.js')
 // handle introduction
 var handleInput = function(socket, player, input) {
 
-  switch(input) {
+  switch(Util.lowerTrim(input)) {
 
     case "hilfe": 
       Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "chapter")

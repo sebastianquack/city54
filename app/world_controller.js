@@ -10,6 +10,7 @@ var Chat = require('./chat_controller.js')
 var Intro = require('./intro_controller.js')
 
 var rooms = ['hamm', 'camp lintfort']
+var RegexPrivateRooms = "(tretroller|stahlgleiter|mini\-van|kart)$"
 var Spreadsheets = require('./apis/google_spreadsheets')
 
 var RegexWoBinIch = /^(wo bin ich|wobinich|wo|umschauen|schaue um|schaue dich um|schau um|schau dich um|schaue$)/i
@@ -44,6 +45,7 @@ function getPlayersInRoom(socket, room, callback) {
 }
 
 function announceRoomPlayers(socket, player) {
+    if (player.currentRoom.search(RegexPrivateRooms) != -1) return // no output in private rooms
     getPlayersInRoom(socket, player.currentRoom, function(roomPlayers) {
       playerNames = []
       for (i in roomPlayers) { 
@@ -109,6 +111,7 @@ function processRoomCommand(socket, player, command, object) {
   var reply = ""
   var bot = ""
   var exit = ""
+  var effects = []
   for (i in data.command) {
     if (i >= data.command.length) { // prevent a strange bug having to do with cached data object being too large
       console.log("error prevented: player.currentRoomData too large!")
@@ -132,10 +135,10 @@ function processRoomCommand(socket, player, command, object) {
       
       roomCommandFound = true
 
-      // effect
+      // collect effect
       if (data.effect != undefined && data.effect[i].length > 0) {
         effect = parseWV(data.effect[i])
-        setWV(effect)
+        effects.push(effect)
       }   
 
       // collect reply
@@ -146,7 +149,7 @@ function processRoomCommand(socket, player, command, object) {
         Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " " + Util.linkify(data.announcement[i]), "everyone else") // todo only to people in room
       } 
 
-      // leave room
+      // collect exit
       if (data.exit != undefined && data.exit[i].length > 0) {
         exit = data.exit[i]
       }  
@@ -167,6 +170,9 @@ function processRoomCommand(socket, player, command, object) {
     Util.write(socket, player, {name: "System"}, reply, "sender")
   }
 
+  // set effects
+  effects.forEach(function(effect) { setWV(effect) })
+
   // leave room
   if (exit != "") {
     enterRoom(player, exit, socket)
@@ -186,6 +192,9 @@ function processRoomCommand(socket, player, command, object) {
 
 // handle world exploration
 var handleInput = function(socket, player, input) {  
+
+  input = Util.lowerTrim(input)
+
   if(!input) {
     var roomEntered = function(data){
       if (data == undefined) {
@@ -203,7 +212,7 @@ var handleInput = function(socket, player, input) {
         //var place = player.currentRoom.split('/')[0]
         //Util.write(socket, player, {name: "System"}, place + ", "+d.getDate()+"."+d.getMonth()+"."+d.getFullYear(), "sender", "chapter")
       //}
-      Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " ist jetzt auch hier.", "everyone else")
+      if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " ist jetzt auch hier.", "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")

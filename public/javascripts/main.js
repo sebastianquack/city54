@@ -32,6 +32,7 @@ function autoType(text, menuFlag, menuValue) {
 // submit a command to the server and clear input field 
 function submitCommand() {
   val = $('#input-command').val()
+  if (val.trim()=="") return
   socket.emit('player-action', { uuid: $.cookie('city54_uuid'), input: val })
   $('#input-command').val('')
   updateInput()
