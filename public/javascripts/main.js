@@ -23,7 +23,7 @@ function autoType(text, menuFlag, menuValue) {
   type(text,delay)
 
   if(menuFlag == true) {
-    setTimeout(function() { submitMenuCommand(menuValue) }, delay*(text.length+2))
+    setTimeout(function() { submitMenuCommand(menuValue) }, delay*(text.length+5))
   } else {
     setTimeout(submitCommand, delay*(text.length+2))
   }

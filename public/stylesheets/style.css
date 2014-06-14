@@ -135,7 +135,7 @@ header h1 {
   height: 70px;
   padding: 0;
   margin: 0 35px 0 0;
-	cursor: pointer;
+  cursor: pointer;
 }
 header h2 {
   font-size: .8em;
@@ -159,7 +159,7 @@ header button.fullscreen-toggle {
   right: 35px;
 }
 header button.help-btn {
-	 background: #222222 url("../images/help_button.png") no-repeat;
+   background: #222222 url("../images/help_button.png") no-repeat;
 }
 header button.navbar-toggle {
   top: 35px;
@@ -216,10 +216,10 @@ header .show ul {
   -moz-box-sizing: border-box;
   margin: 0;
   padding: 20px;
-	padding-top: 110px;
+  padding-top: 110px;
   margin-right:6px;
-	position: absolute;
-	top: 0;
+  position: absolute;
+  top: 0;
 }
 #chat p {
   padding-bottom: 0.7em;
@@ -244,7 +244,7 @@ header .show ul {
 }
 p[data-sender]:not([data-state=world]):not([data-state=jump]):before {
   content: attr(data-sender) ": ";
-	color: #fdc81c;
+  color: #fdc81c;
   font-style: italic;
   text-transform: capitalize;
 }
@@ -252,7 +252,7 @@ b[data-command] {
   font-weight: 700;
 }
 #chat section {
-  transition:color 2s;
+  transition:color 2s linear 4s;
 }
 #chat section:not(:last-child) {
   color:#bbb;
@@ -273,11 +273,22 @@ b[data-command] {
   color: #060606;
   vertical-align: middle;
   font-size: 0.6em;
-  line-height: 100%;
+  line-height: 1.2em;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   background: #ffdf14;
   padding: 0.2em 0.5em;
+}
+
+#input[data-state=world].chars #input-fake #cursor:before,
+#input[data-state=jump].chars #input-fake #cursor:before {
+  border-color: white;
+}
+
+#input[data-state=world].chars #input-fake,
+#input[data-state=jump].chars #input-fake {
+  letter-spacing: 1px;
+  
 }
 
 #chat section b[data-command]:after {
@@ -285,14 +296,27 @@ b[data-command] {
   position: relative;
   bottom: 0.2em;
   opacity: 0;
-  transition: opacity 2s;
-  transition-delay: 0.2s;
-  -webkit-transform: scale(2);
+  overflow:hidden;
+  display:inline-block;
+  opacity:1;
+  padding: 0.2em 0.5em;
+  margin: 0 1ex;
+  max-width:300px;  
+  transition: 
+    opacity 0.6s ease-out 0.3s, 
+  max-width 1s linear 0.6s, 
+  padding 0.3s linear 1.4s, 
+  margin 0.3s linear 1.4s;
 }
 
-#chat section:last-child b[data-command]:after {
-  opacity:1;
+#chat section:not(:last-child) b[data-command]:after {
+  max-width:0px;
+  max-height:1.2em;
+  padding:0;
+  margin:0;
+  opacity:0;
 }
+
 b[data-command]:hover,
 b[data-command]:after:hover,
 b[data-menu]:hover,
@@ -312,6 +336,7 @@ body #input-command {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   resize: none;
+  color:white;
 }
 
 body.nontouch #input-command {
@@ -327,10 +352,15 @@ body.nontouch #input-command {
   border-style: solid;
   border-color: #fefefe;
   border-width: 0 0 0 2px;
-  padding-left: -2px;
+  margin-left: -2px;
+  position:relative;
+  left:1px;
+  opacity:1;
+  transition: opacity 0.2s ease-in-out;
+
 }
 #cursor.inverted:before {
-  visibility: hidden;
+  opacity:0.05;
 }
 #input-fake {
   white-space: pre-wrap;
