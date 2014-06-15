@@ -32,7 +32,7 @@ var adminInterface = function(req, res) {
 }
 
 var express = require('express')
-var auth = express.basicAuth('admin', 'c1ty54');
+var auth = express.basicAuth('admin', process.env.city54adminpw)
 
 /**
  * Expose
