@@ -328,6 +328,15 @@ b#einbetten {
   cursor: pointer;
 }
 
+span.italic {
+  color: #fdc81c;
+  font-style: italic;	
+}
+
+span.bold {
+  font-weight: 700;
+}
+
 #input[data-state=world].chars #cursor:before,
 #input[data-state=jump].chars #cursor:before {
   border-color: white;
