@@ -2,13 +2,13 @@
 
 var socket
 
-var slowScroll
-
 /* function declarations */
 
 // type command in input field and submit to server
+var autoTyping = false
 function autoType(text, menuFlag, menuValue) {
-  // TODO: scroll to input field
+  if (autoTyping) return
+  else autoTyping = true
   scrollInput()
   var delay=90
 
@@ -23,9 +23,9 @@ function autoType(text, menuFlag, menuValue) {
   type(text,delay)
 
   if(menuFlag == true) {
-    setTimeout(function() { submitMenuCommand(menuValue) }, delay*(text.length+5))
+    setTimeout(function() { submitMenuCommand(menuValue); autoTyping = false; }, delay*(text.length+5))
   } else {
-    setTimeout(submitCommand, delay*(text.length+5))
+    setTimeout(function() { submitCommand(); autoTyping = false; }, delay*(text.length+5))
   }
 }
 
@@ -54,26 +54,37 @@ splitCursor = function (text, position) {
 }
 
 // update fake input
-updateInput = function() {
-  scrollInput()
+updateInput = function() {  
   $('#input-fake').html(splitCursor($('#input-command').val(), $('#input-command').getCursorPosition()))
   $('#input-command').focus()
   if ($('#input-command').val().length >= 1) $('#input').addClass('chars')
   else $('#input').removeClass('chars')
 }
 
+
 // fast scroll to input
+var fastScroll = false
 scrollInput = function() {
+  var offset_y = $("#chat")[0].scrollHeight - $("#chat").innerHeight()
+  var delta_y = offset_y-$("#chat").scrollTop()
+  if (fastScroll || delta_y <= 2) return
+  var duration = delta_y * 3
+  duration = Math.max(Math.min(duration, 800), 200)
   $('#chat').stop().animate( {
-      scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
+      scrollTop: offset_y
     }, {
-      duration: 800,
+      duration: duration,
       queue: false,
+      start: function() { fastScroll = true },
+      always: function() { fastScroll = false },
+      complete: fillCommandGaps,
       easing: "swing"
   })
 }
 
-
+fillCommandGaps = function() {
+  $("#chat section:not(:last-child)").addClass("done")
+}
 
 /* let's go! */
 
@@ -127,20 +138,6 @@ $(document).ready(function() {
     $("#input").attr("data-state", player.state)
     $("#input-command").focus()
 
-/*
-    tt = $(".incoming")
-    t = $(tt.last())
-    t.removeClass("incoming")
-    t.addClass("typing")
-    console.log("all :" + tt.length)
-    console.log("type:" + t.html())
-    t.typewrite({ delay: 60 }, function () {
-      console.log("remove:" + $(t).html() )
-      $(t).removeClass("incoming")
-      $(t).removeClass("typing")
-    })
-*/
-
     // scroll up to fit new item
     var delta_y = $("#chat")[0].scrollHeight -$("#chat").innerHeight()-$("#chat").scrollTop()
     $('#chat').stop().animate( {
@@ -149,16 +146,18 @@ $(document).ready(function() {
 	      duration: delta_y*50, //$("ul#chat p:last-child").height()*100,
         queue: true,
         easing: "easeOutSine",
-        done: function(){
-        }
+        start: function() {
+          // user scroll breaks slow scroll
+          $("#chat").bind("mousedown.scroll DOMMouseScroll.scroll mousewheel.scroll keypress.scroll", function(e){
+            $('#chat').stop()
+            $('#chat').unbind("mousedown.scroll DOMMouseScroll.scroll mousewheel.scroll keypress.scroll")
+          });
+        },
+        complete: fillCommandGaps,
+        always: function(){}
     })
     
   })
-
-  // user scroll breaks autp scroll
-  $("#chat").bind("mousedown DOMMouseScroll mousewheel keyup", function(){
-    $('#chat').stop();
-  });
 
   // detect touch device (roughly)
   $('body').on("touchstart", function() {
@@ -167,7 +166,13 @@ $(document).ready(function() {
   })
     
   // focus input field
-  $('body').on("keypress keyup click focus resize load", updateInput)
+  $('body').not("b[data-command], #input-command").on("keypress click focus resize load", function(){
+    scrollInput()
+    $('#input-command').focus()
+  })
+
+  $('#input-command').on("keypress keyup keydown", updateInput)
+    
 
   // user clicks on menu
   $("body").on("click","*[data-menu]", null, function() { 
@@ -178,12 +183,14 @@ $(document).ready(function() {
   
   // user clicks on command
   $("body").on("click","b[data-command]", null, function() { 
+    scrollInput()
     autoType($(this).data("command"))
   })
 
   // user hits enter in console
   $('#input-command').on("keypress", function(e) {
     if (e.keyCode == 13) { 
+      
       submitCommand()
     }
   })
