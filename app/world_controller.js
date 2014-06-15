@@ -212,7 +212,7 @@ var handleInput = function(socket, player, input) {
         //var place = player.currentRoom.split('/')[0]
         //Util.write(socket, player, {name: "System"}, place + ", "+d.getDate()+"."+d.getMonth()+"."+d.getFullYear(), "sender", "chapter")
       //}
-      if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + " ist jetzt auch hier.", "everyone else")
+      if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
@@ -252,6 +252,7 @@ var handleInput = function(socket, player, input) {
 
     switch(command) {
       case "sage" :
+      case "sprich" :
         if (object) {
           playerOrMessage = Util.getCommand(object)
           var targetPlayer = undefined
@@ -266,23 +267,25 @@ var handleInput = function(socket, player, input) {
             if (targetPlayer != undefined) {
               if (message) {
                 // enter chat with targetPlayer & message
-                Util.write(socket, targetPlayer, {name: "System"}, player.name + " spricht so zu dir, dass nur du es hören kannst...", "sender")
-                Util.write(socket, player, {name: "System"}, "Du wendest dich " + targetPlayer.name + " zu.", "sender")
-                Util.write(socket, player, player, message, "everyone else", null, targetPlayer )
+                //Util.write(socket, targetPlayer, {name: "System"}, player.name + " spricht so zu dir, dass nur du es hören kannst...", "sender")
+                //Util.write(socket, player, {name: "System"}, "Du wendest dich " + targetPlayer.name + " zu.", "sender")
+                //Util.write(socket, player, player, message, "everyone else", null, targetPlayer )
+                enterChat(socket, player, player.currentRoom, object) 
               }
               else {
                 // enter chat with targetPlayer
+                enterChat(socket, player, player.currentRoom, object) 
               }
             }
             // no target player found
             else {
               // enter chat with room and message
-              enterChat(socket, player, player.currentRoom, object) // use "chat_" + player.currentRoom to create a seperate room
+              enterChat(socket, player, player.currentRoom, object) 
             }
           })
         }
         else {
-          enterChat(socket, player, player.currentRoom) // use "chat_" + player.currentRoom to create a seperate room
+          enterChat(socket, player, player.currentRoom) 
           Util.write(socket, player, {name: "System"}, "Du wendest dich an die Anwesenden und hebst an zu sprechen.", "sender")
         }
         break

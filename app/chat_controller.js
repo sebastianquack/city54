@@ -13,11 +13,11 @@ var World = require('./world_controller.js')
 
 var leaveChat = function(socket, player, message) {
 
-  /*
+  
   Player
     .find({ 'currentChat': player.currentChat })
     .where('_id').ne(player._id)
-    //.where('state').equals("chat")
+    .where('online').equals(true)
     //.select('_id')
     .exec(function (err, otherChatters) {
       // TODO: error handling
@@ -30,15 +30,26 @@ var leaveChat = function(socket, player, message) {
           otherChatters[i].currentChat = ""
           otherChatters[i].state = "world"
           otherChatters[i].save( function(err, data) {
-            Util.write(socket, otherChatters[i], player, message, "everyone else and me", null, otherChatters[i])
+            //Util.write(socket, otherChatters[i], player, message, "everyone else and me", null, otherChatters[i])
+            Util.write(socket, otherChatters[i], player, message, "sender", null, otherChatters[i])
           })
         }
       }
+      else {
+        for (i in otherChatters) {
+          Util.write(socket, otherChatters[i], player, message, "sender", null, otherChatters[i])
+        }
+      }
     })
-  */
+  
 
-  if (player.currentChat != player.currentRoom)
-    socket.leave(player.currentChat) // do not leave room feed
+  if (player.currentChat != player.currentRoom) { // do not leave room feed
+    Util.playerGetSockets(player, function(sockets) {
+      for (s in sockets) {
+        sockets[s].leave(player.currentChat)
+      }
+    })
+  }
   player.previousChat = player.currentChat
   player.currentChat = ""
   player.state = "world" // send player back into world
@@ -60,11 +71,13 @@ var handleInput = function(socket, player, input) {
       
     // send input to other chat members
     // (Hint: the easy way to just send to anybody would be: Util.write(socket, player, player, input , "chat") )
+  
     Player
       .find({ 'currentRoom': player.currentRoom })
       //.where('previousChat').ne(player.currentChat)
       .where('_id').ne(player._id)
-      .where('state').equals("world")
+      .where('state').in(['world', 'chat'])
+      .where('online').equals(true)
       //.select('_id')
       .exec(function (err, availableRoomPlayers) {
         // TODO: error handling
@@ -72,20 +85,22 @@ var handleInput = function(socket, player, input) {
         // change state of recipients
         if (availableRoomPlayers != null && availableRoomPlayers.length > 0) {
           for (i in availableRoomPlayers) {
-            console.log(availableRoomPlayers[i].name)
-            console.log(availableRoomPlayers[i].currentChat)
-            console.log(availableRoomPlayers[i].previousChat)
-            console.log(availableRoomPlayers[i].state)
             availableRoomPlayers[i].currentChat = player.currentChat
             availableRoomPlayers[i].state = "chat"
-            availableRoomPlayers[i].save()
-            // no save, chats states are ephemeral
-
-            //Util.write(socket, player, player, input, "everyone else and me", null, availableRoomPlayers[i])
+            availableRoomPlayers[i].save(function (err, chatPlayer) {
+              /*
+              Util.playerGetSockets(chatPlayer, function(sockets) {
+                for (s in sockets) {
+                  sockets[s].join(player.currentChat)
+                }
+              })
+              */
+              Util.write(socket, chatPlayer, player, input, "sender", null, chatPlayer)
+            })
           }
         }
 
-        Util.write(socket, player, player, input , "chat") // send the message
+        //Util.write(socket, player, player, input , "chat") // send the message
 
       })
   }

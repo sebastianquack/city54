@@ -73,6 +73,8 @@ scrollInput = function() {
   })
 }
 
+
+
 /* let's go! */
 
 $(document).ready(function() {
@@ -87,8 +89,11 @@ $(document).ready(function() {
   if(!$.cookie('city54_uuid')) {
     $.cookie('city54_uuid', uuid.v1(), { expires: 31 }) // create new uuid
   }
-  // send cookie to server for check 
-  socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
+  
+  socket.on("connect", function() {
+    // send cookie to server for check 
+    socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
+  });
 
   /* events */
 

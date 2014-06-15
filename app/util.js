@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
 var ChatItem = mongoose.model('ChatItem')
+var Player = mongoose.model('Player')
 
 // handle errors
 var handleError = function(err) {
@@ -47,6 +48,21 @@ var linkify = function(text) {
 	return text
 }
 
+var socketGetPlayer = function(socket, callback) {
+  socket.get("uuid", function(err, uuid) {
+    // TODO: error handling
+
+    Player.find( { uuid: uuid } , function(err, player) {
+      if(err) return handleError(err)
+
+      callback(player)
+    })
+  })
+}
+
+var playerGetSockets = function(player, callback) {
+  return io.sockets.clients(player.uuid)
+}
 
 // send text to client
 // player: playing belonging to the socket, both causing the message
@@ -74,7 +90,7 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
   if (recipient != undefined)
     recipient_uuid = recipient.uuid
   else
-    recipient_uuid = null
+    recipient_uuid = player.uuid
 
   // broadcast to everyone
   if(mode == "everyone")  
@@ -99,7 +115,7 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
 
   // send to player
   if(mode == "sender") {
-    socket.to(player.uuid).emit('chat-update', chat_item) 
+    io.sockets.to(recipient_uuid).emit('chat-update', chat_item) 
   }
 
   // send back to socket
@@ -115,3 +131,5 @@ module.exports.getObject = getObject
 module.exports.handleError = handleError
 module.exports.write = write
 module.exports.lowerTrim = lowerTrim
+module.exports.socketGetPlayer = socketGetPlayer
+module.exports.playerGetSockets = playerGetSockets

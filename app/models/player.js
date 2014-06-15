@@ -7,6 +7,8 @@ var Schema = mongoose.Schema
 
 var PlayerSchema = new Schema({
   uuid: { type: String, default: '' },
+  sockets: { type: Array, default: [] }, 
+  online: { type: Boolean, default: true }, 
   name: { type: String, default: '' },
   state: { type: String, default: '' },
   active: { type: Boolean, default: false },
