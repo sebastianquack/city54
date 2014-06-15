@@ -238,7 +238,7 @@ header .show ul {
 #chat p:last-child {
   padding-bottom: 0.5em;
 }
-#chat p.chapter {
+#chat p.chapter, #chat p.gameinfo {
   font-weight: 700;
   text-transform: capitalize;
 }

@@ -115,7 +115,9 @@ $(document).ready(function() {
       $('#chat').append($('<section>'))
       //if (["bergkamen","bönen","fröndenberg","holzwickede","kamen","lünen","schwerte","selm","unna","werne"].indexOf(player.currentRoom) != -1) $('body').trigger('startRumble');
     }
-    else $('body').trigger('stopRumble');
+
+
+    //$('body').trigger('stopRumble');
 
     player = {
       name:         (data.player_name != null) ? data.player_name : player.name,
