@@ -4,8 +4,8 @@ var Util = require('../util.js')
 /* variable declarations */
 
 var RegexBye = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
-var RegexYes = /^(ja|ok|yup|jaa|yo|yep|genau|ja)?[\s!\.]*$/i
-var RegexNo = /^(nein|no|nö|nee|ne)?[\s!\.]*$/i
+var RegexYes = /^(ja|ok|okay|o\.k\.|yup|jaa|yo|yep|genau|ja|klar|sicher|aber klar|aber klar doch)?[\s!\.]*$/i
+var RegexNo = /^(nein|no|nö|nee|ne|niemals|never|auf keinen fall)?[\s!\.]*$/i
 
 /* function declarations */
 

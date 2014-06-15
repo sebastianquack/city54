@@ -181,7 +181,7 @@ function processRoomCommand(socket, player, command, object) {
   // or enter bot
   else if (bot != "") {
     player.state = "bot"
-    player.currentBot = data.bot[i]
+    player.currentBot = bot
     console.log("entering botchat " + player.currentBot)
     player.save()
     Bots.handleInput(socket, player, null)
@@ -205,13 +205,8 @@ var handleInput = function(socket, player, input) {
         return
       }
       player.setRoom(player.currentRoom, socket)
-      //if (player.currentRoom.split("/")[0] != player.previousRoom.split("/")[0]) { // city changed
-        d = new Date(new Date().setFullYear(2044))
-        Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
-
-        //var place = player.currentRoom.split('/')[0]
-        //Util.write(socket, player, {name: "System"}, place + ", "+d.getDate()+"."+d.getMonth()+"."+d.getFullYear(), "sender", "chapter")
-      //}
+      d = new Date(new Date().setFullYear(2044))
+      Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
       if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
       player.currentRoomData = data;
       player.save()
