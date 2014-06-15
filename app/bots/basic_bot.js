@@ -109,7 +109,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
     
     case "get_name":
       bot.playerInfo[player.uuid].playerName = input
-      output.answer = "Schön dich, kennenzulernen, " + input + "! "      
+      output.answer = "Schön dich kennenzulernen, " + input + "! "      
       output.answer += pickRandom(openingPhrases)        
       bot.setState(player, "check_keyphrase")
       break
