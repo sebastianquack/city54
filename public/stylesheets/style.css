@@ -252,11 +252,12 @@ b[data-command] {
   font-weight: 700;
 }
 #chat section {
-  transition:color 2s linear 4s;
+  transition:color 2s linear;
 }
-#chat section:not(:last-child) {
-  color:#bbb;
+#chat section.done {
+  /*color:#bbb;*/
 }
+
 #chat section:last-child b[data-command],
 #chat section b {
   font-weight: normal;
