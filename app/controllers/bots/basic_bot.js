@@ -213,7 +213,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
       bot.playerInfo[player.uuid].currentRelationship = randomRelationship
       
       if(randomRelationship.level == 1) {
-        output.answer = "Ich würde wirklich gerne " + randomRelationship.bot + " in " + randomRelationship.place + " besser kennenlernen."        
+        output.answer = "Ich würde wirklich gerne " + Util.capitaliseFirstLetter(randomRelationship.bot) + " in " + randomRelationship.place + " besser kennenlernen."        
       }
       else if(randomRelationship.level == 2) {
         output.answer = randomRelationship.bot + " aus " + randomRelationship.place + " finde ich echt heiß. Ich bin ein bisschen verliebt."          
