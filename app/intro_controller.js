@@ -22,6 +22,7 @@ var handleInput = function(socket, player, input) {
 
   case "name":
     Util.write(socket, player, player, input, "socket") // echo player input
+    input = Util.lowerTrim(input)
     
     // check if playername exists
     Player.findOne({ name: input, active: true }, function (err, existingPlayer) {
@@ -49,6 +50,7 @@ var handleInput = function(socket, player, input) {
     
   case "check_passphrase":
     Util.write(socket, player, player, input, "socket") // echo player input
+    input = Util.lowerTrim(input)
 
     Player.findOne({ name: player.name, active: true }, function (err, existingPlayer){
 
