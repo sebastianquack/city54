@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
 var Player = mongoose.model('Player')
 
 var RegexJump = /^(spring|sprung|springe)?[\s!\.]*$/i
+var RegexChatExit = /^(exit|ciao|tschüss|tschüß|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)+[\s!\.]*$/i
 
 // handle introduction
 var handleInput = function(socket, player, input) {
@@ -22,6 +23,7 @@ var handleInput = function(socket, player, input) {
 
   case "name":
     Util.write(socket, player, player, input, "socket") // echo player input
+    input = Util.lowerTrim(input)
     
     // check if playername exists
     Player.findOne({ name: input, active: true }, function (err, existingPlayer) {
@@ -49,6 +51,7 @@ var handleInput = function(socket, player, input) {
     
   case "check_passphrase":
     Util.write(socket, player, player, input, "socket") // echo player input
+    input = Util.lowerTrim(input)
 
     Player.findOne({ name: player.name, active: true }, function (err, existingPlayer){
 
@@ -88,10 +91,22 @@ var handleInput = function(socket, player, input) {
   case "save_passphrase":
     Util.write(socket, player, player, input , "socket") // echo player input
     player.passphrase = input
-    player.state = "jump"
+    player.state = "endchat"
     player.save()
-    Util.write(socket, player, {name: "Flugcomputer"}, "Alles klar! Merk dir die Parole gut. Und jetzt... spring!", "socket")
-    Util.write(socket, player, {name: "System"}, Util.linkify("Du schaust nach unten und zögerst. [Springst du?|springe]"), "socket")
+    Util.write(socket, player, {name: "Flugcomputer"}, "Alles klar! Merk dir die Parole gut. Und jetzt.. spring! Aber vorher: Sei höflich und beende das Gespräch, indem du dich von mir verabschiedest.", "socket")
+    break
+    
+  case "endchat":
+    if(!input) input = ""
+    Util.write(socket, player, player, input , "socket") // echo player input
+
+    if(input.search(RegexChatExit) != -1) {     
+      player.state = "jump"
+      player.save()
+      Util.write(socket, player, {name: "System"}, Util.linkify("Du wendest dich vom Flugcomputer ab, schaust nach unten und zögerst. [Springst du?|springe]"), "socket")
+    } else {
+      Util.write(socket, player, {name: "Flugcomputer"}, "Das sagt mir nichts. Ich kenne nur ciao, tschüss, tschüssikowski, bye bye und auf wiedersehen. Versuch's nochmal!", "socket")      
+    }
     break
     
   case "jump":

@@ -63,9 +63,9 @@ var handleInput = function(socket, player, input) {
         player.state = "world" // send player back into world
         player.save()
         if(output.abort == 'bot') {
-          Util.write(socket, player, {name: "System"}, output.bot.name + " wendet sich von dir ab.", "sender")
+          Util.write(socket, player, {name: "System"}, Util.capitaliseFirstLetter(output.bot.name) + " hat das Gespräch beendet.", "sender")
         } else {
-          Util.write(socket, player, {name: "System"}, "Du wendest dich von " + output.bot.name + " ab.", "sender")
+          Util.write(socket, player, {name: "System"}, "Du wendest dich von " + Util.capitaliseFirstLetter(output.bot.name) + " ab.", "sender")
         }
       }
 

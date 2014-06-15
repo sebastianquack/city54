@@ -27,7 +27,7 @@ var handleInput = function(socket, player, input) {
       break
       
     case "erkläre chat":
-      text = "Unterwegs triffst du manchmal auf andere Menschen, mit denen du frei chatten kannst. Sprich sie mit dem Kommando 'sage' an und verabschiede dich mit 'tschüss'. Viel Spaß!<br>[zurück zum spiel]"
+      text = "Unterwegs triffst du manchmal auf andere Menschen, mit denen du frei chatten kannst. Sprich sie mit dem Kommando 'sprich' an und verabschiede dich mit 'tschüss'. Tip: Wenn du den Chat verlassen hast, kannst du jederzeit [schaue] eingeben, um dich noch einmal umzuschauen. Viel Spaß!"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
               

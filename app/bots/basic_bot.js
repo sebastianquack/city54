@@ -4,8 +4,8 @@ var Util = require('../util.js')
 /* variable declarations */
 
 var RegexBye = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
-var RegexYes = /^(ja|ok|yup|jaa|yo|yep|genau|ja)?[\s!\.]*$/i
-var RegexNo = /^(nein|no|nö|nee|ne)?[\s!\.]*$/i
+var RegexYes = /^(ja|ok|okay|o\.k\.|yup|jaa|yo|yep|genau|ja|klar|sicher|aber klar|aber klar doch)?[\s!\.]*$/i
+var RegexNo = /^(nein|no|nö|nee|ne|niemals|never|auf keinen fall)?[\s!\.]*$/i
 
 /* function declarations */
 
@@ -42,7 +42,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
       break
 
     case "ask_name": 
-      output.answer = "Hallo, ich bin " + bot.globalVariables.botname + "! Wie heißt du?"
+      output.answer = "Hallo, ich bin " + Util.capitaliseFirstLetter(bot.globalVariables.botname) + "! Wie heißt du?"
       bot.setState(player, "get_name")
       break
     
