@@ -216,13 +216,13 @@ var handleInput = function(bot, player, input, callback, prefix) {
         output.answer = "Ich würde wirklich gerne " + Util.capitaliseFirstLetter(randomRelationship.bot) + " in " + randomRelationship.place + " besser kennenlernen."        
       }
       else if(randomRelationship.level == 2) {
-        output.answer = randomRelationship.bot + " aus " + randomRelationship.place + " finde ich echt heiß. Ich bin ein bisschen verliebt."          
+        output.answer = Util.capitaliseFirstLetter(randomRelationship.bot) + " aus " + randomRelationship.place + " finde ich echt heiß. Ich bin ein bisschen verliebt."          
       }
       else if(randomRelationship.level > 2) {
-        output.answer = randomRelationship.bot + " aus " + randomRelationship.place + " ist meine große Liebe."          
+        output.answer = Util.capitaliseFirstLetter(randomRelationship.bot) + " aus " + randomRelationship.place + " ist meine große Liebe."          
       }
       else if(randomRelationship.level < 1) {
-        output.answer = "Ich bin richtig sauer auf " + randomRelationship.bot + " in " + randomRelationship.place + "!!"            
+        output.answer = "Ich bin richtig sauer auf " + Util.capitaliseFirstLetter(randomRelationship.bot) + " in " + randomRelationship.place + "!!"            
       }
         
       output.answer += " Kannst du mir helfen?"
