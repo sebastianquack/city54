@@ -381,7 +381,8 @@ var handleInput = function(bot, player, input, callback, prefix) {
         bot.globalVariables.messages.push({
           text: Util.capitaliseFirstLetter(input), 
           type: bot.playerInfo[player.uuid].currentMessageType,
-          author: player.name
+          author: player.name,
+          ip: player.currentIP
         })
         
         if(bot.playerInfo[player.uuid].currentRelationship) {

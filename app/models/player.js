@@ -20,6 +20,7 @@ var PlayerSchema = new Schema({
   currentBot: { type: String, default: '' },
   currentChat: { type: String, default: '' },
   previousChat: { type: String, default: '' },
+  currentIP: { type: String, default: '' },
   quests: [],
   cities: []
 })
