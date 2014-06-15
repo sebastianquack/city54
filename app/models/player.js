@@ -21,6 +21,7 @@ var PlayerSchema = new Schema({
   currentChat: { type: String, default: '' },
   previousChat: { type: String, default: '' },
   currentIP: { type: String, default: '' },
+  blocked: { type: Boolean, default: false }, 
   quests: [],
   cities: []
 })

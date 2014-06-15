@@ -43,6 +43,12 @@ module.exports.init = function (io) {
           player.currentIP = socket.handshake.address.address + ':' + socket.handshake.address.port
           player.save()
 
+          if (player.blocked == true) {
+            Util.write(socket, player, {name: "System"}, "Dein Account wurde gesperrt. Bei Fragen hierzu wende dich bitte an tobias.fritzsche@ringlokschuppen.de", "sender")
+            return
+          }
+
+
           if (player.state == "welcome") {
             // new player action
             Intro.handleInput(socket, player, null)

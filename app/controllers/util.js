@@ -83,7 +83,8 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
     player_room: (mode == "sender" || mode == "socket") ? player.currentRoom : null, 
     player_state: (mode == "sender" || mode == "socket") ? player.state : null,
     value: value, 
-    type: type
+    type: type,
+    ip: socket.handshake.address.address + ':' + socket.handshake.address.port
   })
   chat_item.save()
 

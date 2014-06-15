@@ -31,7 +31,7 @@ var getMessagesOfType = function(bot, player, type) {
   var messages = []
  
   bot.globalVariables.messages.forEach(function(message) {
-    if(message.type == type) {
+    if(message.type == type && message.hidden == false) {
       messages.push(message)
     }  
   })
@@ -382,7 +382,9 @@ var handleInput = function(bot, player, input, callback, prefix) {
           text: Util.capitaliseFirstLetter(input), 
           type: bot.playerInfo[player.uuid].currentMessageType,
           author: player.name,
-          ip: player.currentIP
+          ip: player.currentIP, 
+          timestamp: new Date().getTime(),
+          hidden: false
         })
         
         if(bot.playerInfo[player.uuid].currentRelationship) {

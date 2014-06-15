@@ -13,7 +13,8 @@ var ChatItemSchema = new Schema({
   player_state: { type: String, default: ''},
   value: { type: String, default: '' },
   type: { type: String, default: '' },  
-  time: { type : Date, default: Date.now }
+  time: { type : Date, default: Date.now },
+  ip: { type: String, default: '' }
 })
 
 /**
