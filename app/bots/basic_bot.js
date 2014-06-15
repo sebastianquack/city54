@@ -42,7 +42,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
       break
 
     case "ask_name": 
-      output.answer = "Hallo, ich bin " + bot.globalVariables.botname + "! Wie heißt du?"
+      output.answer = "Hallo, ich bin " + Util.capitaliseFirstLetter(bot.globalVariables.botname) + "! Wie heißt du?"
       bot.setState(player, "get_name")
       break
     
