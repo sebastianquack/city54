@@ -252,11 +252,12 @@ b[data-command] {
   font-weight: 700;
 }
 #chat section {
-  transition:color 2s linear 4s;
+  transition:color 2s linear;
 }
-#chat section:not(:last-child) {
-  color:#bbb;
+#chat section.done {
+  /*color:#bbb;*/
 }
+
 #chat section:last-child b[data-command],
 #chat section b {
   font-weight: normal;
@@ -304,17 +305,20 @@ b[data-command] {
   max-width:300px;  
   transition: 
     opacity 0.6s ease-out 0.3s, 
-  max-width 1s linear 0.6s, 
-  padding 0.3s linear 1.4s, 
-  margin 0.3s linear 1.4s;
+    max-width 0.5s linear 0s, 
+    padding 0.5s linear 0s, 
+    margin 0.5s linear 0s;
 }
 
 #chat section:not(:last-child) b[data-command]:after {
+  opacity:0;
+}
+
+#chat section.done b[data-command]:after {
   max-width:0px;
   max-height:1.2em;
   padding:0;
   margin:0;
-  opacity:0;
 }
 
 b[data-command]:hover,
