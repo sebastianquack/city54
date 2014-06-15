@@ -70,13 +70,15 @@ PlayerSchema.methods.getActiveQuestsFromBot = function(fromBot) {
   return quests
 }
 
-PlayerSchema.methods.resolveQuest = function(quest) {
+
+PlayerSchema.methods.resolveQuest = function(quest, status) {
+  if(status == undefined) status = 'resolved'
   thisPlayer = this
   console.log("resolving quest")
   console.log(quest)
   this.quests.forEach(function(q, index) {
     if(q.fromBot == quest.fromBot && q.toBot == quest.toBot && q.message.text == quest.message.text) {
-      thisPlayer.quests[index].status = 'resolved'
+      thisPlayer.quests[index].status = status
       thisPlayer.markModified('quests')
       thisPlayer.save()
       console.log(thisPlayer.quests[index])

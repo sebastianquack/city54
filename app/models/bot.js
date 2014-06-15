@@ -8,7 +8,7 @@ var Schema = mongoose.Schema
 var BotSchema = new Schema({
   name: { type: String, default: '' },
   room: { type: String, default: ''},
-  relationships: [],
+  relationships: { type: Object, default: {} },
   globalVariables: { type: Object, default: {} },
   playerInfo: { type: Schema.Types.Mixed, default: {} }
 })
