@@ -266,7 +266,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
         if(message) {
           bot.playerInfo[player.uuid].currentQuest.message = message
                   
-          output.answer += "Kannst du bitte zu " + bot.playerInfo[player.uuid].currentQuest.toBot + " in " + bot.playerInfo[player.uuid].currentQuest.toPlace + " gehen und Folgendes sagen: '"
+          output.answer += "Kannst du bitte zu " + Util.capitaliseFirstLetter(bot.playerInfo[player.uuid].currentQuest.toBot) + " in " + bot.playerInfo[player.uuid].currentQuest.toPlace + " gehen und Folgendes sagen: '"
           output.answer += bot.playerInfo[player.uuid].currentQuest.message.text + "' "
                     
           if(bot.playerInfo[player.uuid].currentQuest.message.author == player.name) {
