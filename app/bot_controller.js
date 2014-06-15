@@ -12,7 +12,8 @@ var BasicBot = require('./bots/basic_bot.js')
 var leaveBot = function(player) {  
   Bots.findOne( { name: player.currentBot } , function(err, bot) {
     if(bot) {
-      bot.playerInfo[player.uuid].state = ""
+      if(bot.playerInfo)
+        bot.playerInfo[player.uuid].state = ""
       bot.markModified('playerInfo')
       bot.save()   
     }
