@@ -90,10 +90,8 @@ $(document).ready(function() {
     $.cookie('city54_uuid', uuid.v1(), { expires: 31 }) // create new uuid
   }
   
-  socket.on("connect", function() {
-    // send cookie to server for check 
-    socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
-  });
+  // send cookie to server for check 
+  socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
 
   /* events */
 
