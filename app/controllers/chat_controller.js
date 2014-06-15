@@ -3,7 +3,7 @@
 var mongoose = require('mongoose')
 var Bots = mongoose.model('Bot')
 var Player = mongoose.model('Player')
-var Cleverscript = require('./apis/cleverscript')
+//var Cleverscript = require('./apis/cleverscript')
 var RegexChatExit = /^(exit|ciao|tschüss|tschüß|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)+[\s!\.]*$/i
 
 var Util = require('./util.js')

@@ -49,5 +49,5 @@ io = require('socket.io').listen(server)
 io.set('log level', 1) // disable verbose socket log
 
 // launch game_controller
-var Game = require('./app/game_controller')
+var Game = require('./app/controllers/game_controller')
 Game.init(io)
