@@ -26,7 +26,8 @@ block content
           ul 
             each quest, index in player.quests.reverse()
               li
-                span= quest.message.text + " (" + quest.status + ", " + quest.message.type + ", " + quest.message.author + ", " + quest.message.ip + ", " + new Date(quest.message.timestamp) + ") " 
+                b= quest.message.text
+                span= " (" + quest.status + ", " + quest.message.type + ", " + quest.message.author + ", " + quest.message.ip + ", " + new Date(quest.message.timestamp) + ") " 
                 if(quest.status == 'active')
                   a(class="btn btn-sm", href="/quests/cancel/"+player.name+"/"+(player.quests.length - index - 1)) cancel
   
