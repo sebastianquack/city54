@@ -102,8 +102,9 @@ $(document).ready(function() {
   }
   
   // send cookie to server for check 
-  socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
-
+  socket.on('connect', function() { 
+    socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
+  })
   /* events */
 
   // a chat item comes in from the server
