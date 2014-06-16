@@ -1,4 +1,4 @@
-/* variable declarations */ 
+ /* variable declarations */ 
 
 var socket
 
@@ -139,6 +139,7 @@ $(document).ready(function() {
     $("#input").attr("data-sender", player.name)
     $("#input").attr("data-state", player.state)
     $("#input-command").focus()
+    updateInput()
 
     // scroll up to fit new item
     var delta_y = $("#chat")[0].scrollHeight -$("#chat").innerHeight()-$("#chat").scrollTop()
