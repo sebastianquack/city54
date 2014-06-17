@@ -79,6 +79,9 @@ var playerGetSockets = function(player, callback) {
 //
 var write = function(socket, player, emitter, value, mode, type, recipient) {
 
+  var ipLog = ""
+  if(socket.handshake) ipLog = socket.handshake.address.address + ':' + socket.handshake.address.port
+
   var chat_item = new ChatItem({ 
     player_uuid: player.uuid, 
     sender_name: emitter.name,
@@ -87,7 +90,7 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
     player_state: (mode == "sender" || mode == "socket") ? player.state : null,
     value: value, 
     type: type,
-    ip: socket.handshake.address.address + ':' + socket.handshake.address.port
+    ip: ipLog
   })
   chat_item.save()
 

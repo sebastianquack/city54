@@ -126,6 +126,13 @@ $(document).ready(function() {
       state:        (data.player_state != null) ? data.player_state : player.state,
     }
 
+    // do some replacements
+    var d = new Date()
+    d.setYear(2044)
+    var dateString = d.getDate()+"."+(d.getMonth()+1)+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2)
+    data.value = data.value.replace("\time", dateString) // parse old links
+    
+    // add text
     if(data.sender_name == "System") {
       newElem = $('<p>' + data.value + '</p>')
     } else {

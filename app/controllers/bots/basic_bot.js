@@ -445,7 +445,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
         } else {
           bot.relationships[fromBot].level -= 2
         }
-                
+                        
         player.resolveQuest(bot.playerInfo[player.uuid].currentQuest)
         bot.playerInfo[player.uuid].currentQuest = null                
         
@@ -454,7 +454,8 @@ var handleInput = function(bot, player, input, callback, prefix) {
         return
       } 
       else if(input.search(RegexNo) != -1) {
-        // todo: respond to message type
+        // todo: respond to message type, and this bot
+        
         prefix = "Ach soo... dann ist das ja nicht so wichtig."
         bot.setState(player, "offer_quest")
         handleInput(bot, player, input, callback, prefix)
