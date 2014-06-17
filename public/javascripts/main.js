@@ -1,4 +1,4 @@
-/* variable declarations */ 
+ /* variable declarations */ 
 
 var socket
 
@@ -102,8 +102,9 @@ $(document).ready(function() {
   }
   
   // send cookie to server for check 
-  socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
-
+  socket.on('connect', function() { 
+    socket.emit('player-action', { uuid: $.cookie('city54_uuid'), firstPlayerAction: true })
+  })
   /* events */
 
   // a chat item comes in from the server
@@ -139,6 +140,7 @@ $(document).ready(function() {
     $("#input").attr("data-sender", player.name)
     $("#input").attr("data-state", player.state)
     $("#input-command").focus()
+    updateInput()
 
     // scroll up to fit new item
     var delta_y = $("#chat")[0].scrollHeight -$("#chat").innerHeight()-$("#chat").scrollTop()

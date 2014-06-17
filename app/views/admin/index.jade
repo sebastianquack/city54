@@ -1,30 +1,33 @@
 extends ./admin_layout.jade
 
 block content
+  div(class="container")
 
-  h1 Hello, admin
-  h2 Messages stored in bots
-  ul 
-    each message in messages
-      li
-        span= message.text + " (" + message.type + ", " + message.bot + ", " + message.author + ", " + message.ip + ", " + new Date(message.timestamp) + ") " 
-        if(message.hidden == true)
-          a(href="/messages/unhide/"+message.bot+"/"+message.index) unhide
-        else
-          a(href="/messages/hide/"+message.bot+"/"+message.index) hide
-  h2 Messages stored in players
-  ul
-    each player in players
-      li
-        span= player.name + " "
-        if(player.blocked == true)
-          a(href="/players/unblock/"+player.name) unblock
-        else
-          a(href="/players/block/"+player.name) block        
-        ul 
-          each quest, index in player.quests.reverse()
-            li
-              span= quest.message.text + " (" + quest.status + ", " + quest.message.type + ", " + quest.message.author + ", " + quest.message.ip + ", " + new Date(quest.message.timestamp) + ") " 
-              if(quest.status == 'active')
-                a(href="/quests/cancel/"+player.name+"/"+(player.quests.length - index - 1)) cancel
+    h1 Hello, admin
+    h2 Messages stored in bots
+    ul 
+      each message in messages
+        li(class=(message.hidden ? "bad" : ""))
+          b= message.text
+          span= " (" + message.type + ", " + message.bot + ", " + message.author + ", " + message.ip + ", " + new Date(message.timestamp) + ") " 
+          if(message.hidden == true)
+            a(class="btn btn-sm", href="/messages/unhide/"+message.bot+"/"+message.index) unhide
+          else
+            a(class="btn btn-sm", href="/messages/hide/"+message.bot+"/"+message.index) hide
+    h2 Messages stored in players
+    ul
+      each player in players
+        li(class=(player.blocked ? "bad" : ""))
+          span= player.name + " "
+          if(player.blocked == true)
+            a(class="btn btn-sm", href="/players/unblock/"+player.name) unblock
+          else
+            a(class="btn btn-sm", href="/players/block/"+player.name) block        
+          ul 
+            each quest, index in player.quests.reverse()
+              li
+                b= quest.message.text
+                span= " (" + quest.status + ", " + quest.message.type + ", " + quest.message.author + ", " + quest.message.ip + ", " + new Date(quest.message.timestamp) + ") " 
+                if(quest.status == 'active')
+                  a(class="btn btn-sm", href="/quests/cancel/"+player.name+"/"+(player.quests.length - index - 1)) cancel
   
