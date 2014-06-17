@@ -206,7 +206,7 @@ var handleInput = function(socket, player, input) {
       }
       player.setRoom(player.currentRoom, socket)
       d = new Date(new Date().setFullYear(2044))
-      Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+(d.getMonth()+1)"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
+      Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+(d.getMonth()+1)+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
       if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
       player.currentRoomData = data;
       player.save()
@@ -286,9 +286,23 @@ var handleInput = function(socket, player, input) {
         break
       case "warp":
         var target = object
-        console.log(target)
         enterRoom(player, target, socket)
         break
+      case "warpchat":
+        var targetBot = object.split(" in ")[0]
+        if(targetBot && object.split(" in ").length > 1) {
+          player.state = "bot"
+          player.currentBot = targetBot
+          player.currentRoom = object.split(" in ")[1]
+          //player.currentRoomData = {}
+          console.log("entering botchat " + player.currentBot)
+          player.save(function() {
+            Bots.handleInput(socket, player, null)
+          })
+          
+        }
+        break
+
       case "restart":
         // todo: make sure user really wants this
         Util.write(socket, player, {name: "System"}, "restarting game...", "sender")

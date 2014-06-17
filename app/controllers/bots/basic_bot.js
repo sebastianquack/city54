@@ -223,7 +223,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
       else if(randomRelationship.level > 2) {
         output.answer = Util.capitaliseFirstLetter(randomRelationship.bot) + " aus " + randomRelationship.place + " ist meine große Liebe."          
       }
-      else if(randomRelationship.level < 1) {
+      else {
         output.answer = "Ich bin richtig sauer auf " + Util.capitaliseFirstLetter(randomRelationship.bot) + " in " + randomRelationship.place + "!!"            
       }
         
