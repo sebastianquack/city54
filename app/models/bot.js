@@ -21,6 +21,7 @@ BotSchema.methods.setState = function(player, state) {
 
 BotSchema.methods.findRandomOtherBot = function(callback) {  
   var thisbot = this
+  console.log("findRandomOtherBot " + thisbot)
   mongoose.model('Bot', BotSchema).find({ name: { $ne: thisbot.name } }, function (err, all_bots) {
     if(all_bots.length > 0) {
       var randomBot = all_bots[Math.floor(Math.random() * all_bots.length)]

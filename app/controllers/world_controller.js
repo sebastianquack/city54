@@ -206,7 +206,7 @@ var handleInput = function(socket, player, input) {
       }
       player.setRoom(player.currentRoom, socket)
       d = new Date(new Date().setFullYear(2044))
-      Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+d.getMonth()+"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
+      Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — " +d.getDate()+"."+(d.getMonth()+1)"."+d.getFullYear()+", "+d.getHours()+":"+("00" + d.getMinutes()).slice(-2), "sender", "chapter")
       if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
       player.currentRoomData = data;
       player.save()

@@ -39,6 +39,8 @@ var getMessagesOfType = function(bot, player, type) {
   return messages
 }
 
+/* constants */
+
 var messageTypes = ['witz', 'anmachspruch', 'beleidigung', 'kompliment']
 var messageRequests = {witz: "Sag mal, kennst du lustige Witze? Kannst du mir einen sagen?", 
   anmachspruch: "Sag mal, kennst du sexy Anmachsprüche? Kannst du mir einen sagen?", 
@@ -306,7 +308,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
       }
       else {
         output.answer = "Bitte rede mal Klartext. Das ist wichtig für mich! Ja oder nein?"
-        bot.setState(player, "get_sender_confirmation")        
+        bot.setState(player, "get_quest_confirmation")        
       }
       break
     
