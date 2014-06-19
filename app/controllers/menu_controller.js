@@ -75,7 +75,7 @@ var handleInput = function(socket, player, input) {
     case "credits":
       Util.write(socket, player, {name: "System"}, "Credits", "sender", "gameinfo")
       
-      text = "Ein Spiel von /Invisible Playground/, frei nach dem Roman 'Anarchie in Ruhrstadt' von /Jörg Albrecht/. Game-Design: /Sebastian Quack/, /Holger Heissmeyer/, /Daniel Boy/, /Christiane Hütter/. Recherchen: /Christina Prfötschner/. Programmierung: /Sebastian Quack/ und /Holger Heissmeyer/. Grafik: /V2A.net/. Teil des Gesamtprojekts '54. Stadt' von /Ringlokschuppen Ruhr/, /Theater Oberhausen/ und /Urbane Künste Ruhr/."
+      text = "Ein Spiel von /Invisible Playground/, frei nach dem Roman 'Anarchie in Ruhrstadt' von /Jörg Albrecht/. Game-Design: /Sebastian Quack/, /Holger Heissmeyer/, /Daniel Boy/, /Christiane Hütter/. Recherchen: /Christina Prfötschner/. Programmierung: /Sebastian Quack/ und /Holger Heissmeyer/. Grafik: /V2A.net/. Eine Produktion von /Ringlokschuppen Ruhr/ und /Urbane Künste Ruhr/ in Kooperation mit dem /Theater Oberhausen/. Gefördert vom Ministerium für Familie, Kinder, Jugend, Kultur und Sport des Landes Nordrhein-Westfalen, im Fonds Doppelpass der Kulturstiftung des Bundes und von der Kunststiftung NRW."
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
@@ -93,7 +93,7 @@ var handleInput = function(socket, player, input) {
     case "theatertour":
       Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "gameinfo")
       
-      text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von /kainkollektiv/, /LIGNA/, /Invisible Playground/ und /Copy & Waste/, die vom 12.-14. 2014 September in *Mülheim* und *Oberhausen* stattfinden wird. Infos und Karten unter /ringlokschuppen.ruhr/ (oder einfach auf das Logo oben klicken!)"
+      text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von /kainkollektiv/, /LIGNA/, /Invisible Playground/ und /Copy & Waste/, die vom 12.-14. September 2014 in *Mülheim* und *Oberhausen* stattfinden wird. Infos und Karten unter /ringlokschuppen.ruhr/ (oder einfach auf das Logo oben klicken!)"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
