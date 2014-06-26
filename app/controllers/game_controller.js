@@ -63,6 +63,8 @@ module.exports.init = function (io) {
           
           
           console.log("headers " + Object.keys(socket.handshake.headers))
+          if(socket.handshake.headers['x-forwarded-for'])
+            console.log("x-forwarded-for " + socket.handshake.headers['x-forwarded-for'])
           player.save()
 
           if (player.blocked == true) {
