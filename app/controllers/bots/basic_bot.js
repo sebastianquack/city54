@@ -342,7 +342,7 @@ var handleInput = function(bot, player, input, callback, prefix) {
         bot.setState(player, "get_final_quest_confirmation")             
       } else {
         bot.playerInfo[player.uuid].currentQuest.message.text = input
-        bot.globalVariables.messages.push(bot.playerInfo[player.uuid].currentQuest)
+        bot.globalVariables.messages.push(bot.playerInfo[player.uuid].currentQuest.message)
         bot.setState(player, "get_final_quest_confirmation") 
         prefix = "Das gefällt mir auch sehr! Dann sag lieber deine Version."    
         player.quests.push(bot.playerInfo[player.uuid].currentQuest)
