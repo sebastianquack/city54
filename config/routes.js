@@ -12,7 +12,7 @@ var compare = function(a,b) {
 
 var adminInterface = function(req, res) {
   Bots.find({}, function(err, bots) {
-    Players.find({}, function(err, players) {          
+    Players.find({active: true}, function(err, players) {          
       console.log(bots)
       
       var messages = []
