@@ -19,7 +19,7 @@ block content
     ul
       each player in players
         li(class=(player.blocked ? "bad" : ""))
-          span= player.name + " "
+          span= player.name + " " + player.currentIP
           if(player.blocked == true)
             a(class="btn btn-sm", href="/players/unblock/"+player.name) unblock
           else
