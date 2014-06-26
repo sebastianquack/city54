@@ -79,8 +79,7 @@ var playerGetSockets = function(player, callback) {
 //
 var write = function(socket, player, emitter, value, mode, type, recipient) {
 
-  var ipLog = ""
-  if(socket.handshake) ipLog = socket.handshake.address.address + ':' + socket.handshake.address.port
+  var ipLog = socket.handshake.address.address
 
   var chat_item = new ChatItem({ 
     player_uuid: player.uuid, 

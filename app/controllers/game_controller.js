@@ -40,7 +40,7 @@ module.exports.init = function (io) {
           socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
           socket.join(player.uuid)
           player.online = true
-          player.currentIP = socket.handshake.address.address + ':' + socket.handshake.address.port
+          player.currentIP = socket.handshake.address.address
           player.save()
 
           if (player.blocked == true) {

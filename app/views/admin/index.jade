@@ -4,7 +4,7 @@ block content
   div(class="container")
 
     h1 Hello, admin
-    h2 Messages stored in bots
+    h2 #{messages.length} messages stored in bots
     ul 
       each message in messages
         li(class=(message.hidden ? "bad" : ""))
@@ -15,7 +15,7 @@ block content
           else
             a(class="btn btn-sm", href="/messages/hide/"+message.bot+"/"+message.index) hide
           a(class="btn btn-sm", href="/messages/delete/"+message.bot+"/"+message.index) delete
-    h2 Messages stored in #{players.length} players
+    h2 #{players.length} players in the world
     ul
       each player in players
         li(class=(player.blocked ? "bad" : ""))
