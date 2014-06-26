@@ -15,7 +15,7 @@ block content
           else
             a(class="btn btn-sm", href="/messages/hide/"+message.bot+"/"+message.index) hide
           a(class="btn btn-sm", href="/messages/delete/"+message.bot+"/"+message.index) delete
-    h2 Messages stored in players
+    h2 Messages stored in #{players.length} players
     ul
       each player in players
         li(class=(player.blocked ? "bad" : ""))
