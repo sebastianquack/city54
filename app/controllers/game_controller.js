@@ -10,6 +10,25 @@ var Chat = require('./chat_controller.js')
 var Intro = require('./intro_controller.js')
 var Menu = require('./menu_controller.js')
 
+function getClientIp(req) {
+  var ipAddress;
+  // Amazon EC2 / Heroku workaround to get real client IP
+  var forwardedIpsStr = req.header('x-forwarded-for'); 
+  if (forwardedIpsStr) {
+    // 'x-forwarded-for' header may return multiple IP addresses in
+    // the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
+    // the first one
+    var forwardedIps = forwardedIpsStr.split(',');
+    ipAddress = forwardedIps[0];
+  }
+  if (!ipAddress) {
+    // Ensure getting client IP address still works in
+    // development environment
+    ipAddress = req.connection.remoteAddress;
+  }
+  return ipAddress;
+}
+
 /* expose functionality */
 module.exports.init = function (io) {
 
@@ -40,8 +59,10 @@ module.exports.init = function (io) {
           socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
           socket.join(player.uuid)
           player.online = true
-          player.currentIP = socket.handshake.headers['X-Forwarded-For']
-          console.log("header " + socket.handshake.headers['X-Forwarded-For'])
+          //player.currentIP = socket.handshake.headers['X-Forwarded-For']
+          
+          
+          console.log("headers " + Object.keys(socket.handshake.headers))
           player.save()
 
           if (player.blocked == true) {
