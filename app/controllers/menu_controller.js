@@ -84,7 +84,7 @@ var handleInput = function(socket, player, input) {
     case "bedingungen":
       Util.write(socket, player, {name: "System"}, "Nutzungsbedingungen", "sender", "gameinfo")
       
-      text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der /Immobilien/ werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an /tobias.fritzsche@ringlokschuppen.de/"
+      text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der /Immobilien/ werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an /max.grafe@ringlokschuppen.de/"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
@@ -93,7 +93,7 @@ var handleInput = function(socket, player, input) {
     case "theatertour":
       Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "gameinfo")
       
-      text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von /kainkollektiv/, /LIGNA/, /Invisible Playground/ und /Copy & Waste/, die vom 12.-14. September 2014 in *Mülheim* und *Oberhausen* stattfinden wird. Infos und Karten unter /ringlokschuppen.ruhr/ (oder einfach auf das Logo oben klicken!)"
+      text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von /kainkollektiv/, /LIGNA/, /Invisible Playground/ und /copy & waste/, die vom 12.-14. September 2014 in *Mülheim* und *Oberhausen* stattfinden wird. Infos und Karten unter /ringlokschuppen.ruhr/ (oder einfach auf das Logo oben klicken!)"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       

@@ -1,75 +1,3 @@
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 100;
-  src: local('Roboto Thin'), local('Roboto-Thin'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/vzIUHo9z-oJ4WgkpPOtg13YhjbSpvc47ee6xR_80Hnw.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Roboto Light'), local('Roboto-Light'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/Hgo13k-tfSpn0qi1SFdUfbO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Roboto Regular'), local('Roboto-Regular'), url(../fonts/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Roboto Medium'), local('Roboto-Medium'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/RxZJdnzeo3R5zSexge8UUbO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Roboto Bold'), local('Roboto-Bold'), url(../fonts/d-6IYplOFocCacKzxwXSOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 900;
-  src: local('Roboto Black'), local('Roboto-Black'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/mnpfi9pxYH-Go5UiibESIrO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: italic;
-  font-weight: 100;
-  src: local('Roboto Thin Italic'), local('Roboto-ThinItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/12mE4jfMSBTmg-81EiS-Yb3hpw3pgy2gAi-Ip7WPMi0.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: italic;
-  font-weight: 300;
-  src: local('Roboto Light Italic'), local('Roboto-LightItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/7m8l7TlFO-S3VkhHuR0at7rIa-7acMAeDBVuclsi6Gc.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: italic;
-  font-weight: 400;
-  src: local('Roboto Italic'), local('Roboto-Italic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/1pO9eUAp8pSF8VnRTP3xnnYhjbSpvc47ee6xR_80Hnw.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: italic;
-  font-weight: 500;
-  src: local('Roboto Medium Italic'), local('Roboto-MediumItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/OLffGBTaF0XFOW1gnuHF0brIa-7acMAeDBVuclsi6Gc.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: italic;
-  font-weight: 700;
-  src: local('Roboto Bold Italic'), local('Roboto-BoldItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/t6Nd4cfPRhZP44Q5QAjcC7rIa-7acMAeDBVuclsi6Gc.woff) format('woff');
-}
-@font-face {
-  font-family: 'Roboto';
-  font-style: italic;
-  font-weight: 900;
-  src: local('Roboto Black Italic'), local('Roboto-BlackItalic'), url(http://themes.googleusercontent.com/static/fonts/roboto/v11/bmC0pGMXrhphrZJmniIZpbrIa-7acMAeDBVuclsi6Gc.woff) format('woff');
-}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -155,11 +83,11 @@ header button {
   background-image: none;
   border: 1px solid #222222;
 }
-header button.fullscreen-toggle {
-  right: 35px;
-}
 header button.help-btn {
    background: #222222 url("../images/help_button.png") no-repeat;
+}
+header button.fullscreen-toggle {
+	background: #222222 url("../images/fullscreen_button.png") no-repeat;
 }
 header button.navbar-toggle {
   top: 35px;
@@ -395,29 +323,44 @@ body.touch #input-fake {
     display: none;
   }
 }
-/*
-#chat p:last-child b[data-command] {
-  font-weight: 700;
-  border-radius:3px;
-  border: solid 1px rgba(0,0,0,0.6);
-  padding: 0 0 0 0.5ex;
-  font-size:0.95em;
+
+@media screen and (min-width: 636px) {
+	header, #chat, #top-border, #bottom-border {
+		width: 50%;
+	}
+
+	#left-border {
+		margin-left: 25%;
+		left: -6px;
+	}
+
+	#right-border {
+		margin-right: 25%;
+		right: -6px;
+	}
+
+	header, #chat, #top-border, #bottom-border {
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+	#chat {
+		position: relative;
+	}
+
+	.fullscreen-toggle {
+		display: none;
+	}
+
 }
 
-#chat p:last-child b[data-command]:after {
-  content: "" attr(data-command) "";
-  background-color:rgba(0,0,0,0.6);
-  color:rgba(255,255,255,0.8);
-  vertical-align:middle;
-  font-size:0.7em; 
-  line-height:100%;
-  font-weight:normal;
-  letter-spacing:0.1em;
-  border-radius:3px;
-  padding: 0.1em 0.5em;
-  margin:0 0.1em 0 0.5em;
-  position:relative;
-  bottom:0.1em;
+@media screen and (max-width: 299px) {
+	header h1 {
+		display: none;
+	}
+	
+	header h2 {
+		display: none;
+	}
+	
 }
-*/
-/*# sourceMappingURL=css/city54-temp.css.map */

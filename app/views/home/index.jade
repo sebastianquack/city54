@@ -9,15 +9,17 @@ block content
     nav(role='navigation')
       button(type='button', data-menu='hilfe', class='help-btn')
         span.sr-only Hilfe zum Spiel
-      //button(type='button', class='fullscreen-toggle')
-      //  span.sr-only Toggle fullscreen
+      button(type='button', class='fullscreen-toggle')
+        span.sr-only Toggle fullscreen
       button(type='button', class='navbar-toggle')
         span.sr-only Toggle navigation
       ul
         li
+          b(data-menu='hilfe') Hilfe
+        li
           b(data-menu='spielstand') Spielstand
         li
-          b(data-menu='bedingungen') Nutzungsbedinungen
+          b(data-menu='bedingungen') Nutzung
         li
           b(data-menu='credits') Credits
         li
