@@ -59,12 +59,11 @@ module.exports.init = function (io) {
           socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
           socket.join(player.uuid)
           player.online = true
-          //player.currentIP = socket.handshake.headers['X-Forwarded-For']
           
-          
-          console.log("headers " + Object.keys(socket.handshake.headers))
+          //console.log("headers " + Object.keys(socket.handshake.headers))
           if(socket.handshake.headers['x-forwarded-for'])
-            console.log("x-forwarded-for " + socket.handshake.headers['x-forwarded-for'])
+            player.currentIP = socket.handshake.headers['x-forwarded-for']
+            //console.log("x-forwarded-for " + socket.handshake.headers['x-forwarded-for'])
           player.save()
 
           if (player.blocked == true) {
