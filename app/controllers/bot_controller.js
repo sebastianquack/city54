@@ -63,12 +63,13 @@ var handleInput = function(socket, player, input) {
         output.bot.playerInfo[player.uuid].state = "" // reset bot state for this player     
         player.state = "world" // send player back into world
         player.save()
+        var exitNote = ""
         if(output.abort == 'bot') {
-          Util.write(socket, player, {name: "System"}, Util.capitaliseFirstLetter(output.bot.name) + " hat das Gespräch beendet.", "sender")
+          exitNote = Util.capitaliseFirstLetter(output.bot.name) + " hat das Gespräch beendet."
         } else {
-          Util.write(socket, player, {name: "System"}, "Du wendest dich von " + Util.capitaliseFirstLetter(output.bot.name) + " ab.", "sender")
+          exitNote = "Du wendest dich von " + Util.capitaliseFirstLetter(output.bot.name) + " ab."
         }
-        Util.write(socket, player, {name: "System"}, Util.linkify("Du bist weiterhin in " + Util.capitaliseFirstLetter(player.currentRoom) + ". [schaue]"), "sender")
+        Util.write(socket, player, {name: "System"}, exitNote + " " + Util.linkify("Du bist weiterhin in " + Util.capitaliseFirstLetter(player.currentRoom) + ". [schaue]"), "sender")
       } 
 
       // save updated bot to db

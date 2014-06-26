@@ -156,6 +156,7 @@ function processRoomCommand(socket, player, command, object) {
 
       // enter bot
       if (data.bot != undefined && data.bot[i].length > 0) {
+        reply += " Verabschiede dich, um das Gespräch zu beenden."
         bot = data.bot[i]
       }
 
