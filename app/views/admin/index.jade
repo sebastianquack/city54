@@ -14,6 +14,7 @@ block content
             a(class="btn btn-sm", href="/messages/unhide/"+message.bot+"/"+message.index) unhide
           else
             a(class="btn btn-sm", href="/messages/hide/"+message.bot+"/"+message.index) hide
+          a(class="btn btn-sm", href="/messages/delete/"+message.bot+"/"+message.index) delete
     h2 Messages stored in players
     ul
       each player in players
@@ -25,9 +26,10 @@ block content
             a(class="btn btn-sm", href="/players/block/"+player.name) block        
           ul 
             each quest, index in player.quests.reverse()
-              li
-                b= quest.message.text
-                span= " (" + quest.status + ", " + quest.message.type + ", " + quest.message.author + ", " + quest.message.ip + ", " + new Date(quest.message.timestamp) + ") " 
-                if(quest.status == 'active')
-                  a(class="btn btn-sm", href="/quests/cancel/"+player.name+"/"+(player.quests.length - index - 1)) cancel
+              if(quest.status == 'active')
+                li
+                  b= quest.message.text
+                  span= " (" + quest.status + ", " + quest.message.type + ", " + quest.message.author + ", " + quest.message.ip + ", " + new Date(quest.message.timestamp) + ") " 
+                  if(quest.status == 'active')
+                    a(class="btn btn-sm", href="/quests/cancel/"+player.name+"/"+(player.quests.length - index - 1)) cancel
   

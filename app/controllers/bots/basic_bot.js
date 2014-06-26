@@ -4,7 +4,7 @@ var Util = require('../util.js')
 /* variable declarations */
 
 var RegexBye = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
-var RegexYes = /^(ja|ok|okay|o\.k\.|yup|jaa|yo|yep|genau|ja|klar|sicher|aber klar|aber klar doch|denke schon|vielleicht)?[\s!\.]*$/i
+var RegexYes = /^(ja|ok|okay|o\.k\.|yup|jaa|yo|yep|genau|ja|klar|sicher|aber klar|aber klar doch|denke schon|vielleicht|bestimmt)?[\s!\.]*$/i
 var RegexNo = /^(nein|no|nö|nee|ne|niemals|never|auf keinen fall)?[\s!\.]*$/i
 
 var openingPhrases = ["", "Und, alles klar?", "Und, wie sieht's aus?", "Schönes Wetter heute, nicht?"]

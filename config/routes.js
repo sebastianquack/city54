@@ -65,6 +65,16 @@ module.exports = function (app) {
     })
   })
   
+  app.get('/messages/delete/:bot/:index', auth, function(req, res) {
+    Bots.findOne({name: req.params.bot}, function(err, bot) {
+      bot.globalVariables.messages.splice(req.params.index, 1)
+      bot.markModified('globalVariables')  
+      bot.save(function() {
+        res.redirect('/admin')
+      })
+    })
+  })
+    
   app.get('/messages/unhide/:bot/:index', auth, function(req, res) {
     Bots.findOne({name: req.params.bot}, function(err, bot) {
       bot.globalVariables.messages[req.params.index].hidden = false
