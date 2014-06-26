@@ -66,6 +66,8 @@ var handleInput = function(socket, player, input) {
   if(typeof input == "string" && input.search(RegexChatExit) != -1) { // leave chat
     leaveChat(socket, player, input)
     Util.write(socket, player, {name: "System"}, "Du verlässt das Gespräch.", "sender")    
+    Util.write(socket, player, {name: "System"}, Util.linkify("Du bist weiterhin in " + Util.capitaliseFirstLetter(player.currentRoom) + ". [schaue]"), "sender")
+
     return
   }
       

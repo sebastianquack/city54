@@ -247,6 +247,7 @@ var handleInput = function(socket, player, input) {
     switch(command) {
       case "sage" :
       case "sprich" :
+        Util.write(socket, player, {name: "System"}, "Du beginnst zu sprechen. Verabschiede dich, um das Gespräch zu beenden.", "sender")
         if (object) {
           playerOrMessage = Util.getCommand(object)
           var targetPlayer = undefined
@@ -280,7 +281,6 @@ var handleInput = function(socket, player, input) {
         }
         else {
           enterChat(socket, player, player.currentRoom) 
-          Util.write(socket, player, {name: "System"}, "Du wendest dich an die Anwesenden und hebst an zu sprechen.", "sender")
         }
         break
       case "warp":
