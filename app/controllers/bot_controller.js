@@ -68,7 +68,8 @@ var handleInput = function(socket, player, input) {
         } else {
           Util.write(socket, player, {name: "System"}, "Du wendest dich von " + Util.capitaliseFirstLetter(output.bot.name) + " ab.", "sender")
         }
-      }
+        Util.write(socket, player, {name: "System"}, Util.linkify("Du bist weiterhin in " + player.currentRoom + ". [schaue]"), "sender")
+      } 
 
       // save updated bot to db
       output.bot.markModified('globalVariables')

@@ -4,10 +4,10 @@ var Util = require('../util.js')
 /* variable declarations */
 
 var RegexBye = /^(exit|ciao|tschüss|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)?[\s!\.]*$/i
-var RegexYes = /^(ja|ok|okay|o\.k\.|yup|jaa|yo|yep|genau|ja|klar|sicher|aber klar|aber klar doch|denke schon)?[\s!\.]*$/i
+var RegexYes = /^(ja|ok|okay|o\.k\.|yup|jaa|yo|yep|genau|ja|klar|sicher|aber klar|aber klar doch|denke schon|vielleicht)?[\s!\.]*$/i
 var RegexNo = /^(nein|no|nö|nee|ne|niemals|never|auf keinen fall)?[\s!\.]*$/i
 
-var openingPhrases = ["", "Und, was gibt's Neues?", "Und, wie sieht's aus?", "Schönes Wetter heute, nicht?"]
+var openingPhrases = ["", "Und, alles klar?", "Und, wie sieht's aus?", "Schönes Wetter heute, nicht?"]
 
 /* function declarations */
 
@@ -111,24 +111,45 @@ var handleInput = function(bot, player, input, callback, prefix) {
     
     case "get_name":
       bot.playerInfo[player.uuid].playerName = input
-      output.answer = "Schön dich kennenzulernen, " + input + "! "      
-      output.answer += pickRandom(openingPhrases)        
-      bot.setState(player, "check_keyphrase")
-      break
+      prefix = "Schön dich kennenzulernen, " + input + "! "      
+      bot.setState(player, "opening_phrase")   
+      handleInput(bot, player, input, callback, prefix) 
+      return
 
     case "greeting":  
-      output.answer = "Schön dich wiederzusehen, " + Util.capitaliseFirstLetter(bot.playerInfo[player.uuid].playerName) + "! "
-      output.answer += pickRandom(openingPhrases)     
-      bot.setState(player, "check_keyphrase")   
+      prefix = "Schön dich wiederzusehen, " + Util.capitaliseFirstLetter(bot.playerInfo[player.uuid].playerName) + "! "
+      bot.setState(player, "opening_phrase")   
+      handleInput(bot, player, input, callback, prefix) 
+      return
+             
+    case "opening_phrase":
+      var quests = player.getActiveQuestsToBot(bot.name) // get all active quests leading to this bot
+      if(quests.length > 0) {
+        output.answer = "Hast du eine Nachricht für mich?"
+        bot.setState(player, "check_keyphrase")           
+      } else {
+        output.answer = pickRandom(openingPhrases)        
+        bot.setState(player, "prepare_quest")           
+      }
       break
               
     case "check_keyphrase":
       bot.setState(player, "prepare_quest") // default option
       
       var quests = player.getActiveQuestsToBot(bot.name) // get all active quests leading to this bot
-      console.log(quests)
+      //console.log(quests)
       if(quests.length > 0) {
+       
+        if(input.search(RegexYes) != -1) {
+          output.answer = "Ok, lass hören!"
+          bot.setState(player, "check_keyphrase")   
+          break
+        }
         
+        if(input.search(RegexNo) != -1) {
+          prefix = "Schade."
+        }
+              
         var messages = []
         quests.forEach(function(quest) {
           messages.push(quest.message.text)
@@ -165,9 +186,8 @@ var handleInput = function(bot, player, input, callback, prefix) {
         }
         
       } 
-      handleInput(bot, player, input, callback) 
+      handleInput(bot, player, input, callback, prefix) 
       return
-      break
 
     // the bot reviews her relationships and decided what to ask of user      
     case "prepare_quest":
@@ -427,7 +447,6 @@ var handleInput = function(bot, player, input, callback, prefix) {
       
     case "get_sender_confirmation":
       if(input.search(RegexYes) != -1) {
-        prefix = "Puuuh. Das ist ja was. Danke!"
         
         // check if bot already has a relationship with this bot
         var fromBot = bot.playerInfo[player.uuid].currentQuest.fromBot
@@ -442,19 +461,24 @@ var handleInput = function(bot, player, input, callback, prefix) {
         
         if(bot.playerInfo[player.uuid].currentQuest.message.type != 'beleidigung') {
           bot.relationships[fromBot].level += 1
+          prefix = "Puh. Das ist ja was."
+
         } else {
           bot.relationships[fromBot].level -= 2
+          prefix = "Uff. Das macht mich richtig wütend."
         }
                         
         player.resolveQuest(bot.playerInfo[player.uuid].currentQuest)
         bot.playerInfo[player.uuid].currentQuest = null                
         
+        // todo: respond to history of this relationship in next quest
         bot.setState(player, "prepare_quest")
         handleInput(bot, player, input, callback, prefix)
         return
       } 
       else if(input.search(RegexNo) != -1) {
         // todo: respond to message type, and this bot
+        // todo: ask which bot sent message
         
         prefix = "Ach soo... dann ist das ja nicht so wichtig."
         bot.setState(player, "offer_quest")
