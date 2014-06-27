@@ -44,13 +44,17 @@ function getPlayersInRoom(socket, room, callback) {
   }
 }
 
-function announceRoomPlayers(socket, player) {
+function announceRoomPlayers(socket, player, announceArrival) {
     if (player.currentRoom.search(RegexPrivateRooms) != -1) return // no output in private rooms
     getPlayersInRoom(socket, player.currentRoom, function(roomPlayers) {
       playerNames = []
       for (i in roomPlayers) { 
-        if (player.name != roomPlayers[i].name) 
+        if (player.name != roomPlayers[i].name) {
           playerNames.push(roomPlayers[i].name) 
+          if (announceArrival) {
+            Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "sender", null, roomPlayers[i])
+          }
+        }
       }    
       switch(playerNames.length) {
         case 0:  return;
@@ -207,11 +211,11 @@ var handleInput = function(socket, player, input) {
       }
       player.setRoom(player.currentRoom, socket)
       Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — \time", "sender", "chapter")
-      if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
+      //if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
       player.currentRoomData = data;
       player.save()
       processRoomCommand(socket, player, "base", "")
-      announceRoomPlayers(socket, player)
+      announceRoomPlayers(socket, player, true)
     }     
     Spreadsheets.loadRoom(player.currentRoom, roomEntered)
     return
