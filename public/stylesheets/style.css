@@ -256,6 +256,11 @@ b#einbetten {
   cursor: pointer;
 }
 
+span.italic a {
+  color: #fdc81c;
+  font-style: italic;	
+}
+
 span.italic {
   color: #fdc81c;
   font-style: italic;	
