@@ -1,6 +1,7 @@
  /* variable declarations */ 
 
 var socket
+var touchDevice = false
 
 /* function declarations */
 
@@ -56,7 +57,9 @@ splitCursor = function (text, position) {
 // update fake input
 updateInput = function() {  
   $('#input-fake').html(splitCursor($('#input-command').val(), $('#input-command').getCursorPosition()))
-  $('#input-command').focus()
+  if(!touchDevice) {
+    $('#input-command').focus()
+  } 
   if ($('#input-command').val().length >= 1) $('#input').addClass('chars')
   else $('#input').removeClass('chars')
 }
@@ -65,21 +68,23 @@ updateInput = function() {
 // fast scroll to input
 var fastScroll = false
 scrollInput = function() {
-  var offset_y = $("#chat")[0].scrollHeight - $("#chat").innerHeight()
-  var delta_y = offset_y-$("#chat").scrollTop()
-  if (fastScroll || delta_y <= 2) return
-  var duration = delta_y * 3
-  duration = Math.max(Math.min(duration, 800), 200)
-  $('#chat').stop().animate( {
-      scrollTop: offset_y
-    }, {
-      duration: duration,
-      queue: false,
-      start: function() { fastScroll = true },
-      always: function() { fastScroll = false },
-      complete: fillCommandGaps,
-      easing: "swing"
-  })
+  
+    var offset_y = $("#chat")[0].scrollHeight - $("#chat").innerHeight()
+    var delta_y = offset_y-$("#chat").scrollTop()
+    if (fastScroll || delta_y <= 2) return
+    var duration = delta_y * 3
+    duration = Math.max(Math.min(duration, 800), 200)
+    $('#chat').stop().animate({
+        scrollTop: offset_y
+    },{
+        duration: duration,
+        queue: false,
+        start: function() { fastScroll = true },
+        always: function() { fastScroll = false },
+        complete: fillCommandGaps,
+        easing: "swing"
+    })
+
 }
 
 fillCommandGaps = function() {
@@ -89,6 +94,16 @@ fillCommandGaps = function() {
 /* let's go! */
 
 $(document).ready(function() {
+
+  touchDevice = 'ontouchstart' in window || !!navigator.msMaxTouchPoints; // detect touch device
+
+  /*
+  // detect touch device (roughly)
+  $('body').on("touchstart", function() {
+    $('body').removeClass("nontouch")
+    $('body').addClass("touch")
+  })
+  */
 
   // local player object
   player = {}
@@ -170,21 +185,30 @@ $(document).ready(function() {
     
   })
 
-  // detect touch device (roughly)
-  $('body').on("touchstart", function() {
-    $('body').removeClass("nontouch")
-    $('body').addClass("touch")
-  })
-    
   // focus input field
-  $('body').not("b[data-command], #input-command").on("keypress click focus resize load", function(){
-    scrollInput()
-    $('#input-command').focus()
-  })
+  if(!touchDevice) {
+    $('body').not("b[data-command], #input-command").on("keypress click focus resize load", function(event){
+      scrollInput()
+      $('#input-command').focus()
+    })
+  } else {
+    $('#input').on("click", function(event){
+      $('#input-command').focus()
+      setInterval(scrollInput, 500) // add delay while software keyboard opens on touch devices
+    })
+  }
 
   $('#input-command').on("keypress keyup keydown", updateInput)
+  
+  // toggle navigation
+  $('.navbar-toggle').click( function(){
+    $(this).parent().toggleClass('show');
+  });
     
-
+  if(self==top) {
+  	$(".fullscreen-toggle").hide()    
+  }
+    
   // user clicks on menu
   $("body").on("click","*[data-menu]", null, function() { 
     $('nav').removeClass('show');
@@ -200,8 +224,7 @@ $(document).ready(function() {
 
   // user hits enter in console
   $('#input-command').on("keypress", function(e) {
-    if (e.keyCode == 13) { 
-      
+    if (e.keyCode == 13) {       
       submitCommand()
     }
   })
@@ -250,11 +273,6 @@ $(document).ready(function() {
               return sel.text.length - selLen;
           }
       }
-
-  // toggle navigation
-  $('.navbar-toggle').click( function(){
-    $(this).parent().toggleClass('show');
-  });
 
   })(jQuery);
 
