@@ -42,7 +42,10 @@ var getObject = function(input) {
 
 // parse world descriptions for links
 var linkify = function(text) {
+    
   text = text.replace(/\/(.*?)\//g,'<span class="italic">$1</span>') // italic
+  text = text.replace("ringlokschuppen.ruhr", "<a href='http://ringlokschuppen.ruhr' target='_parent'>ringlokschuppen.ruhr</a>")
+      
   text = text.replace(/\*(.*?)\*/g,'<span class="bold">$1</span>') // bold
 
   text = text.replace(/\[(.*?)\|(.*?)\]/g,'<b data-command="$2">$1</b>') // parse old links
