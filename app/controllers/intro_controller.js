@@ -30,7 +30,7 @@ var handleInput = function(socket, player, input) {
     // check if playername exists
     Player.find({ name: input /*, active: true */ }, function (err, records) {
 
-      console.log(records)
+      //console.log(records)
       
       if(records.length >= 1) {
     
@@ -57,9 +57,11 @@ var handleInput = function(socket, player, input) {
     Util.write(socket, player, player, input, "socket") // echo player input
     input = Util.lowerTrim(input)
 
-    Player.findOne({ name: player.name, passphrase: input }, function (err, existingPlayer){
+    Player.findOne({ name: player.name }, function (err, existingPlayer){
 
       if(existingPlayer) {
+    
+        console.log(existingPlayer.passphrase)
     
         // check if passphrase is correct
         if(existingPlayer.passphrase == input) {
