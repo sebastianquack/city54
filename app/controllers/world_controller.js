@@ -156,8 +156,8 @@ function processRoomCommand(socket, player, command, object) {
 
       // enter bot
       if (data.bot != undefined && data.bot[i].length > 0) {
-        reply += " Verabschiede dich, um das Gespräch zu beenden."
         bot = data.bot[i]
+        reply += "Du sprichst jetzt mit " + Util.capitaliseFirstLetter(bot) + ". Verabschiede dich, um das Gespräch zu beenden."
       }
 
       // play audio
@@ -248,6 +248,11 @@ var handleInput = function(socket, player, input) {
     switch(command) {
       case "sage" :
       case "sprich" :
+        if(player.inMenu) {
+          player.inMenu = false
+        }
+        player.state = "chat"
+        player.save()
         Util.write(socket, player, {name: "System"}, "Du beginnst zu sprechen. Verabschiede dich, um das Gespräch zu beenden.", "sender")
         if (object) {
           playerOrMessage = Util.getCommand(object)
@@ -303,13 +308,6 @@ var handleInput = function(socket, player, input) {
         }
         break
 
-      case "restart":
-        // todo: make sure user really wants this
-        Util.write(socket, player, {name: "System"}, "restarting game...", "sender")
-        player.state = "welcome"
-        player.save()
-        Intro.handleInput(socket, player, null)
-        break
       case "admin":
           switch(object) {
             case "print player":

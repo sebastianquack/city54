@@ -15,23 +15,27 @@ var handleInput = function(socket, player, input) {
   switch(player.state) {
   case "welcome":
     Util.write(socket, player, {name: "System"}, "Auf den ersten Blick liegt die Stadt einfach da, nicht friedlich und doch stumm, ein riesiges Raumschiff, das gelandet ist, um von hier aus die Welt zu erobern. Die gläsernen Hallen und weißen Monolithen, die vielen Villages und Grünflächen sehen aus, als wüßten sie von nichts. Luftschlitten jagen leise zischend hin und her.", "socket")
-    if (player.name == "") player.name = "Du"
-    Util.write(socket, player, {name: "Flugcomputer"}, "Wie heißt du?", "socket")
+    //if (player.name == "") player.name = "Du"
+    Util.write(socket, { name: "Du" }, {name: "Flugcomputer"}, "Wie heißt du?", "socket")
     player.state = "name"
     player.save()
     break
 
   case "name":
-    Util.write(socket, player, player, input, "socket") // echo player input
+    Util.write(socket, { name: "Du" }, { name: "Du" }, input, "socket") // echo player input
     input = Util.lowerTrim(input)
     
+    console.log(input)
+    
     // check if playername exists
-    Player.findOne({ name: input, active: true }, function (err, existingPlayer) {
+    Player.find({ name: input /*, active: true */ }, function (err, records) {
+
+      console.log(records)
       
-      if(existingPlayer) {
+      if(records.length >= 1) {
     
         // if yes, ask passphrase    
-        Util.write(socket, player, {name: "Flugcomputer"}, Util.capitaliseFirstLetter(input) + "... der Name kommt mir bekannt vor. Wie ist deine Geheimparole?", "socket")
+        Util.write(socket, {name: "Du"}, {name: "Flugcomputer"}, Util.capitaliseFirstLetter(input) + "... der Name kommt mir bekannt vor. Wie ist deine Geheimparole?", "socket")
         player.name = input
         player.state = "check_passphrase"
         player.save()
@@ -53,7 +57,7 @@ var handleInput = function(socket, player, input) {
     Util.write(socket, player, player, input, "socket") // echo player input
     input = Util.lowerTrim(input)
 
-    Player.findOne({ name: player.name, active: true }, function (err, existingPlayer){
+    Player.findOne({ name: player.name, passphrase: input }, function (err, existingPlayer){
 
       if(existingPlayer) {
     
@@ -64,13 +68,13 @@ var handleInput = function(socket, player, input) {
 
           // use existingPlayer from now on with this cookie, remove temporary player document
           existingPlayer.uuid = player.uuid
+          existingPlayer.state = "world"
           existingPlayer.save()
           player.remove()
 
           Util.write(socket, existingPlayer, {name: "System"}, Util.linkify("Der Flugcomputer landet, lässt dich aussteigen und fliegt davon."), "socket")
           World.handleInput(socket, existingPlayer, null)
-                  
-                    
+                            
         } else {
 
           player.name = "Du"
@@ -120,7 +124,7 @@ var handleInput = function(socket, player, input) {
     player.setRoom(randomRoom, socket)
     console.log("random room " + randomRoom + " -> " + player.currentRoom)
     player.state = "world"
-    player.active = true
+    //player.active = true
     player.save()
     World.handleInput(socket, player, null)
     break

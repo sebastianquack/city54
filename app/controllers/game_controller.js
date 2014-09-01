@@ -33,7 +33,7 @@ function getClientIp(req) {
 module.exports.init = function (io) {
 
   // reset players
-  console.log("Resettings Players...")
+  console.log("Resetting Players...")
   Player.update({ online: true }, { $set: { online: false }}, { multi: true }, function() {
 
     // client connects
@@ -70,7 +70,6 @@ module.exports.init = function (io) {
             Util.write(socket, player, {name: "System"}, Util.linkify("Dein Account wurde gesperrt. Bei Fragen hierzu wende dich bitte an /max.grafe@ringlokschuppen.de/"), "sender")
             return
           }
-
 
           if (player.state == "welcome") {
             // new player action

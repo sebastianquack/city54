@@ -7,10 +7,21 @@ var World = require('./world_controller.js')
 var Bots = require('./bot_controller.js')
 var Chat = require('./chat_controller.js')
 
+function restart(socket, player) {
+  Util.write(socket, player, {name: "System"}, "Über der Stadt", "sender", "chapter")
+  player.state = "welcome"
+  player.save()
+  Intro.handleInput(socket, player, "")
+}
+
 // handle introduction
 var handleInput = function(socket, player, input) {
 
   switch(Util.lowerTrim(input)) {
+
+    case "restart":
+      restart(socket, player)
+      break
 
     case "zurück zum spiel":
       player.inMenu = false
@@ -20,11 +31,7 @@ var handleInput = function(socket, player, input) {
         player.save()
         World.handleInput(socket, player, "")
       } else {
-        Util.write(socket, player, {name: "System"}, "Über der Stadt", "sender", "chapter")
-        player.state = "welcome"
-        player.name = ""
-        player.save()
-        Intro.handleInput(socket, player, "")        
+        restart(socket, player)
       }
       break 
 
@@ -38,8 +45,17 @@ var handleInput = function(socket, player, input) {
 
     case "starte anleitung":
       Util.write(socket, player, {name: "System"}, "Exploration", "sender", "chapter")
-      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene *Städte* besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Du kannst jederzeit 'schaue' eingeben, um dich umzuschauen. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien] [zurück zum Spiel]"
+      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene *Städte* besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Du kannst jederzeit [schaue] eingeben, um dich umzuschauen. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien] [zurück zum Spiel]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
+      break
+      
+    case "schaue":
+      if(player.inMenu) {      
+        text = "Du schaust dir gerade die Spielanleitung an. Willst du vielleicht etwas über die Immobilien erfahren? [erkläre immobilien]"
+        Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")      
+      } else {
+        return false
+      }
       break
       
     case "erkläre immobilien":
@@ -50,7 +66,7 @@ var handleInput = function(socket, player, input) {
       
     case "erkläre chat":
       Util.write(socket, player, {name: "System"}, "Chatten", "sender", "chapter")
-      text = "Unterwegs triffst du manchmal auf andere Menschen, mit denen du frei chatten kannst. Sprich sie mit dem Kommando 'sprich' an und beende das Gespräch, indem du dich Verabschiedest, z.B. mit 'tschüss'. Viel Spaß! [zurück zum Spiel]"
+      text = "Unterwegs triffst du manchmal auf andere Menschen, mit denen du frei chatten kannst. Sprich sie mit dem Kommando [sprich] an und beende das Gespräch, indem du dich Verabschiedest, z.B. mit 'tschüss'. Viel Spaß! [zurück zum Spiel]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
               

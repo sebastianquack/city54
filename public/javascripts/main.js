@@ -34,7 +34,13 @@ function autoType(text, menuFlag, menuValue) {
 function submitCommand() {
   val = $('#input-command').val()
   if (val.trim()=="") return
-  socket.emit('player-action', { uuid: $.cookie('city54_uuid'), input: val })
+  
+  if(val.trim() == "logout") {
+    $.cookie('city54_uuid', uuid.v1(), { expires: 31 }) // create new uuid
+    location.reload()
+  } else {
+    socket.emit('player-action', { uuid: $.cookie('city54_uuid'), input: val })
+  }
   $('#input-command').val('')
   updateInput()
 }
