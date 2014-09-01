@@ -4,35 +4,61 @@ var Util = require('./util.js')
 var Menu = require('./menu_controller.js')
 var Intro = require('./intro_controller.js')
 var World = require('./world_controller.js')
+var Bots = require('./bot_controller.js')
+var Chat = require('./chat_controller.js')
 
 // handle introduction
 var handleInput = function(socket, player, input) {
 
   switch(Util.lowerTrim(input)) {
 
+    case "zurück zum spiel":
+      player.inMenu = false
+      player.save()
+      if(player.state == "world" || player.state == "bot" || player.state == "chat") {
+        player.state = "world"
+        player.save()
+        World.handleInput(socket, player, "")
+      } else {
+        Util.write(socket, player, {name: "System"}, "Über der Stadt", "sender", "chapter")
+        player.state = "welcome"
+        player.name = ""
+        player.save()
+        Intro.handleInput(socket, player, "")        
+      }
+      break 
+
     case "hilfe": 
-      Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "gameinfo")
-      text = "Herzlich Willkommen bei /Einsame Immobilien/, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung]"
-      Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
+      Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "chapter")
+      text = "Herzlich Willkommen bei /Einsame Immobilien/, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung] [zurück zum Spiel]"
+      player.inMenu = true
+      player.save()
+      Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")      
       break
 
     case "starte anleitung":
-      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene *Städte* besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Du kannst jederzeit [schaue] eingeben, um dich umzuschauen. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien]"
+      Util.write(socket, player, {name: "System"}, "Exploration", "sender", "chapter")
+      text = "Schau dich in Ruhe um und erforsche das Ruhrgebiet im Jahr 2044. Du kannst 53 verschiedene *Städte* besuchen, indem du auf die gelb unterlegten Kommandos klickst oder sie mit der Tastatur eingibst. Du kannst jederzeit 'schaue' eingeben, um dich umzuschauen. Auf dem Weg wirst du verschiedene Verkehrsmittel nutzen und Abkürzungen entdecken. Am besten du machst dir eine Karte, um dich besser zurecht zu finden!<br>[erkläre immobilien] [zurück zum Spiel]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
       
     case "erkläre immobilien":
-      text = "Ziel des Spiels ist es, möglichst viele /einsame Immobilien/ miteinander in Kontakt zu bringen. Sprich mit ihnen, um herauszufinden, was ihnen fehlt. Baue eine 54. Stadt der Liebe oder spinne Intrigen. Achtung: Die Komplimente, Witze, Anmachsprüche und Beleidigungen, die die Immobilien austauschen, stammen alle von anderen Spielern.<br>[erkläre chat]"
+      Util.write(socket, player, {name: "System"}, "Immobilien", "sender", "chapter")
+      text = "Ziel des Spiels ist es, möglichst viele /einsame Immobilien/ miteinander in Kontakt zu bringen. Sprich mit ihnen, um herauszufinden, was ihnen fehlt. Baue eine 54. Stadt der Liebe oder spinne Intrigen. Achtung: Die Komplimente, Witze, Anmachsprüche und Beleidigungen, die die Immobilien austauschen, stammen alle von anderen Spielern.<br>[erkläre chat] [zurück zum Spiel]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
       
     case "erkläre chat":
-      text = "Unterwegs triffst du manchmal auf andere Menschen, mit denen du frei chatten kannst. Sprich sie mit dem Kommando [sprich] an und beende das Gespräch, indem du dich Verabschiedest, z.B. mit 'tschüss'. Tip: Wenn du den Chat verlassen hast, kannst du jederzeit [schaue] eingeben, um dich noch einmal umzuschauen. Viel Spaß!"
+      Util.write(socket, player, {name: "System"}, "Chatten", "sender", "chapter")
+      text = "Unterwegs triffst du manchmal auf andere Menschen, mit denen du frei chatten kannst. Sprich sie mit dem Kommando 'sprich' an und beende das Gespräch, indem du dich Verabschiedest, z.B. mit 'tschüss'. Viel Spaß! [zurück zum Spiel]"
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       break
               
     case "spielstand": 
-      Util.write(socket, player, {name: "System"}, "Spielstand", "sender", "gameinfo")
+      Util.write(socket, player, {name: "System"}, "Spielstand", "sender", "chapter")
+
+      player.inMenu = true
+      player.save()
       
       // name
       var info = "Du bist " + Util.capitaliseFirstLetter(player.name) + ". "
@@ -68,32 +94,44 @@ var handleInput = function(socket, player, input) {
       }
       info += quests
       
+      info += " [zurück zum Spiel]"
+      
       Util.write(socket, player, {name: "System"}, Util.linkify(info), "sender")
       
       break
 
     case "credits":
-      Util.write(socket, player, {name: "System"}, "Credits", "sender", "gameinfo")
+      Util.write(socket, player, {name: "System"}, "Credits", "sender", "chapter")
+
+      player.inMenu = true
+      player.save()
       
-      text = "Ein Spiel von /Invisible Playground/, frei nach dem Roman 'Anarchie in Ruhrstadt' von /Jörg Albrecht/. Game-Design: /Sebastian Quack/, /Holger Heissmeyer/, /Daniel Boy/, /Christiane Hütter/. Recherchen: /Christina Prfötschner/. Programmierung: /Sebastian Quack/ und /Holger Heissmeyer/. Grafik: /V2A.net/. Eine Produktion von /Ringlokschuppen Ruhr/ und /Urbane Künste Ruhr/ in Kooperation mit dem /Theater Oberhausen/. Gefördert vom Ministerium für Familie, Kinder, Jugend, Kultur und Sport des Landes Nordrhein-Westfalen, im Fonds Doppelpass der Kulturstiftung des Bundes und von der Kunststiftung NRW."
+      text = "Ein Spiel von /Invisible Playground/, frei nach dem Roman 'Anarchie in Ruhrstadt' von /Jörg Albrecht/. Game-Design: /Sebastian Quack/, /Holger Heissmeyer/, /Daniel Boy/, /Christiane Hütter/. Recherchen: /Christina Prfötschner/. Programmierung: /Sebastian Quack/ und /Holger Heissmeyer/. Grafik: /V2A.net/. Eine Produktion von /Ringlokschuppen Ruhr/ und /Urbane Künste Ruhr/ in Kooperation mit dem /Theater Oberhausen/. Gefördert vom Ministerium für Familie, Kinder, Jugend, Kultur und Sport des Landes Nordrhein-Westfalen, im Fonds Doppelpass der Kulturstiftung des Bundes und von der Kunststiftung NRW. [zurück zum Spiel]"
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
       break
             
     case "bedingungen":
-      Util.write(socket, player, {name: "System"}, "Nutzungsbedingungen", "sender", "gameinfo")
+      Util.write(socket, player, {name: "System"}, "Nutzungsbedingungen", "sender", "chapter")
       
-      text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der /Immobilien/ werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an /max.grafe@ringlokschuppen.de/"
+      text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der /Immobilien/ werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an /max.grafe@ringlokschuppen.de/ [zurück zum Spiel]"
+      
+      player.inMenu = true
+      player.save()
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
       break
 
     case "theatertour":
-      Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "gameinfo")
+      Util.write(socket, player, {name: "System"}, "Die Theatertour", "sender", "chapter")
       
-      text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von /kainkollektiv/, /LIGNA/, /Invisible Playground/ und /copy & waste/, die vom 12.-14. September 2014 in *Mülheim* und *Oberhausen* stattfinden wird. Infos und Karten unter /ringlokschuppen.ruhr/"
+      text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von /kainkollektiv/, /LIGNA/, /Invisible Playground/ und /copy & waste/, die vom 12.-14. September 2014 in *Mülheim* und *Oberhausen* stattfinden wird. Infos und Karten unter /ringlokschuppen.ruhr/ [zurück zum Spiel]"
+      
+      player.inMenu = true
+      player.save()
+      
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       

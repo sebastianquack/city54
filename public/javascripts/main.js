@@ -212,8 +212,11 @@ $(document).ready(function() {
   // user clicks on menu
   $("body").on("click","*[data-menu]", null, function() { 
     $('nav').removeClass('show');
-    //submitMenuCommand($(this).data("menu"))      
-    autoType($(this).data("menu"), true, $(this).data("menu"))
+    if(player.state == "welcome" || player.state == "bot" || player.state == "chat") {
+      submitMenuCommand($(this).data("menu"))      
+    } else {
+      autoType($(this).data("menu"), true, $(this).data("menu"))      
+    }
   })
   
   // user clicks on command

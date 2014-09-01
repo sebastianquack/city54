@@ -265,6 +265,11 @@ var handleInput = function(bot, player, input, callback, prefix) {
       break
       
     case "get_quest_confirmation":
+      if(!input) {
+        bot.setState(player, "") // in case no other bot was found
+        handleInput(bot, player, input, callback, prefix)
+        return
+      }      
       if(input.search(RegexYes) != -1) {
         
         output.answer = "Toll. "

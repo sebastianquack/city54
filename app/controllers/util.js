@@ -96,6 +96,10 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
     type: type,
     ip: ipLog
   })
+  
+  if(player.inMenu) {
+    chat_item.player_state = "menu"
+  }
   chat_item.save()
 
   if (recipient != undefined)

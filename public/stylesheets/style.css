@@ -170,7 +170,7 @@ header .show ul {
   font-weight: 700;
   text-transform: capitalize;
 }
-p[data-sender]:not([data-state=world]):not([data-state=jump]):before {
+p[data-sender]:not([data-state=world]):not([data-state=jump]):not([data-state=menu]):before {
   content: attr(data-sender) ": ";
   color: #fdc81c;
   font-style: italic;
@@ -197,7 +197,9 @@ b[data-command] {
 #input[data-state=world].chars #input-fake,
 #input[data-state=world].chars #input-command,
 #input[data-state=jump].chars #input-fake,
-#input[data-state=jump].chars #input-command {
+#input[data-state=jump].chars #input-command,
+#input[data-state=menu].chars #input-fake,
+#input[data-state=menu].chars #input-command {
   content: "" attr(data-command) "";
   color: #060606;
   vertical-align: middle;
@@ -210,12 +212,14 @@ b[data-command] {
 }
 
 #input[data-state=world].chars #input-fake #cursor:before,
-#input[data-state=jump].chars #input-fake #cursor:before {
+#input[data-state=jump].chars #input-fake #cursor:before,
+#input[data-state=menu].chars #input-fake #cursor:before {
   border-color: white;
 }
 
 #input[data-state=world].chars #input-fake,
-#input[data-state=jump].chars #input-fake {
+#input[data-state=jump].chars #input-fake,
+#input[data-state=menu].chars #input-fake {
   letter-spacing: 1px;
   
 }
@@ -270,6 +274,7 @@ span.bold {
   font-weight: 700;
 }
 
+#input[data-state=menu].chars #cursor:before,
 #input[data-state=world].chars #cursor:before,
 #input[data-state=jump].chars #cursor:before {
   border-color: white;
