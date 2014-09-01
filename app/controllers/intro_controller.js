@@ -126,7 +126,7 @@ var handleInput = function(socket, player, input) {
     player.setRoom(randomRoom, socket)
     console.log("random room " + randomRoom + " -> " + player.currentRoom)
     player.state = "world"
-    //player.active = true
+    player.active = true
     player.save()
     World.handleInput(socket, player, null)
     break
