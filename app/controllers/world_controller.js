@@ -205,8 +205,10 @@ var handleInput = function(socket, player, input) {
       if (data == undefined) {
         // no data delivered - send player back to previous room (there is a slight risk of infinite loops here)
         console.log("room " + player.currentRoom + " delivered no data. sending player back to " + player.previousRoom)
-        player.currentRoom = player.previousRoom
-        Spreadsheets.loadRoom(player.currentRoom, roomEntered)
+        if(player.previousRoom) {
+          player.currentRoom = player.previousRoom
+          Spreadsheets.loadRoom(player.currentRoom, roomEntered)
+        }
         return
       }
       player.setRoom(player.currentRoom, socket)
