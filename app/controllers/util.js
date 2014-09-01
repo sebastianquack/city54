@@ -83,8 +83,9 @@ var playerGetSockets = function(player, callback) {
 var write = function(socket, player, emitter, value, mode, type, recipient) {
 
   var ipLog = ""
-  if(socket.handshake.headers['x-forwarded-for'])
-    ipLog = socket.handshake.headers['x-forwarded-for']
+  if(socket.handshake)
+    if(socket.handshake.headers['x-forwarded-for'])
+      ipLog = socket.handshake.headers['x-forwarded-for']
 
   var chat_item = new ChatItem({ 
     player_uuid: player.uuid, 
