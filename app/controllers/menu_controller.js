@@ -4,8 +4,10 @@ var Util = require('./util.js')
 var Menu = require('./menu_controller.js')
 var Intro = require('./intro_controller.js')
 var World = require('./world_controller.js')
-var Bots = require('./bot_controller.js')
 var Chat = require('./chat_controller.js')
+
+var mongoose = require('mongoose')
+var Bots = mongoose.model('Bot')
 
 function restart(socket, player) {
   Util.write(socket, player, {name: "System"}, "Über der Stadt", "sender", "chapter")
@@ -77,43 +79,69 @@ var handleInput = function(socket, player, input) {
       player.inMenu = true
       player.save()
       
-      // name
-      var info = "Du bist " + Util.capitaliseFirstLetter(player.name) + ". "
+      // story
+      var info = "Wusstest du schon? "
       
-      // städte
-      info += "Du hast bereits " + player.cities.length + " von 53 Städten besucht"      
-      if(player.cities.length > 0) {
-        info += ": "
-      }      
-      for(var index = 0; index < player.cities.length; index++) {
-          info += "*" + Util.capitaliseFirstLetter(player.cities[index]) + "*"
-          if(index < player.cities.length - 2) {
-            info += ", "
-          } 
-          if(index == player.cities.length - 2) {
-            info += " und "
-          }
-      }
-      info += ".<br>"
-            
-      // quests
-      var quests = ""
-      var resolved = 0
-      player.quests.forEach(function(quest) {
-        if(quest.status == 'active') {
-          quests += "/" + Util.capitaliseFirstLetter(quest.questGiver) + "/ hat dich vor kurzem gefragt, ob du an /" + Util.capitaliseFirstLetter(quest.toBot) + "/ in *" + quest.toPlace + "* folgende Nachricht überbringen kannst: '" + quest.message.text + "'.<br>"
-        } else if(quest.status == 'resolved') {
-          resolved += 1
+      relationshipVerbs = ["ist sauer auf", "ist interessiert an", "ist verknallt in", "liebt"]
+      
+      Bots.find({} , function(err, bots) {
+        bots.forEach(function(bot, index) {
+          info += "/" + Util.capitaliseFirstLetter(bot.name) + "/ " + " aus *" + Util.capitaliseFirstLetter(bot.room.replace(/\//g, " ")) + "* "
+          Object.keys(bot.relationships).forEach(function(key, index2, keys) {
+            relationship = bot.relationships[key]
+            if(relationship.level < 0) relationship.level = 0
+            if(relationship.level > 3) relationship.level = 3
+            info += " " + relationshipVerbs[relationship.level] + " "
+            info += "/" + Util.capitaliseFirstLetter(relationship.bot) + "/" + " aus *" + relationship.place.replace(/\//g, " ") + "*"            
+            if(index2 < keys.length - 2) {
+              info += ", "
+            } else if(index2 == keys.length - 2)  {
+              info += " und "
+            } else {
+              info += ". "
+            }
+          })
+        })
+      
+        console.log(info)
+      
+        // name
+        info += "<br><br>Dein Name ist /" + Util.capitaliseFirstLetter(player.name) + "/. "
+      
+        // städte
+        info += "Du hast bereits " + player.cities.length + " von 53 Städten besucht"      
+        if(player.cities.length > 0) {
+          info += ": "
+        }      
+        for(var index = 0; index < player.cities.length; index++) {
+            info += "*" + Util.capitaliseFirstLetter(player.cities[index]) + "*"
+            if(index < player.cities.length - 2) {
+              info += ", "
+            } 
+            if(index == player.cities.length - 2) {
+              info += " und "
+            }
         }
+        info += ". "
+      
+        // quests
+        var quests = ""
+        var resolved = 0
+        player.quests.forEach(function(quest) {
+          if(quest.status == 'active') {
+            quests += "/" + Util.capitaliseFirstLetter(quest.questGiver) + "/ hat dich vor kurzem gefragt, ob du an /" + Util.capitaliseFirstLetter(quest.toBot) + "/ in *" + quest.toPlace + "* folgende Nachricht überbringen kannst: '" + quest.message.text + "'.<br>"
+          } else if(quest.status == 'resolved') {
+            resolved += 1
+          }
+        })
+        if(resolved > 0) {
+          info += "Du hast bereits " + resolved + " Nachrichten für Immobilien überbracht."
+        }
+        info += "<br><br>" + quests
+
+        info += "<br>[zurück zum Spiel]"
+        Util.write(socket, player, {name: "System"}, Util.linkify(info), "sender")
       })
-      if(resolved > 0) {
-        info += "Du hast bereits " + resolved + " Nachrichten überbracht.<br>"
-      }
-      info += quests
-      
-      info += " [zurück zum Spiel]"
-      
-      Util.write(socket, player, {name: "System"}, Util.linkify(info), "sender")
       
       break
 
