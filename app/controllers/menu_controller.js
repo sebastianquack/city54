@@ -86,7 +86,9 @@ var handleInput = function(socket, player, input) {
       
       Bots.find({} , function(err, bots) {
         bots.forEach(function(bot, index) {
-          info += "/" + Util.capitaliseFirstLetter(bot.name) + "/ " + " aus *" + Util.capitaliseFirstLetter(bot.room.replace(/\//g, " ")) + "* "
+          if(Object.keys(bot.relationships).length > 0) {
+            info += "/" + Util.capitaliseFirstLetter(bot.name) + "/ " + " aus *" + Util.capitaliseFirstLetter(bot.room.replace(/\//g, " ")) + "* "
+          }
           Object.keys(bot.relationships).forEach(function(key, index2, keys) {
             relationship = bot.relationships[key]
             if(relationship.level < 0) relationship.level = 0
@@ -135,7 +137,7 @@ var handleInput = function(socket, player, input) {
           }
         })
         if(resolved > 0) {
-          info += "Du hast bereits " + resolved + " Nachrichten für Immobilien überbracht."
+          info += "Du hast bereits " + resolved + " Nachrichten für einsame Immobilien überbracht."
         }
         info += "<br><br>" + quests
 
