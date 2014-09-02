@@ -86,23 +86,27 @@ var handleInput = function(socket, player, input) {
       
       Bots.find({} , function(err, bots) {
         bots.forEach(function(bot, index) {
-          if(Object.keys(bot.relationships).length > 0) {
-            info += "/" + Util.capitaliseFirstLetter(bot.name) + "/ " + " aus *" + Util.capitaliseFirstLetter(bot.room.replace(/\//g, " ")) + "* "
-          }
+          rel_info = ""
           Object.keys(bot.relationships).forEach(function(key, index2, keys) {
             relationship = bot.relationships[key]
             if(relationship.level < 0) relationship.level = 0
             if(relationship.level > 3) relationship.level = 3
-            info += " " + relationshipVerbs[relationship.level] + " "
-            info += "/" + Util.capitaliseFirstLetter(relationship.bot) + "/" + " aus *" + relationship.place.replace(/\//g, " ") + "*"            
-            if(index2 < keys.length - 2) {
-              info += ", "
-            } else if(index2 == keys.length - 2)  {
-              info += " und "
-            } else {
-              info += ". "
+            if(relationship.level != 1) {
+              
+              rel_info += " " + relationshipVerbs[relationship.level] + " "
+              rel_info += "/" + Util.capitaliseFirstLetter(relationship.bot) + "/" + " aus *" + relationship.place.replace(/\//g, " ") + "*"            
+              if(index2 < keys.length - 2) {
+                rel_info += ", "
+              } else if(index2 == keys.length - 2)  {
+                rel_info += " und "
+              } else {
+                rel_info += ". "
+              }
             }
           })
+          if(rel_info != "") {
+            info += "/" + Util.capitaliseFirstLetter(bot.name) + "/ " + " aus *" + Util.capitaliseFirstLetter(bot.room.replace(/\//g, " ")) + "* " + rel_info
+          }
         })
       
         console.log(info)
