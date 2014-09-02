@@ -9,6 +9,7 @@ var Chat = require('./chat_controller.js')
 
 function restart(socket, player) {
   Util.write(socket, player, {name: "System"}, "Über der Stadt", "sender", "chapter")
+  player.inMenu = false
   player.state = "welcome"
   player.save()
   Intro.handleInput(socket, player, "")

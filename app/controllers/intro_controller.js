@@ -17,6 +17,7 @@ var handleInput = function(socket, player, input) {
     Util.write(socket, player, {name: "System"}, "Auf den ersten Blick liegt die Stadt einfach da, nicht friedlich und doch stumm, ein riesiges Raumschiff, das gelandet ist, um von hier aus die Welt zu erobern. Die gläsernen Hallen und weißen Monolithen, die vielen Villages und Grünflächen sehen aus, als wüßten sie von nichts. Luftschlitten jagen leise zischend hin und her.", "socket")
     //if (player.name == "") player.name = "Du"
     Util.write(socket, { name: "Du" }, {name: "Flugcomputer"}, "Wie heißt du?", "socket")
+    player.inMenu = false
     player.state = "name"
     player.save()
     break

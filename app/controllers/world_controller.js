@@ -215,6 +215,7 @@ var handleInput = function(socket, player, input) {
       Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — \time", "sender", "chapter")
       //if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
       player.currentRoomData = data;
+      player.inMenu = false
       player.save()
       processRoomCommand(socket, player, "base", "")
       announceRoomPlayers(socket, player, true)
