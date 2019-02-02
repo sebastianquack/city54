@@ -2,6 +2,8 @@ var mongoose = require('mongoose')
 var ChatItem = mongoose.model('ChatItem')
 var Player = mongoose.model('Player')
 
+const utf8 = require('utf8');
+
 // handle errors
 var handleError = function(err) {
   console.log("error")
@@ -78,6 +80,7 @@ var playerGetSockets = function(player, callback) {
 // IDEE / REFACTOR : instead of taking metadata from player (which does not work for group messages to socket.io rooms)
 // , pass only the relevant ones in the arguments if required
 //
+
 var write = async function(socket, player, emitter, value, mode, type, recipient) {
 
   var ipLog = ""
@@ -91,7 +94,7 @@ var write = async function(socket, player, emitter, value, mode, type, recipient
     player_name: (mode == "sender" || mode == "socket") ? player.name : null, 
     player_room: (mode == "sender" || mode == "socket") ? player.currentRoom : null, 
     player_state: (mode == "sender" || mode == "socket") ? player.state : null,
-    value: value, 
+    value: value.replace(/ü/g, "ü").replace(/Ü/g, "Ü").replace(/ä/g, "ä").replace(/ö/g, "ö"), 
     type: type,
     ip: ipLog
   })
