@@ -48,12 +48,16 @@ module.exports.init = function (io) {
 
           if(!player) {
 
+            console.log("player not recognized, creating new player object");
+
             // no player yet, create one
             player = new Player({ uuid: data.uuid }) // use data as name
             player.state = "welcome"
             player.save()
 
-          } 
+          } else {
+            console.log("player recognized", player);
+          }
 
           // connect sockets and players (player can have several sockets)
           //socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
