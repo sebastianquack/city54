@@ -78,7 +78,7 @@ scrollInput = function() {
     var offset_y = $("#chat")[0].scrollHeight - $("#chat").innerHeight()
     var delta_y = offset_y-$("#chat").scrollTop()
     if (fastScroll || delta_y <= 2) return
-    var duration = delta_y * 3
+    var duration = delta_y * 2
     duration = Math.max(Math.min(duration, 800), 200)
     $('#chat').stop().animate({
         scrollTop: offset_y
@@ -176,7 +176,7 @@ $(document).ready(function() {
     $('#chat').stop().animate( {
 		    scrollTop: $("#chat")[0].scrollHeight - $("#chat").innerHeight()
       }, {
-	      duration: delta_y*50, //$("ul#chat p:last-child").height()*100,
+	      duration: delta_y*10, //$("ul#chat p:last-child").height()*100,
         queue: true,
         easing: "easeOutSine",
         start: function() {
