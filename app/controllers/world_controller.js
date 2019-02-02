@@ -197,7 +197,7 @@ function processRoomCommand(socket, player, command, object) {
 }
 
 // handle world exploration
-var handleInput = function(socket, player, input) {  
+var handleInput = async function(socket, player, input) {  
 
   console.log(player);
   console.log(input);
@@ -205,7 +205,7 @@ var handleInput = function(socket, player, input) {
   input = Util.lowerTrim(input)
 
   if(!input) {
-    var roomEntered = function(data){
+    var roomEntered = async function(data){
       if (data == undefined) {
         // no data delivered - send player back to previous room (there is a slight risk of infinite loops here)
         console.log("room " + player.currentRoom + " delivered no data. sending player back to " + player.previousRoom)
@@ -216,11 +216,11 @@ var handleInput = function(socket, player, input) {
         return
       }
       player.setRoom(player.currentRoom, socket)
-      Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — \time", "sender", "chapter")
+      await Util.write(socket, player, {name: "System"}, player.currentRoom.replace("/",", ") + " — \time", "sender", "chapter")
       //if (player.currentRoom.search(RegexPrivateRooms) == -1) Util.write(socket, player, {name: "System", currentRoom: player.currentRoom}, player.name + Util.linkify(" ist jetzt auch hier. [sprich " + player.name + "]"), "everyone else")
       player.currentRoomData = data;
       player.inMenu = false
-      player.save()
+      await player.save()
       processRoomCommand(socket, player, "base", "")
       announceRoomPlayers(socket, player, true)
     }     
@@ -263,7 +263,7 @@ var handleInput = function(socket, player, input) {
           player.inMenu = false
         }
         player.state = "chat"
-        player.save()
+        await player.save()
         Util.write(socket, player, {name: "System"}, "Du beginnst zu sprechen. Verabschiede dich, um das Gespräch zu beenden.", "sender")
         if (object) {
           playerOrMessage = Util.getCommand(object)
