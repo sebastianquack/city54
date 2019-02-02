@@ -55,15 +55,13 @@ var linkify = function(text) {
 }
 
 var socketGetPlayer = function(socket, callback) {
-  socket.get("uuid", function(err, uuid) {
-    // TODO: error handling
-
-    Player.find( { uuid: uuid } , function(err, player) {
+  if(socket.uuid) {
+    Player.find( { uuid: socket.uuid } , function(err, player) {
       if(err) return handleError(err)
 
       callback(player)
     })
-  })
+  }
 }
 
 var playerGetSockets = function(player, callback) {

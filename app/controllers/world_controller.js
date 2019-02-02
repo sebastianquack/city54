@@ -24,7 +24,8 @@ var worldVariables = []
 function getPlayersInRoom(socket, room, callback) {
 
   uuids = []
-  roomSockets = io.sockets.clients(room)
+  //roomSockets = io.sockets.clients(room)
+  roomSockets = io.of('/').in(room).clients;
 
   var queryPlayers = function (uuids){
     Player.find( { uuid: { $in: uuids } } , function(err, roomPlayers) {

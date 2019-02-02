@@ -56,7 +56,9 @@ module.exports.init = function (io) {
           } 
 
           // connect sockets and players (player can have several sockets)
-          socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
+          //socket.set("uuid", player.uuid) // or: add socket id to player (and clean the list up)
+          socket.uuid = player.uuid;
+
           socket.join(player.uuid)
           player.online = true
           
