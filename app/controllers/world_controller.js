@@ -199,6 +199,9 @@ function processRoomCommand(socket, player, command, object) {
 // handle world exploration
 var handleInput = function(socket, player, input) {  
 
+  console.log(player);
+  console.log(input);
+  
   input = Util.lowerTrim(input)
 
   if(!input) {

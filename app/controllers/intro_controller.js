@@ -10,7 +10,7 @@ var RegexJump = /^(spring|sprung|springe)?[\s!\.]*$/i
 var RegexChatExit = /^(exit|ciao|tschüss|tschüß|tschüssikowski|bye|bye bye|auf wiedersehen|wiedersehen)+[\s!\.]*$/i
 
 // handle introduction
-var handleInput = function(socket, player, input) {
+var handleInput = async function(socket, player, input) {
   
   switch(player.state) {
   case "welcome":
@@ -19,7 +19,7 @@ var handleInput = function(socket, player, input) {
     Util.write(socket, { name: "Du" }, {name: "Flugcomputer"}, "Wie heißt du?", "socket")
     player.inMenu = false
     player.state = "name"
-    player.save()
+    await player.save()
     break
 
   case "name":
@@ -29,7 +29,7 @@ var handleInput = function(socket, player, input) {
     console.log(input)
     
     // check if playername exists
-    Player.find({ name: input /*, active: true */ }, function (err, records) {
+    Player.find({ name: input /*, active: true */ }, async function (err, records) {
 
       //console.log(records)
       
@@ -39,14 +39,14 @@ var handleInput = function(socket, player, input) {
         Util.write(socket, {name: "Du"}, {name: "Flugcomputer"}, Util.capitaliseFirstLetter(input) + "... der Name kommt mir bekannt vor. Wie ist deine Geheimparole?", "socket")
         player.name = input
         player.state = "check_passphrase"
-        player.save()
+        await player.save()
 
       } else {
 
         // if no, create player
         player.name = input
         player.state = "save_passphrase"
-        player.save()      
+        await player.save()      
         Util.write(socket, player, {name: "Flugcomputer"}, "Hallo, " + Util.capitaliseFirstLetter(input) + "! Bitte erfinde jetzt eine Geheimparole, damit ich dich wiedererkenne.", "socket")
       }
 
@@ -58,7 +58,7 @@ var handleInput = function(socket, player, input) {
     Util.write(socket, player, player, input, "socket") // echo player input
     input = Util.lowerTrim(input)
 
-    Player.findOne({ name: player.name }, function (err, existingPlayer){
+    Player.findOne({ name: player.name }, async function (err, existingPlayer){
 
       if(existingPlayer) {
     
@@ -72,8 +72,8 @@ var handleInput = function(socket, player, input) {
           // use existingPlayer from now on with this cookie, remove temporary player document
           existingPlayer.uuid = player.uuid
           existingPlayer.state = "world"
-          existingPlayer.save()
-          player.remove()
+          await existingPlayer.save()
+          await player.remove()
 
           Util.write(socket, existingPlayer, {name: "System"}, Util.linkify("Der Flugcomputer landet, lässt dich aussteigen und fliegt davon."), "socket")
           World.handleInput(socket, existingPlayer, null)
@@ -82,14 +82,14 @@ var handleInput = function(socket, player, input) {
 
           player.name = "Du"
           player.state = "name"
-          player.save()         
+          await player.save()         
           Util.write(socket, player, {name: "Flugcomputer"}, "Du scheinst nicht der " + Util.capitaliseFirstLetter(existingPlayer.name) + ", zu sein, den ich kenne. Bitte nenne dich anders, damit ich nicht durcheinanderkomme. Wie willst du heißen?", "socket")
         }
         
       } else {
         // this shouldn't happen, go back to start
         player.state = "welcome"
-        player.save()      
+        await player.save()      
       }
 
     })
@@ -99,7 +99,7 @@ var handleInput = function(socket, player, input) {
     Util.write(socket, player, player, input , "socket") // echo player input
     player.passphrase = input
     player.state = "endchat"
-    player.save()
+    await player.save()
     Util.write(socket, player, {name: "Flugcomputer"}, "Alles klar! Merk dir die Parole gut. Und jetzt.. spring! Aber vorher: Sei höflich und beende das Gespräch, indem du dich von mir verabschiedest.", "socket")
     break
     
@@ -109,7 +109,7 @@ var handleInput = function(socket, player, input) {
 
     if(input.search(RegexChatExit) != -1) {     
       player.state = "jump"
-      player.save()
+      await player.save()
       Util.write(socket, player, {name: "System"}, Util.linkify("Du wendest dich vom Flugcomputer ab, schaust nach unten und zögerst. [Springst du?|springe]"), "socket")
     } else {
       Util.write(socket, player, {name: "Flugcomputer"}, "Das sagt mir nichts. Ich kenne nur ciao, tschüss, tschüssikowski, bye bye und auf wiedersehen. Versuch's nochmal!", "socket")      
@@ -128,7 +128,7 @@ var handleInput = function(socket, player, input) {
     console.log("random room " + randomRoom + " -> " + player.currentRoom)
     player.state = "world"
     player.active = true
-    player.save()
+    await player.save()
     World.handleInput(socket, player, null)
     break
   }

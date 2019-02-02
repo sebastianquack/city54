@@ -18,7 +18,8 @@ function restart(socket, player) {
 }
 
 // handle introduction
-var handleInput = function(socket, player, input) {
+var handleInput = async function(socket, player, input) {
+  console.log("menu handleInput", input);
 
   switch(Util.lowerTrim(input)) {
 
@@ -28,10 +29,10 @@ var handleInput = function(socket, player, input) {
 
     case "zurück zum spiel":
       player.inMenu = false
-      player.save()
+      await player.save()
       if(player.state == "world" || player.state == "bot" || player.state == "chat") {
         player.state = "world"
-        player.save()
+        await player.save()
         World.handleInput(socket, player, "")
       } else {
         restart(socket, player)
@@ -42,7 +43,7 @@ var handleInput = function(socket, player, input) {
       Util.write(socket, player, {name: "System"}, "Spielanleitung", "sender", "chapter")
       text = "Herzlich Willkommen bei /Einsame Immobilien/, dem Webspiel der 54. Stadt. Hier erfährst du alles, um in das ultimative Dating-Netzwerk der Ruhrstadt einzusteigen. Los geht's mit ein paar Basics. [starte anleitung] [zurück zum Spiel]"
       player.inMenu = true
-      player.save()
+      await player.save()
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")      
       break
 
@@ -77,7 +78,7 @@ var handleInput = function(socket, player, input) {
       Util.write(socket, player, {name: "System"}, "Spielstand", "sender", "chapter")
 
       player.inMenu = true
-      player.save()
+      await player.save()
       
       // story
       var info = "Wusstest du schon? "
@@ -158,7 +159,7 @@ var handleInput = function(socket, player, input) {
       Util.write(socket, player, {name: "System"}, "Credits", "sender", "chapter")
 
       player.inMenu = true
-      player.save()
+      await player.save()
       
       text = "Ein Spiel von /Invisible Playground/, frei nach dem Roman 'Anarchie in Ruhrstadt' von /Jörg Albrecht/. Game-Design: /Sebastian Quack/, /Holger Heissmeyer/, /Daniel Boy/, /Christiane Hütter/. Recherchen: /Christina Prfötschner/. Programmierung: /Sebastian Quack/ und /Holger Heissmeyer/. Grafik: /V2A.net/. Eine Produktion von /Ringlokschuppen Ruhr/ und /Urbane Künste Ruhr/ in Kooperation mit dem /Theater Oberhausen/. Gefördert vom Ministerium für Familie, Kinder, Jugend, Kultur und Sport des Landes Nordrhein-Westfalen, im Fonds Doppelpass der Kulturstiftung des Bundes und von der Kunststiftung NRW. [zurück zum Spiel]"
       
@@ -172,7 +173,7 @@ var handleInput = function(socket, player, input) {
       text = "Das Spiel verwendet Cookies, um Nutzer wiederzuerkennen. Zur Verfolgung von Mißbrauch werden die IP-Adressen der Nutzer gespeichert. Dialog-Elemente der /Immobilien/ werden durch Nutzer eingegeben. Bitte geben Sie keine sensiblen Daten in das Spiel ein. Hinweise auf problematische Inhalte an /max.grafe@ringlokschuppen.de/ [zurück zum Spiel]"
       
       player.inMenu = true
-      player.save()
+      await player.save()
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
       
@@ -184,7 +185,7 @@ var handleInput = function(socket, player, input) {
       text = "Dieses Webspiel ist Teil der 54. Stadt, einer spektakulären Theatertour von /kainkollektiv/, /LIGNA/, /Invisible Playground/ und /copy & waste/, die vom 12.-14. September 2014 in *Mülheim* und *Oberhausen* stattfinden wird. Infos und Karten unter /ringlokschuppen.ruhr/ [zurück zum Spiel]"
       
       player.inMenu = true
-      player.save()
+      await player.save()
       
       
       Util.write(socket, player, {name: "System"}, Util.linkify(text), "sender")
@@ -192,6 +193,7 @@ var handleInput = function(socket, player, input) {
       break
 
     default:
+      console.log("no menu input found");
       return false
   }
   return true

@@ -34,7 +34,7 @@ module.exports.init = function (io) {
 
   // reset players
   console.log("Resetting Players...")
-  Player.update({ online: true }, { $set: { online: false }}, { multi: true }, function() {
+  Player.update({ online: true }, { $set: { online: false }}, { multi: true }, async function() {
 
     // client connects
     io.sockets.on('connection', function (socket) {
@@ -43,7 +43,7 @@ module.exports.init = function (io) {
       socket.on('player-action', function (data) {    
 
         // check if player exists
-        Player.findOne({ uuid: data.uuid }, function(err, player) {
+        Player.findOne({ uuid: data.uuid }, async function(err, player) {
           if(err) return Util.handleError(err)
 
           if(!player) {
@@ -53,7 +53,7 @@ module.exports.init = function (io) {
             // no player yet, create one
             player = new Player({ uuid: data.uuid }) // use data as name
             player.state = "welcome"
-            player.save()
+            await player.save()
 
           } else {
             console.log("player recognized", player);
@@ -70,7 +70,8 @@ module.exports.init = function (io) {
           if(socket.handshake.headers['x-forwarded-for'])
             player.currentIP = socket.handshake.headers['x-forwarded-for']
             //console.log("x-forwarded-for " + socket.handshake.headers['x-forwarded-for'])
-          player.save()
+          await player.save()
+          console.log("player saved");
 
           if (player.blocked == true) {
             Util.write(socket, player, {name: "System"}, Util.linkify("Dein Account wurde gesperrt. Bei Fragen hierzu wende dich bitte an /max.grafe@ringlokschuppen.de/"), "sender")
@@ -86,7 +87,8 @@ module.exports.init = function (io) {
             if(data.firstPlayerAction) {
 
               player.inMenu = false
-              player.save()
+              await player.save()
+              console.log("player saved");
               
               switch(player.state) {
                 case "world":
@@ -102,40 +104,43 @@ module.exports.init = function (io) {
                 default: // reset intro to start
                   player.state = "welcome"
                   player.name = ""
-                  player.save()
+                  await player.save()
                   break
               }
             }
 
             // see if this is a menu event
-            if(!Menu.handleInput(socket, player, data.input)) {
 
-              // check player state and hand off to different parsers
-              switch(player.state) {
-                case "world": 
-                  World.handleInput(socket, player, data.input)
-                  break
-                case "bot":
-                  Bots.handleInput(socket, player, data.input)  
-                  break
-                case "chat":
-                  Chat.handleInput(socket, player, data.input)  
-                  break              
-                default:
-                  Intro.handleInput(socket, player, data.input)
+            Menu.handleInput(socket, player, data.input).then((result)=>{
+              if(!result) {
+                console.log(result);
+                console.log(player);
+
+                // check player state and hand off to different parsers
+                switch(player.state) {
+                  case "world": 
+                    console.log("handing over to world controller");
+                    World.handleInput(socket, player, data.input)
+                    break
+                  case "bot":
+                    Bots.handleInput(socket, player, data.input)  
+                    break
+                  case "chat":
+                    Chat.handleInput(socket, player, data.input)  
+                    break              
+                  default:
+                    Intro.handleInput(socket, player, data.input)
+                }
               }
-            
-            }
-            
-          }
-
+            });
+          }  
         })
       })
 
-      socket.on('disconnect', function () {
-        Util.socketGetPlayer(socket, function(player) {
+      socket.on('disconnect', async function () {
+        Util.socketGetPlayer(socket, async function(player) {
           player.online = false
-          player.save
+          await player.save()
         })
         // remove socket id from player (and clean the list up)
       });

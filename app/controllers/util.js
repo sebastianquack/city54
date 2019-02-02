@@ -78,7 +78,7 @@ var playerGetSockets = function(player, callback) {
 // IDEE / REFACTOR : instead of taking metadata from player (which does not work for group messages to socket.io rooms)
 // , pass only the relevant ones in the arguments if required
 //
-var write = function(socket, player, emitter, value, mode, type, recipient) {
+var write = async function(socket, player, emitter, value, mode, type, recipient) {
 
   var ipLog = ""
   if(socket.handshake)
@@ -99,7 +99,7 @@ var write = function(socket, player, emitter, value, mode, type, recipient) {
   if(player.inMenu) {
     chat_item.player_state = "menu"
   }
-  chat_item.save()
+  await chat_item.save()
 
   if (recipient != undefined)
     recipient_uuid = recipient.uuid

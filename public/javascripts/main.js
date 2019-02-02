@@ -119,6 +119,7 @@ $(document).ready(function() {
   
   // check for cookie
   if(!$.cookie('city54_uuid')) {
+    console.log("creating new cookie");
     $.cookie('city54_uuid', uuid.v1(), { expires: 31 }) // create new uuid
   }
   

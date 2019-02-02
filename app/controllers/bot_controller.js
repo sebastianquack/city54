@@ -9,7 +9,7 @@ var BasicBot = require('./bots/basic_bot.js')
 
 /* function declarations */
 
-var leaveBot = function(player) {  
+var leaveBot = async function(player) {  
   Bots.findOne( { name: player.currentBot } , function(err, bot) {
     if(bot) {
       if(bot.playerInfo)
@@ -20,11 +20,11 @@ var leaveBot = function(player) {
   })
   player.currentBot = null
   player.state = "world" // send player back into world  
-  player.save()  
+  await player.save()  
 }
 
 // handle bot chat
-var handleInput = function(socket, player, input) {
+var handleInput = async function(socket, player, input) {
   
   // reflect player input back to player
   if (input != null & input != "") {
@@ -32,7 +32,7 @@ var handleInput = function(socket, player, input) {
   }
     
   // look up the global bot object
-  Bots.findOne({ name: player.currentBot }).exec(function(err, bot) {
+  Bots.findOne({ name: player.currentBot }).exec(async function(err, bot) {
     if(err) return Util.handleError(err)   
 
     // if nothing has been stored about this bot, create one
@@ -41,7 +41,7 @@ var handleInput = function(socket, player, input) {
       bot.room = player.currentRoom // save the room where the bot is
       bot.globalVariables = {botname: player.currentBot} // set bot name on init
       bot.markModified('globalVariables')
-      bot.save()            
+      await bot.save()            
     }
            
     // check if the bot meets this player for the first time
@@ -50,10 +50,10 @@ var handleInput = function(socket, player, input) {
       bot.playerInfo[player.uuid] = {}
       bot.playerInfo[player.uuid].state = ""
       bot.markModified('playerInfo')
-      bot.save()   
+      await bot.save()   
     }
       
-    BasicBot.handleInput(bot, player, input, function(output) { // process the bots response
+    BasicBot.handleInput(bot, player, input, async function(output) { // process the bots response
 
       // write answer to console
       Util.write(socket, player, {name: player.currentBot}, output.answer, "sender") 
@@ -62,7 +62,7 @@ var handleInput = function(socket, player, input) {
       if(output.abort) {
         output.bot.playerInfo[player.uuid].state = "" // reset bot state for this player     
         player.state = "world" // send player back into world
-        player.save()
+        await player.save()
         var exitNote = ""
         if(output.abort == 'bot') {
           exitNote = Util.capitaliseFirstLetter(output.bot.name) + " hat das Gespräch beendet."
@@ -76,7 +76,7 @@ var handleInput = function(socket, player, input) {
       output.bot.markModified('globalVariables')
       output.bot.markModified('relationships')
       output.bot.markModified('playerInfo')
-      output.bot.save()
+      await output.bot.save()
     
     })
                               

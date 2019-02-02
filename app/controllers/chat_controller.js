@@ -11,7 +11,7 @@ var World = require('./world_controller.js')
 
 /* function declarations */
 
-var leaveChat = function(socket, player, message) {
+var leaveChat = async function(socket, player, message) {
 
   
   Player
@@ -53,7 +53,7 @@ var leaveChat = function(socket, player, message) {
   player.previousChat = player.currentChat
   player.currentChat = ""
   player.state = "world" // send player back into world
-  player.save()
+  await player.save()
 }
 
 // handle player chat
